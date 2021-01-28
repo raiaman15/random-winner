@@ -50,7 +50,7 @@ class ProductPageTests(SimpleTestCase):
             self.response, 'Hi there! I should not be on the page.')
 
     def test_productpage_url_resolves_productpageview(self):
-        view = resolve('/product/')
+        view = resolve('/')
         self.assertEqual(
             view.func.__name__,
             ProductPageView.as_view().__name__

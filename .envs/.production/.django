@@ -2,7 +2,7 @@
 MIMIC_PRODUCTION_LOCALLY=True
 
 SECRET_KEY=L\HS@*Wi@H%z9]Wdy@ILoY]2s&:_P"`{~%e}0wc}`MWc!!a"aS
-DJANGO_ALLOWED_HOSTS=0.0.0.0 test.infroid.com
+ALLOWED_HOSTS=0.0.0.0 test.infroid.com
 SQL_ENGINE=django.db.backends.postgresql
 SQL_DATABASE=product_name_db
 SQL_USER=product_name_db_user
