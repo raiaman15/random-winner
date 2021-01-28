@@ -4,12 +4,15 @@ from .validators import validate_investment
 
 
 class Pool(models.Model):
-    size = models.IntegerField(default=20, null=False, blank=False)
+    name = models.CharField(
+        null=False, blank=False, unique=True, editable=False, help_text='Unique name for the Pool')
+    size = models.IntegerField(
+        default=20, null=False, blank=False, help_text='Pool size, i.e. maximum member count for the Pool')
     investment = models.DecimalField(
-        default=10000, validators=[validate_investment], null=False, blank=False
+        default=10000, validators=[validate_investment], null=False, blank=False, editable=False,
     )
     master = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT, related_name='master', blank=False
+        CustomUser, on_delete=models.PROTECT, related_name='master', blank=False, editable=False,
     )
     members = models.ManyToManyField(
         CustomUser, on_delete=models.PROTECT, related_name='member', blank=True
@@ -38,9 +41,13 @@ class Pool(models.Model):
         return user in self.members
 
     def join_pool(self, user):
+        """ Checks if pool is available and user is not already in the pool """
         if self.get_member_remaining > 0:
-            if self.master != user:
+            if not self.verify_member(user):
                 self.members.add(user)
+
+    def __str__(self):
+        return self.name + ':' + self.master.email
 
 
 class InvestmentTransaction(models.Model):
@@ -55,11 +62,14 @@ class InvestmentTransaction(models.Model):
         null=False, blank=False, max_digits=7, decimal_places=2
     )
     transaction_from = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='outgoing_transactions', blank=False
+        CustomUser, on_delete=models.DO_NOTHING, related_name='outgoing_investment_transactions', blank=False
     )
     transaction_for_pool = models.ForeignKey(
-        Pool, on_delete=models.DO_NOTHING, related_name='transactions', blank=False
+        Pool, on_delete=models.DO_NOTHING, related_name='investment_transactions', blank=False
     )
     transaction_to = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='incoming_transactions', blank=False
+        CustomUser, on_delete=models.DO_NOTHING, related_name='incoming_investment_transactions', blank=False
     )
+
+    def __str__(self):
+        return self.transaction_from.email + ':' + self.transaction_type + ':' + self.transaction_for_pool + ':' + self.transaction_amount + ':' + self.transaction_to

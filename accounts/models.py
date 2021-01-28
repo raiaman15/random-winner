@@ -34,6 +34,9 @@ class CustomUser(AbstractUser):
         if self.is_verified and self.kyc_document:
             pass
 
+    def __str__(self):
+        return self.email
+
 
 class BalanceTransaction(models.Model):
     TRANSACTION_TYPE = (
@@ -46,3 +49,9 @@ class BalanceTransaction(models.Model):
     transaction_amount = models.DecimalField(
         null=False, blank=False, max_digits=7, decimal_places=2
     )
+    transaction_by = models.ForeignKey(
+        CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transactions', blank=False
+    )
+
+    def __str__(self):
+        return self.transaction_by.email + ':' + self.transaction_type + ':' + self.transaction_amount
