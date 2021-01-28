@@ -8,21 +8,9 @@ from config.settings.base import env
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False)
+DEBUG = True
 
-ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
-
-ADMINS = [
-    (
-        env.str("WEBMASTER_NAME", default="Webmaster"),
-        env.str("WEBMASTER_EMAIL", default="webmaster@test.infroid.com")
-    ),
-    (
-        env.str("ADMINISTRATOR_NAME", default="Administrator"),
-        env.str("ADMINISTRATOR_EMAIL", default="administrator@test.infroid.com")
-    )
-]
-MANAGERS = ADMINS
+ALLOWED_HOSTS = ['0.0.0.0']
 
 # Add INSTALLED_APPS on top
 INSTALLED_APPS = [] + INSTALLED_APPS

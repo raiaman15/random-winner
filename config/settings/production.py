@@ -51,7 +51,7 @@ CACHE_MIDDLEWARE_SECONDS = 3600
 CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Security config
-if env.bool("MIMIC_PRODUCTION_LOCALLY"):
+if env.bool("MIMIC_PRODUCTION_LOCALLY", False):
     pass
 else:
     CSRF_COOKIE_SECURE = True
