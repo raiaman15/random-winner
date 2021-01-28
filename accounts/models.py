@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
+from config.validators import phone_regex
 
 
 class CustomUser(AbstractUser):
@@ -13,12 +14,18 @@ class CustomUser(AbstractUser):
         max_length=2, choices=USER_TYPE, default='ME', blank=True
     )
     picture = models.ImageField(
-        upload_to='picture/', blank=True
+        upload_to='picture/', blank=True,
+        help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format.'
     )
     kyc_document = models.ImageField(
-        upload_to='kyc_documents/', blank=True
+        upload_to='kyc_documents/', blank=True,
+        help_text='Your photo ID (preferably Aadhaar Card) in .png or .jpg format.'
     )
-    is_verified = models.BooleanField(default=False)
+    kyc_verified = models.BooleanField(default=False)
+    phone = models.CharField(
+        max_length=17, blank=True, help_text='Your valid mobile number for OTP verification.'
+    )
+    phone_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
     is_verified_master = models.BooleanField(default=False)
     balance_cash = models.DecimalField(
@@ -27,12 +34,13 @@ class CustomUser(AbstractUser):
         default=0.00, max_digits=7, decimal_places=2)
 
     def apply_for_master(self):
-        if self.is_verified and self.kyc_document:
+        if self.kyc_verified and self.phone_verified:
             self.is_willing_master = True
 
     def apply_for_withdrawal(self, amount):
-        if self.is_verified and self.kyc_document:
+        if self.kyc_verified and self.phone_verified:
             pass
+            # TODO-NORMAL: Raise request for admin.
 
     def __str__(self):
         return self.email

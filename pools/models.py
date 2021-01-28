@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from .validators import validate_investment
+from config.validators import validate_investment
 
 
 class Pool(models.Model):
