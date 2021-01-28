@@ -7,14 +7,14 @@ from django.views.generic import ListView, DetailView
 from .models import CustomUser
 
 
-class PoolListView(LoginRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'user_list'
     template_name = 'account/user_list.html'
     login_url = 'account_login'
 
 
-class BookDetailView(
+class UserDetailView(
         LoginRequiredMixin,
         PermissionRequiredMixin,
         DetailView):
@@ -22,7 +22,6 @@ class BookDetailView(
     context_object_name = 'user'
     template_name = 'account/user_detail.html'
     login_url = 'account_login'
-    permission_required = 'user.special_status'
 
 
 class SearchResultsListView(ListView):

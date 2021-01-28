@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Pools{% endblock title %}
+
+{% block content %}
+{% for pool in pool_list %}
+<div>
+    <h2><a href="{{ pool.get_absolute_url }}">{{ pool.name }}</a></h2>
+</div>
+{% endfor %}
+{% endblock content %}

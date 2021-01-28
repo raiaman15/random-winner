@@ -25,9 +25,10 @@ urlpatterns = [
 
     # User management
     path('accounts/', include('allauth.urls')),
+    path('accounts/', include('accounts.urls')),
 
     # Local apps
     path('', include('pages.urls')),
+    path('pools/', include('pools.urls')),
     path("upload/", image_upload, name="upload"),
 ]
-    

@@ -1,21 +1,21 @@
 from django.db import models
-from accounts.models import CustomUser
+from django.contrib.auth import get_user_model
 from .validators import validate_investment
 
 
 class Pool(models.Model):
     name = models.CharField(
-        null=False, blank=False, unique=True, editable=False, help_text='Unique name for the Pool')
+        null=False, blank=False, unique=True, editable=False, max_length=250, help_text='Unique name for the Pool')
     size = models.IntegerField(
         default=20, null=False, blank=False, help_text='Pool size, i.e. maximum member count for the Pool')
     investment = models.DecimalField(
-        default=10000, validators=[validate_investment], null=False, blank=False, editable=False,
+        default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False, editable=False,
     )
     master = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT, related_name='master', blank=False, editable=False,
+        get_user_model(), on_delete=models.PROTECT, related_name='master', blank=False, editable=False,
     )
     members = models.ManyToManyField(
-        CustomUser, on_delete=models.PROTECT, related_name='member', blank=True
+        get_user_model(), through="PoolMember", related_name='member', blank=True
     )
 
     def save(self, *args, **kwargs):
@@ -50,6 +50,11 @@ class Pool(models.Model):
         return self.name + ':' + self.master.email
 
 
+class PoolMember(models.Model):
+    pool = models.ForeignKey(Pool, on_delete=models.PROTECT)
+    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+
+
 class InvestmentTransaction(models.Model):
     TRANSACTION_TYPE = (
         ('I', 'Invest'),
@@ -62,13 +67,13 @@ class InvestmentTransaction(models.Model):
         null=False, blank=False, max_digits=7, decimal_places=2
     )
     transaction_from = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='outgoing_investment_transactions', blank=False
+        get_user_model(), on_delete=models.DO_NOTHING, related_name='outgoing_investment_transactions', blank=False
     )
     transaction_for_pool = models.ForeignKey(
         Pool, on_delete=models.DO_NOTHING, related_name='investment_transactions', blank=False
     )
     transaction_to = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='incoming_investment_transactions', blank=False
+        get_user_model(), on_delete=models.DO_NOTHING, related_name='incoming_investment_transactions', blank=False
     )
 
     def __str__(self):

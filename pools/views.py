@@ -14,7 +14,7 @@ class PoolListView(LoginRequiredMixin, ListView):
     login_url = 'account_login'
 
 
-class BookDetailView(
+class PoolDetailView(
         LoginRequiredMixin,
         PermissionRequiredMixin,
         DetailView):
@@ -22,7 +22,6 @@ class BookDetailView(
     context_object_name = 'pool'
     template_name = 'pools/pool_detail.html'
     login_url = 'account_login'
-    permission_required = 'pool.special_status'
 
 
 class SearchResultsListView(ListView):

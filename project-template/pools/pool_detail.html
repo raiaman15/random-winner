@@ -1,0 +1,27 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}{{ pool.name }}{% endblock title %}
+
+{% block content %}
+<div class="pool-detail">
+
+    <h2><a href="">{{ pool.name }}</a></h2>
+    <p>Master: {{ pool.master }}</p>
+    <p>Member Count: {{ pool.get_member_count }} / {{ pool.size }}</p>
+    <p>Investment Amount: {{ pool.investment }}</p>
+    <div>
+        <h3>Members</h3>
+        <ul>
+            {% if pool.members %}
+            {% for member in pool.members %}
+            <li>
+                <img class="memberpicture" src="{{ member.picture.url }}" alt="{{ member.first_name }}">
+                {{ member.email }} ({{ member.email }})
+            </li>
+            {% endfor %}
+            {% endif %}
+
+        </ul>
+    </div>
+</div>
+{% endblock content %}
