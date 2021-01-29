@@ -30,5 +30,5 @@ urlpatterns = [
     # Local apps
     path('', include('pages.urls')),
     path('pools/', include('pools.urls')),
-    path("upload/", image_upload, name="upload"),
+    path('upload/', image_upload, name='upload'),
 ]

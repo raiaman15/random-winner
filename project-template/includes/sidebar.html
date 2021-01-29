@@ -3,7 +3,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <a href="{% url 'dashboard' %}" class="brand-link">
-    <img src="{% static 'logo.png' %}" alt="{{PRODUCT_NAME}} Logo" class="brand-image" style="opacity: .8">
+    <img src="{% static 'logo.png' %}" alt="{{PRODUCT_NAME}} Logo" class="brand-image" style="opacity: .8;">
     <span class="brand-text font-weight-light">{{PRODUCT_NAME}}</span>
   </a>
 
@@ -13,13 +13,18 @@
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
         {% if user.picture %}
-        <img src="{% url user.picture.url %}" class="img-circle elevation-2" alt="User Image">
+        <img src="{{ user.picture.url }}" class="img-circle elevation-1" style="height:2rem; width:2rem;"
+          alt="User Image">
         {% else %}
-        <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-2" alt="User Image">
+        <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1" alt="User Image">
         {% endif %}
       </div>
       <div class="info">
+        {% if user.first_name or user.last_name %}
+        <a href="#user-profile" class="d-block">{{ user.first_name }} {{ user.last_name }}</a>
+        {% else %}
         <a href="#user-profile" class="d-block">{{ user.email }}</a>
+        {% endif %}
       </div>
     </div>
 

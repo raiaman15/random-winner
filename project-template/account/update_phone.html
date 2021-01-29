@@ -3,7 +3,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Update Profile {% endblock %}
+{% block title %} Update Phone {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini layout-fixed {% endblock body_class %}
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Update Profile</h1>
+                    <h1 class="m-0">Update Phone Number</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Update Profile</li>
+                        <li class="breadcrumb-item active">Update Phone Number</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -45,7 +45,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Update Profile
+                                Update Phone Number
                             </h3>
 
                             <div class="card-tools">
@@ -70,16 +70,10 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.picture and user.first_name or user.lastname %}
-                        <div class="card-footer text-center">
-                            <a href="{% url 'update_kyc' %}" class="btn btn-primary">PROCEED TO KYC</a>
-                        </div>
-                        {% else %}
                         <div class="card-footer text-justify">
-                            Your actual photograph must be uploaded here. It will be compared with the KYC document
-                            later.
+                            You will recieve an OTP on the number. Kindly ensure proper network coverage for the
+                            verification.
                         </div>
-                        {% endif %}
                         <!-- /.Help Text -->
                     </div>
                     <!-- /.card -->

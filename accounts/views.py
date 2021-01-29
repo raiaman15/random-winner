@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import (
 from django.db.models import Q
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
 from .models import CustomUser
+from .forms import CustomUserProfileUpdateForm
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 
@@ -12,10 +13,16 @@ from django.urls import reverse, reverse_lazy
 class UserStatusView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
-        if not request.user.kyc_verified:
-            return redirect(f'/accounts/update-kyc/{request.user.id}')
-        elif not request.user.phone_verified:
-            return reverse('dashboard')
+        user = request.user
+        if not (user.first_name or user.last_name) and user.picture:
+            return redirect(f'/accounts/profile/{request.user.id}')
+            # return reverse_lazy('update_profile')
+        elif not user.kyc_verified:
+            # return redirect(f'/accounts/kyc/{request.user.id}')
+            return reverse_lazy('update_kyc')
+        elif not user.phone_verified:
+            # return redirect(f'/accounts/phone/{request.user.id}')
+            return reverse_lazy('update_phone')
         else:
             return reverse('dashboard')
 
@@ -40,9 +47,38 @@ class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
     context_object_name = 'user'
     template_name = 'account/update_profile.html'
     login_url = 'account_login'
+    success_url = reverse_lazy('update_profile')
+
+    def get_object(self):
+        return self.request.user
+
+
+class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    fields = ['kyc']
+    context_object_name = 'user'
+    template_name = 'account/update_kyc.html'
+    login_url = 'account_login'
 
     def get_success_url(self):
-        return f'/accounts/update-profile/{self.request.user.id}'
+        return f'/accounts/kyc/{self.request.user.id}'
+
+    def get_object(self):
+        return self.request.user
+
+
+class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    fields = ['phone']
+    context_object_name = 'user'
+    template_name = 'account/update_profile.html'
+    login_url = 'account_login'
+
+    def get_success_url(self):
+        return f'/accounts/phone/verify/{self.request.user.id}'
+
+    def get_object(self):
+        return self.request.user.profile
 
 
 class SearchResultsListView(ListView):

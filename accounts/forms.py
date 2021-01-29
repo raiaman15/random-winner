@@ -23,7 +23,7 @@ class CustomUserAdminForm(forms.ModelForm):
                   'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
 
 
-class CustomUserProfileForm(forms.ModelForm):
+class CustomUserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('first_name', 'last_name', 'picture')
