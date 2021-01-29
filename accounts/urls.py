@@ -12,5 +12,5 @@ urlpatterns = [
     path('dashboard', DashboardView.as_view(), name='dashboard'),
     path('search/', SearchResultsListView.as_view(),
          name='search_results'),
-    path('status', UserStatusView.as_view(), name='user_status'),
+    path('status', UserStatusView.as_view(), name='status'),
 ]

@@ -7,24 +7,22 @@ from django.views.generic import View, ListView, DetailView, UpdateView, Templat
 from .models import CustomUser
 from .forms import CustomUserProfileUpdateForm
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
+from django.http import HttpResponse
 
 
 class UserStatusView(LoginRequiredMixin, View):
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         user = request.user
         if not (user.first_name or user.last_name) and user.picture:
-            return redirect(f'/accounts/profile/{request.user.id}')
-            # return reverse_lazy('update_profile')
+            return redirect('profile')
         elif not user.kyc_verified:
-            # return redirect(f'/accounts/kyc/{request.user.id}')
-            return reverse_lazy('update_kyc')
+            return redirect('kyc')
         elif not user.phone_verified:
-            # return redirect(f'/accounts/phone/{request.user.id}')
-            return reverse_lazy('update_phone')
+            return redirect('phone')
         else:
-            return reverse('dashboard')
+            return redirect('dashboard')
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -62,7 +60,7 @@ class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('kyc')
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
 class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
@@ -74,7 +72,7 @@ class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('phone')
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
 class SearchResultsListView(ListView):
