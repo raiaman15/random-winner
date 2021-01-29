@@ -10,7 +10,7 @@ CustomUser = get_user_model()
 @admin.register(get_user_model())
 class CustomUserAdmin(admin.ModelAdmin):
     form = CustomUserAdminForm
-    list_display = ('email', 'username', 'date_joined', 'kyc_verified', 'phone_verified',
+    list_display = ('first_name', 'last_name', 'email', 'kyc', 'kyc_verified', 'phone', 'phone_verified',
                     'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
     list_filter = ('kyc_verified', 'phone_verified',
                    'is_willing_master', 'is_verified_master')

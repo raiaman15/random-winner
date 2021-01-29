@@ -45,9 +45,9 @@ class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'picture']
     context_object_name = 'user'
-    template_name = 'account/update_profile.html'
+    template_name = 'account/profile.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('update_profile')
+    success_url = reverse_lazy('profile')
 
     def get_object(self):
         return self.request.user
@@ -57,9 +57,9 @@ class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['kyc']
     context_object_name = 'user'
-    template_name = 'account/update_kyc.html'
+    template_name = 'account/kyc.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('update_kyc')
+    success_url = reverse_lazy('kyc')
 
     def get_object(self):
         return self.request.user
@@ -69,9 +69,9 @@ class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['phone']
     context_object_name = 'user'
-    template_name = 'account/update_phone.html'
+    template_name = 'account/phone.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('update_phone')
+    success_url = reverse_lazy('phone')
 
     def get_object(self):
         return self.request.user

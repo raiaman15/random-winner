@@ -3,10 +3,10 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Update Phone {% endblock %}
+{% block title %} KYC {% endblock %}
 
 <!-- Element injected in the BODY element -->
-{% block body_class %} sidebar-mini layout-fixed {% endblock body_class %}
+{% block body_class %} sidebar-mini {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Update Phone Number</h1>
+                    <h1 class="m-0">KYC</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Update Phone Number</li>
+                        <li class="breadcrumb-item active">KYC</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -41,11 +41,11 @@
                 <!-- Left col -->
                 <section class="col-lg-6 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card elevation-2">
+                    <div class="card bg-white elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Update Phone Number
+                                Update KYC
                             </h3>
 
                             <div class="card-tools">
@@ -70,17 +70,24 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.phone_verified %}
+                        {% if user.kyc_verified %}
                         <div class="card-footer text-center">
-                            <a href="{% url 'update_kyc' %}" class="btn btn-danger">BACK TO UPDATE KYC</a>
-                            <a href="{% url 'dashboard' %}" class="btn btn-success">PROCEED TO DASHBOARD</a>
+                            <a href="{% url 'profile' %}" class="btn btn-danger">BACK TO UPDATE PROFILE</a>
+                            <a href="{% url 'phone' %}" class="btn btn-success">PROCEED TO UPDATE PHONE
+                                NUMBER</a>
+                        </div>
+                        {% elif user.kyc %}
+                        <div class="card-footer text-center">
+                            Your KYC verification is in progress. It may take some time for the verification to
+                            complete. Please visit back in some time to proceed further.
+                            <br />
+
                         </div>
                         {% else %}
                         <div class="card-footer text-center">
-                            You will recieve an OTP on the number. Kindly ensure proper network coverage for the
-                            verification.
+                            It might take upto 48 hours for the KYC document verification.
                             <br />
-                            <a href="{% url 'update_kyc' %}" class="btn btn-danger">BACK TO UPDATE KYC</a>
+                            <a href="{% url 'profile' %}" class="btn btn-danger">BACK TO UPDATE PROFILE</a>
                         </div>
                         {% endif %}
                         <!-- /.Help Text -->

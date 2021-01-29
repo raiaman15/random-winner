@@ -1,10 +1,10 @@
 {% load static %}
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-light-primary elevation-4 text-black">
   <!-- Brand Logo -->
   <a href="{% url 'dashboard' %}" class="brand-link">
     <img src="{% static 'logo.png' %}" alt="{{PRODUCT_NAME}} Logo" class="brand-image" style="opacity: .8;">
-    <span class="brand-text font-weight-light">{{PRODUCT_NAME}}</span>
+    <span class="brand-text font-weight-bold">{{PRODUCT_NAME}}</span>
   </a>
 
   <!-- Sidebar -->
@@ -34,7 +34,7 @@
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <a href="{% url 'dashboard' %}" class="nav-link">
+          <a href="{% url 'dashboard' %}" class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
               Dashboard
@@ -44,25 +44,49 @@
 
         <li class="nav-header">MY ACCOUNT</li>
         <li class="nav-item">
-          <a href="pages/widgets.html" class="nav-link">
+          <a href="{% url 'profile' %}" class="nav-link {% if 'profile' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-id-card"></i>
             <p>
-              KYC Documents
+              My Profile
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link">
+          <a href="{% url 'kyc' %}" class="nav-link {% if 'kyc' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-id-card"></i>
+            <p>
+              My KYC Documents
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'phone' %}" class="nav-link {% if 'phone' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-id-card"></i>
+            <p>
+              My Phone Number
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="pages/kanban.html" class="nav-link {% if 'balance' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-wallet"></i>
             <p>
-              Balance & Investment
+              Balance
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="pages/kanban.html" class="nav-link {% if 'investment' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-wallet"></i>
+            <p>
+              Investment
             </p>
           </a>
         </li>
 
         <li class="nav-header">POOLS</li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link">
+          <a href="pages/kanban.html" class="nav-link {% if 'pools' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-columns"></i>
             <p>
               All Available Pools
@@ -70,7 +94,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/calendar.html" class="nav-link">
+          <a href="pages/calendar.html" class="nav-link {% if 'poolmaster' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-calendar-alt"></i>
             <p>
               My Poolmaster Pools
@@ -78,7 +102,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/gallery.html" class="nav-link">
+          <a href="pages/gallery.html" class="nav-link {% if 'poolmember' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-image"></i>
             <p>
               My Investment Pools
@@ -88,7 +112,7 @@
 
         <li class="nav-header">USERS</li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link">
+          <a href="pages/kanban.html" class="nav-link {% if 'users' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-columns"></i>
             <p>
               All Available USERS
@@ -96,7 +120,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/calendar.html" class="nav-link">
+          <a href="pages/calendar.html" class="nav-link {% if 'poolmasteruser' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-calendar-alt"></i>
             <p>
               All Poolmasters
@@ -104,7 +128,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/gallery.html" class="nav-link">
+          <a href="pages/gallery.html"
+            class="nav-link  {% if 'willing-poolmasteruser' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-image"></i>
             <p>
               Poolmaster Invites

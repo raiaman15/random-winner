@@ -19,8 +19,7 @@ class CustomUserChangeForm(UserChangeForm):
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'picture', 'kyc', 'phone', 'kyc_verified', 'phone_verified',
-                  'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
+        fields = ('kyc_verified', 'is_verified_master',)
 
 
 class CustomUserProfileUpdateForm(forms.ModelForm):
