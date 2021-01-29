@@ -71,10 +71,19 @@
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
                         {% if user.kyc_verified %}
-                        <div class="card-footer text-center">
-                            <a href="{% url 'profile' %}" class="btn btn-danger">BACK TO UPDATE PROFILE</a>
-                            <a href="{% url 'phone' %}" class="btn btn-success">PROCEED TO UPDATE PHONE
-                                NUMBER</a>
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">
+                                    You have successfully updated your KYC.
+                                </p>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <p class="float-sm-right">
+                                    <a href="{% url 'phone' %}" class="btn btn-sm btn-success">
+                                        PROCEED TO UPDATE PHONE NUMBER
+                                    </a>
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% elif user.kyc %}
                         <div class="card-footer text-center">
@@ -84,10 +93,19 @@
 
                         </div>
                         {% else %}
-                        <div class="card-footer text-center">
-                            It might take upto 48 hours for the KYC document verification.
-                            <br />
-                            <a href="{% url 'profile' %}" class="btn btn-danger">BACK TO UPDATE PROFILE</a>
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">
+                                    <a href="{% url 'profile' %}" class="btn btn-sm btn-danger">
+                                        BACK TO UPDATE PROFILE
+                                    </a>
+                                </p>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <p class="float-sm-right">
+                                    Your profile is incomplete; kindly fill all the fields here.
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% endif %}
                         <!-- /.Help Text -->

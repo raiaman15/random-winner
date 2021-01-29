@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
+from config.validators import validate_aadhaar_number
 
 
 class CustomUser(AbstractUser):
@@ -16,9 +17,13 @@ class CustomUser(AbstractUser):
         upload_to='picture/', blank=True,
         help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format.'
     )
+    aadhaar_number = models.CharField(
+        max_length=12, validators=[validate_aadhaar_number], blank=True,
+        help_text='Your 12 digit Aadhaar Number (as written on your aadhaar card).'
+    )
     kyc = models.ImageField(
         upload_to='kyc/', blank=True,
-        help_text='Your photo ID (preferably Aadhaar Card) in .png or .jpg format.'
+        help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format.'
     )
     kyc_verified = models.BooleanField(default=False)
     phone = models.CharField(

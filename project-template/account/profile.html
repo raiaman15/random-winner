@@ -71,13 +71,22 @@
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
                         {% if user.picture and user.first_name or user.lastname %}
-                        <div class="card-footer text-center">
-                            <a href="{% url 'kyc' %}" class="btn btn-success">PROCEED TO UPDATE KYC</a>
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">You have successfully updated your profile.</p>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <p class="float-sm-right">
+                                    <a href="{% url 'kyc' %}" class="btn btn-sm btn-success">
+                                        PROCEED TO UPDATE KYC
+                                    </a>
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% else %}
                         <div class="card-footer text-center">
-                            Your actual photograph must be uploaded here. It will be compared with the KYC document
-                            later.
+                            Your profile is incomplete; kindly fill all the fields here. Your actual photograph must be
+                            uploaded here. It will be compared with the KYC document later.
                         </div>
                         {% endif %}
                         <!-- /.Help Text -->

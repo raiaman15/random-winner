@@ -76,11 +76,19 @@
                             <a href="{% url 'dashboard' %}" class="btn btn-success">PROCEED TO DASHBOARD</a>
                         </div>
                         {% else %}
-                        <div class="card-footer text-center">
-                            You will recieve an OTP on the number. Kindly ensure proper network coverage for the
-                            verification.
-                            <br />
-                            <a href="{% url 'kyc' %}" class="btn btn-danger">BACK TO UPDATE KYC</a>
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">
+                                    <a href="{% url 'kyc' %}" class="btn btn-sm btn-danger">
+                                        BACK TO UPDATE KYC
+                                    </a>
+                                </p>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <p class="float-sm-right">
+                                    Kindly ensure proper network coverage for the OTP verification.
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% endif %}
                         <!-- /.Help Text -->

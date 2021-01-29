@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
 from .models import CustomUser
 from .forms import CustomUserProfileUpdateForm
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 
 
@@ -50,12 +50,12 @@ class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('profile')
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
 class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['kyc']
+    fields = ['aadhaar_number', 'kyc']
     context_object_name = 'user'
     template_name = 'account/kyc.html'
     login_url = 'account_login'
