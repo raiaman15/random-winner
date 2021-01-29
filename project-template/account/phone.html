@@ -72,15 +72,15 @@
                         <!-- Help Text -->
                         {% if user.phone_verified %}
                         <div class="card-footer text-center">
-                            <a href="{% url 'kyc' %}" class="btn btn-danger">BACK TO UPDATE KYC</a>
+                            <a href="{% url 'identity' %}" class="btn btn-danger">BACK TO UPDATE Identity</a>
                             <a href="{% url 'dashboard' %}" class="btn btn-success">PROCEED TO DASHBOARD</a>
                         </div>
                         {% else %}
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-6">
                                 <p class="float-sm-left">
-                                    <a href="{% url 'kyc' %}" class="btn btn-sm btn-danger">
-                                        BACK TO UPDATE KYC
+                                    <a href="{% url 'identity' %}" class="btn btn-sm btn-danger">
+                                        BACK TO UPDATE Identity
                                     </a>
                                 </p>
                             </div><!-- /.col -->

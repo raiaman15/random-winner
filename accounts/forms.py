@@ -12,14 +12,14 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'picture', 'kyc',
-                  'phone', 'kyc_verified', 'phone_verified')
+        fields = ('email', 'username', 'picture', 'identity_proof',
+                  'phone', 'identity_verified', 'phone_verified')
 
 
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('kyc_verified', 'is_verified_master',)
+        fields = ('identity_verified', 'is_verified_master',)
 
 
 class CustomUserProfileUpdateForm(forms.ModelForm):

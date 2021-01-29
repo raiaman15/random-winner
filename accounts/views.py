@@ -15,10 +15,10 @@ class UserStatusView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-        if not (user.first_name or user.last_name) and user.picture:
+        if not ((user.first_name or user.last_name) and user.picture):
             return redirect('profile')
-        elif not user.kyc_verified:
-            return redirect('kyc')
+        elif not user.identity_verified:
+            return redirect('identity')
         elif not user.phone_verified:
             return redirect('phone')
         else:
@@ -51,13 +51,13 @@ class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
-class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
+class UserUpdateIdentityView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['aadhaar_number', 'kyc']
+    fields = ['aadhaar_number', 'identity_proof']
     context_object_name = 'user'
-    template_name = 'account/kyc.html'
+    template_name = 'account/identity.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('kyc')
+    success_url = reverse_lazy('identity')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)

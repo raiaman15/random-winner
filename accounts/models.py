@@ -21,11 +21,11 @@ class CustomUser(AbstractUser):
         max_length=12, validators=[validate_aadhaar_number], blank=True,
         help_text='Your 12 digit Aadhaar Number (as written on your aadhaar card).'
     )
-    kyc = models.ImageField(
-        upload_to='kyc/', blank=True,
+    identity_proof = models.ImageField(
+        upload_to='identity/', blank=True,
         help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format.'
     )
-    kyc_verified = models.BooleanField(default=False)
+    identity_verified = models.BooleanField(default=False)
     phone = models.CharField(
         max_length=17, blank=True, help_text='Your valid mobile number for OTP verification.'
     )
@@ -38,11 +38,11 @@ class CustomUser(AbstractUser):
         default=0.00, max_digits=7, decimal_places=2)
 
     def apply_for_master(self):
-        if self.kyc_verified and self.phone_verified:
+        if self.identity_verified and self.phone_verified:
             self.is_willing_master = True
 
     def apply_for_withdrawal(self, amount):
-        if self.kyc_verified and self.phone_verified:
+        if self.identity_verified and self.phone_verified:
             pass
             # TODO-NORMAL: Raise request for admin.
 

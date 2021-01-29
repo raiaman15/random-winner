@@ -3,7 +3,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} KYC {% endblock %}
+{% block title %} Identity {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">KYC</h1>
+                    <h1 class="m-0">Identity</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">KYC</li>
+                        <li class="breadcrumb-item active">Identity</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -45,7 +45,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Update KYC
+                                Update Identity
                             </h3>
 
                             <div class="card-tools">
@@ -70,11 +70,11 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.kyc_verified %}
+                        {% if user.identity_verified %}
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-6">
                                 <p class="float-sm-left">
-                                    You have successfully updated your KYC.
+                                    You have successfully updated your Identity.
                                 </p>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
@@ -85,9 +85,9 @@
                                 </p>
                             </div><!-- /.col -->
                         </div>
-                        {% elif user.kyc %}
+                        {% elif user.identity %}
                         <div class="card-footer text-center">
-                            Your KYC verification is in progress. It may take some time for the verification to
+                            Your Identity verification is in progress. It may take some time for the verification to
                             complete. Please visit back in some time to proceed further.
                             <br />
 
