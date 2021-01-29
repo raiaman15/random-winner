@@ -11,7 +11,7 @@
     <p>Balance Amount: {{ user.balance_investment }}</p>
     <p>Invested Amount: {{ user.balance_investment }}</p>
     <p>Identity Verified: {% if user.identity_verified %} Yes {% else %} No {% endif %}</p>
-    <p>Phone Verified: {% if user.phone_verified %} Yes {% else %} No {% endif %}</p>
+    <p>Phone Verified: {% if user.contact_verified %} Yes {% else %} No {% endif %}</p>
     {% if user.is_verified_master %}
     <div>
         <h3>Pool Master of Pools</h3>

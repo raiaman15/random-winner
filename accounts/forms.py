@@ -13,7 +13,7 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = get_user_model()
         fields = ('email', 'username', 'picture', 'identity_proof',
-                  'phone', 'identity_verified', 'phone_verified')
+                  'contact_number', 'identity_verified', 'contact_verified')
 
 
 class CustomUserAdminForm(forms.ModelForm):

@@ -19,8 +19,8 @@ class UserStatusView(LoginRequiredMixin, View):
             return redirect('profile')
         elif not user.identity_verified:
             return redirect('identity')
-        elif not user.phone_verified:
-            return redirect('phone')
+        elif not user.contact_verified:
+            return redirect('contact')
         else:
             return redirect('dashboard')
 
@@ -65,11 +65,11 @@ class UserUpdateIdentityView(LoginRequiredMixin, UpdateView):
 
 class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['phone']
+    fields = ['contact']
     context_object_name = 'user'
-    template_name = 'account/phone.html'
+    template_name = 'account/contact.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('phone')
+    success_url = reverse_lazy('contact')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)

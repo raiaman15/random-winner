@@ -26,10 +26,10 @@ class CustomUser(AbstractUser):
         help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format.'
     )
     identity_verified = models.BooleanField(default=False)
-    phone = models.CharField(
+    contact_number = models.CharField(
         max_length=17, blank=True, help_text='Your valid mobile number for OTP verification.'
     )
-    phone_verified = models.BooleanField(default=False)
+    contact_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
     is_verified_master = models.BooleanField(default=False)
     balance_amount = models.DecimalField(
@@ -38,16 +38,22 @@ class CustomUser(AbstractUser):
         default=0.00, max_digits=7, decimal_places=2)
 
     def apply_for_master(self):
-        if self.identity_verified and self.phone_verified:
+        if self.identity_verified and self.contact_verified:
             self.is_willing_master = True
 
     def apply_for_withdrawal(self, amount):
-        if self.identity_verified and self.phone_verified:
+        if self.identity_verified and self.contact_verified:
             pass
             # TODO-NORMAL: Raise request for admin.
 
     def __str__(self):
         return self.email
+
+
+class PhoneNumberOTP(models.Model):
+    contact_number = models.CharField(
+        max_length=17, blank=False, unique=True
+    )
 
 
 class BalanceTransaction(models.Model):
