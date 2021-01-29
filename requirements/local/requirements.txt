@@ -9,3 +9,4 @@ Werkzeug==1.0.1
 pyOpenSSL==20.0.1 
 django-extensions==3.1.0
 django-livesync==0.5
+pyotp==2.4.1
