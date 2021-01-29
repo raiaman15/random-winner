@@ -34,15 +34,15 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     login_url = 'account_login'
 
 
-class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
+class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['first_name', 'last_name', 'picture', 'kyc_document']
+    fields = ['first_name', 'last_name', 'picture']
     context_object_name = 'user'
-    template_name = 'account/update-kyc.html'
+    template_name = 'account/update_profile.html'
     login_url = 'account_login'
 
     def get_success_url(self):
-        return f'/accounts/update-kyc/{self.request.user.id}'
+        return f'/accounts/update-profile/{self.request.user.id}'
 
 
 class SearchResultsListView(ListView):

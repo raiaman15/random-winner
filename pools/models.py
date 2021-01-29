@@ -12,10 +12,10 @@ class Pool(models.Model):
         default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False, editable=False,
     )
     master = models.ForeignKey(
-        get_user_model(), on_delete=models.PROTECT, related_name='master', blank=False, editable=False,
+        get_user_model(), on_delete=models.PROTECT, related_name='master_of_pools', blank=False, editable=False,
     )
     members = models.ManyToManyField(
-        get_user_model(), through="PoolMember", related_name='member', blank=True
+        get_user_model(), through="PoolMember", related_name='member_of_pools', blank=True
     )
 
     def save(self, *args, **kwargs):

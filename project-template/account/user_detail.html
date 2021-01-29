@@ -1,0 +1,47 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}{{ user.first_name }} {{ user.last_name }}{% endblock title %}
+
+{% block content %}
+<div class="pool-detail">
+
+    <h2><a href="">{{ user.first_name }} {{ user.last_name }}</a></h2>
+    <p>Email ID: {{ user.email }}</p>
+    <p>Joined Since: {{ user.date_joined }}</p>
+    <p>Balance Amount: {{ user.balance_investment }}</p>
+    <p>Invested Amount: {{ user.balance_investment }}</p>
+    <p>KYC Verified: {% if user.kyc_verified %} Yes {% else %} No {% endif %}</p>
+    <p>Phone Verified: {% if user.phone_verified %} Yes {% else %} No {% endif %}</p>
+    {% if user.is_verified_master %}
+    <div>
+        <h3>Pool Master of Pools</h3>
+        <ul>
+            {% if user.master_of_pools %}
+            {% for pool in user.master_of_pools %}
+            <li>
+                {{pool.name}}
+            </li>
+            {% endfor %}
+            {% endif %}
+
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if user.is_verified_master %}
+    <div>
+        <h3>Pool Member of Pools</h3>
+        <ul>
+            {% if user.member_of_pools %}
+            {% for pool in user.member_of_pools %}
+            <li>
+                {{pool.name}}
+            </li>
+            {% endfor %}
+            {% endif %}
+
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

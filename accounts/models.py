@@ -16,8 +16,8 @@ class CustomUser(AbstractUser):
         upload_to='picture/', blank=True,
         help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format.'
     )
-    kyc_document = models.ImageField(
-        upload_to='kyc_documents/', blank=True,
+    kyc = models.ImageField(
+        upload_to='kyc/', blank=True,
         help_text='Your photo ID (preferably Aadhaar Card) in .png or .jpg format.'
     )
     kyc_verified = models.BooleanField(default=False)
@@ -27,9 +27,9 @@ class CustomUser(AbstractUser):
     phone_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
     is_verified_master = models.BooleanField(default=False)
-    balance_cash = models.DecimalField(
+    balance_amount = models.DecimalField(
         default=0.00, max_digits=7, decimal_places=2)
-    balance_investment = models.DecimalField(
+    investment_amount = models.DecimalField(
         default=0.00, max_digits=7, decimal_places=2)
 
     def apply_for_master(self):
