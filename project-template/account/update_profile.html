@@ -72,10 +72,10 @@
                         <!-- Help Text -->
                         {% if user.picture and user.first_name or user.lastname %}
                         <div class="card-footer text-center">
-                            <a href="{% url 'update_kyc' %}" class="btn btn-primary">PROCEED TO KYC</a>
+                            <a href="{% url 'update_kyc' %}" class="btn btn-success">PROCEED TO UPDATE KYC</a>
                         </div>
                         {% else %}
-                        <div class="card-footer text-justify">
+                        <div class="card-footer text-center">
                             Your actual photograph must be uploaded here. It will be compared with the KYC document
                             later.
                         </div>

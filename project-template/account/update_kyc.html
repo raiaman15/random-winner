@@ -70,10 +70,20 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        <div class="card-footer text-justify">
+                        {% if user.kyc_verified %}
+                        <div class="card-footer text-center">
+                            <a href="{% url 'update_profile' %}" class="btn btn-danger">BACK TO UPDATE PROFILE</a>
+                            <a href="{% url 'update_phone' %}" class="btn btn-success">PROCEED TO UPDATE PHONE
+                                NUMBER</a>
+                        </div>
+                        {% else %}
+                        <div class="card-footer text-center">
                             It might take upto 48 hours for the KYC document verification. You would recieve an
                             e-mail from our end for the KYC related updates.
+                            <br />
+                            <a href="{% url 'update_profile' %}" class="btn btn-danger">BACK TO UPDATE PROFILE</a>
                         </div>
+                        {% endif %}
                         <!-- /.Help Text -->
                     </div>
                     <!-- /.card -->

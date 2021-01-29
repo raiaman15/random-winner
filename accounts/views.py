@@ -59,9 +59,7 @@ class UserUpdateKYCView(LoginRequiredMixin, UpdateView):
     context_object_name = 'user'
     template_name = 'account/update_kyc.html'
     login_url = 'account_login'
-
-    def get_success_url(self):
-        return f'/accounts/kyc/{self.request.user.id}'
+    success_url = reverse_lazy('update_kyc')
 
     def get_object(self):
         return self.request.user
@@ -71,14 +69,12 @@ class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['phone']
     context_object_name = 'user'
-    template_name = 'account/update_profile.html'
+    template_name = 'account/update_phone.html'
     login_url = 'account_login'
-
-    def get_success_url(self):
-        return f'/accounts/phone/verify/{self.request.user.id}'
+    success_url = reverse_lazy('update_phone')
 
     def get_object(self):
-        return self.request.user.profile
+        return self.request.user
 
 
 class SearchResultsListView(ListView):
