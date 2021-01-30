@@ -206,17 +206,17 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <td>Name</td>
-                                        <td>Size</td>
-                                        <td>Filled</td>
-                                        <td>Investment</td>
+                                        <th>NAME</th>
+                                        <th>SIZE</th>
+                                        <th>FILLED</th>
+                                        <th>INVESTMENT</th>
                                     </tr>
                                 </thead>
                                 {% if user.master_of_pools.all %}
                                 <tbody>
                                     {% for pool in user.master_of_pools.all %}
                                     <tr>
-                                        <td>{{pool.name}}</td>
+                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
                                         <td>{{pool.members.count}}</td>
                                         <td>
@@ -250,18 +250,20 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <td>Name</td>
-                                        <td>Size</td>
-                                        <td>Investment</td>
-                                        <td>PoolMaster</td>
+                                        <th>NAME</th>
+                                        <th>SIZE</th>
+                                        <th>FILLED</th>
+                                        <th>INVESTMENT</th>
+                                        <th>POOLMASTER</th>
                                     </tr>
                                 </thead>
                                 {% if user.member_of_pools.all %}
                                 <tbody>
                                     {% for pool in user.member_of_pools.all %}
                                     <tr>
-                                        <td>{{pool.name}}</td>
+                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
+                                        <td>{{pool.members.count}}</td>
                                         <td>{{pool.investment|intcomma}}</td>
                                         <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
                                     </tr>

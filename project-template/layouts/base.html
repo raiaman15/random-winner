@@ -28,9 +28,21 @@
   <!-- Specific Page CSS goes HERE  -->
   {% block stylesheets %}{% endblock stylesheets %}
 
+  <!-- Dark Theme Patch -->
+  <style>
+    a.nav-link>p,
+    a.nav-link>i {
+      color: #212529;
+    }
+
+    a.nav-link.active {
+      background: #0000001A;
+    }
+  </style>
+
 </head>
 
-<body class="hold-transition {% block body_class %}{% endblock body_class %} dark-mode">
+<body class="hold-transition {% block body_class %}{% endblock body_class %} sidebar-collapse dark-mode">
   <div class="wrapper">
 
     {% include 'includes/navigation.html' %}

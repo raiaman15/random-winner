@@ -32,37 +32,13 @@
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+
+        <li class="nav-header">MY ACCOUNT</li>
         <li class="nav-item">
           <a href="{% url 'dashboard' %}" class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
               Dashboard
-            </p>
-          </a>
-        </li>
-
-        <li class="nav-header">MY ACCOUNT</li>
-        <li class="nav-item">
-          <a href="{% url 'profile' %}" class="nav-link {% if 'profile' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-id-card"></i>
-            <p>
-              My Profile
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'identity' %}" class="nav-link {% if 'identity' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-id-card"></i>
-            <p>
-              My Identity Proof
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'contact' %}" class="nav-link {% if 'contact' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-id-card"></i>
-            <p>
-              My Contact Number
             </p>
           </a>
         </li>
@@ -76,7 +52,7 @@
         </li>
         <li class="nav-item">
           <a href="pages/kanban.html" class="nav-link {% if 'investment' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-wallet"></i>
+            <i class="nav-icon fas fa-chart-line"></i>
             <p>
               Investment
             </p>
@@ -85,8 +61,8 @@
 
         <li class="nav-header">POOLS</li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link {% if 'pools' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-columns"></i>
+          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools' in request.path %}active{% endif %}">
+            <i class="nav-icon fab fa-galactic-republic"></i>
             <p>
               Pool List
             </p>
@@ -112,7 +88,7 @@
         <li class="nav-header">USERS</li>
         <li class="nav-item">
           <a href="{% url 'user_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-columns"></i>
+            <i class="nav-icon fas fa-users"></i>
             <p>
               User List
             </p>

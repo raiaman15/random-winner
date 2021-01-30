@@ -30,7 +30,7 @@
 
 </head>
 
-<body class="hold-transition {% block body_class %}{% endblock body_class %}">
+<body class="hold-transition {% block body_class %}{% endblock body_class %} dark-mode">
   {% block content %}{% endblock content %}
 
   <!-- Generic JS goes HERE  -->
@@ -45,6 +45,11 @@
 
   <!-- Specific Page JS goes HERE  -->
   {% block javascripts %}{% endblock javascripts %}
+
+  <!-- Dark Theme Patch -->
+  <script>
+    $(".textinput").css({ "background-color": "white", "color": "black", "border": "1px solid black" });
+  </script>
 
 </body>
 

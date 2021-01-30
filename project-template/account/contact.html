@@ -1,9 +1,10 @@
 {% extends "layouts/base.html" %}
 
 {% load static %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
-{% block title %} Contact {% endblock %}
+{% block title %}Contact Verification{% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -25,7 +26,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Contact</li>
+                        <li class="breadcrumb-item active">Contact Verification</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -45,7 +46,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Update Contact Number
+                                Contact Number Verification
                             </h3>
 
                             <div class="card-tools">
@@ -66,7 +67,7 @@
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Verify">
+                                <input type="submit" value="Send OTP">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
@@ -106,9 +107,88 @@
                     <!-- /.card -->
                 </section>
                 <!-- /.Left col -->
-                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
+                <!-- Right col -->
                 <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:100%;">
+                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
+                    <div class="col-md-12">
+                        <div class="timeline">
+                            <!-- timeline time label -->
+                            <div class="time-label text-left">
+                                <span class="bg-red"><i class="fas fa-clipboard-list"></i> ONBOARDING PROCESS</span>
+                            </div>
+                            <!-- /.timeline-label -->
+                            <!-- timeline item -->
+                            <div>
+                                <i class="fas fa-envelope bg-success"></i>
+                                <div class="timeline-item">
+                                    <span class="time"><i class="fas fa-clock"></i>
+                                        {{user.date_joined|naturaltime}}
+                                    </span>
+                                    <h3 class="timeline-header text-left">
+                                        <a href="#">Email Verified Profile Creation</a>
+                                        <small><strong>DONE</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        This email is primarily used for all further communications and invoices.
+                                        You have registered with {{user.email}} as your email ID.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            <!-- timeline item -->
+                            <div>
+                                <i class="fas fa-user bg-success"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header text-left">
+                                        <a href="#">Profile Completion</a>
+                                        <small><strong>DONE</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You update your name and photograph. These details would be used throughout the
+                                        website.
+                                        You won't be allowed to change these settings, once your identity is verified.
+                                        In case of any discrepency with the Identification Proof Documents, your profile
+                                        verification would fail!
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            <!-- timeline item -->
+                            <div>
+                                <i class="fas fa-id-card bg-success"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header text-left">
+                                        <a href="#">Identity Verification</a>
+                                        <small><strong>DONE</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You update your Identity Proof Details here, which is verified by our team.
+                                        Identity verification helps us in ensuring a legitimate user base for future
+                                        financial transactions.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            <!-- timeline item -->
+                            <div>
+                                <i class="fas fa-phone-alt bg-warning"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header text-left">
+                                        <a href="#">Contact Verification</a>
+                                        <small><strong>IN PROGRESS</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You update your Contact Number and verify the same using OTP. This is necessary
+                                        for all high priority communications and updates.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            <div>
+                                <i class="fas fa-check bg-success"></i>
+                            </div>
+                        </div>
+                    </div>
                 </section>
                 <!-- right col -->
             </div>

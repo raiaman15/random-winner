@@ -1,11 +1,138 @@
-{% extends 'layouts/base.html' %}
+{% extends "layouts/base.html" %}
 
-{% block title %}Pools{% endblock title %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %} Profile {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-{% for pool in pool_list %}
-<div>
-    <h2><a href="{{ pool.get_absolute_url }}">{{ pool.name }}</a></h2>
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Pool List</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Pool List</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Section -->
+                <section class="col-lg-12 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-warning elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fab fa-galactic-republic"></i>
+                                Pool List
+                            </h3>
+
+                            <div class="card-tools">
+                                <!-- SEARCH FORM -->
+                                <form action="{% url 'pool_search_results' %}" class="form-inline ml-3">
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control form-control-navbar bg-white border" type="search"
+                                            placeholder="Pool Search" aria-label="Pool Search" name="q">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-navbar bg-secondary" type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            <div class="card-body table-responsive p-0" style="height: 300px;">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>NAME</th>
+                                            <th>SIZE</th>
+                                            <th>FILLED</th>
+                                            <th>INVESTMENT</th>
+                                            <th>POOLMASTER</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pool in pool_list %}
+                                        <tr>
+                                            <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
+                                            <td>{{pool.size}}</td>
+                                            <td>{{pool.members.count}}</td>
+                                            <td>{{pool.investment|intcomma}}</td>
+                                            <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div><!-- /.card-body -->
+                        <!-- Pagination -->
+                        <div class="card-footer text-center">
+                            <div class="pagination">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        &laquo; First
+                                    </a>
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        Previous
+                                    </a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+
+                                    {% if page_obj.has_next %}
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        Next
+                                    </a>
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Last &raquo;
+                                    </a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                </section>
+                <!-- /.Section -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
 </div>
-{% endfor %}
+
 {% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

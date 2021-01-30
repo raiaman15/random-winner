@@ -27,7 +27,7 @@
   {% block extra_head %}{% endblock %}
 </head>
 
-<body class="hold-transition {% block body_class %} login-page {% endblock body_class %}">
+<body class="hold-transition {% block body_class %} login-page {% endblock body_class %} dark-mode">
   {% block body %}
 
 
@@ -87,6 +87,11 @@
 
   <!-- Specific Page Extra Body goes HERE  -->
   {% block extra_body %}{% endblock %}
+
+  <!-- Dark Theme Patch -->
+  <script>
+    $(".textinput").css({ "background-color": "white", "color": "black", "border": "1px solid black" });
+  </script>
 </body>
 
 </html>
