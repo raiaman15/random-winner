@@ -143,10 +143,18 @@
                                         <td>Aadhaar Number</td>
                                         <td>{{user.aadhaar_number}}</td>
                                     </tr>
+
                                     <tr>
                                         <td>Identity Proof</td>
-                                        <td>{{user.identity_proof.url}}</td>
+                                        <td>
+                                            {% if user.identity_proof %}
+                                            {{user.identity_proof.url}}
+                                            {% else %}
+                                            <span class="text-danger">NOT UPLOADED</span>
+                                            {% endif %}
+                                        </td>
                                     </tr>
+
                                     <tr>
                                         <td>Identity Verified</td>
                                         <td>
@@ -154,6 +162,10 @@
                                             <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
                                             <i class="fas fa-times-circle text-danger"></i>
+                                            |
+                                            <a href="https://resident.uidai.gov.in/verify" target="_blank">
+                                                Manual Verification
+                                            </a>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -172,80 +184,91 @@
                         </div>
                         <!-- /.card-body -->
                     </div>
-
-                    <div class="card bg-white elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-id-card"></i>
-                                Users List
-                            </h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool btn-fullscreen" title="Maximize">
-                                    <i class="fas fa-expand-arrows-alt"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Close">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-
-                        <div class="card-body">
-                            <h2><a href=""></a></h2>
-                            <p>Email ID: {{ user.email }}</p>
-                            <p>Joined Since: {{ user.date_joined }}</p>
-                            <p>Balance Amount: {{ user.balance_investment }}</p>
-                            <p>Invested Amount: {{ user.balance_investment }}</p>
-                            <p>Identity Verified: {% if user.identity_verified %} Yes {% else %} No {% endif %}</p>
-                            <p>Contact Verified: {% if user.contact_verified %} Yes {% else %} No {% endif %}</p>
-
-                            {% if user.identity_verified and user.contact_verified %}
-                            {% if user.member_of_pools.all %}
-                            <div>
-                                <h3>Pool Member of Pools</h3>
-                                <ul>
-                                    {% for pool in user.master_of_pools.all %}
-                                    <li>
-                                        {{pool.name}}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            {% endif %}
-                            {% endif %}
-
-                            {% if user.is_verified_master %}
-                            {% if user.master_of_pools.all %}
-                            <div>
-                                <h3>Pool Master of Pools</h3>
-                                <ul>
-                                    {% for pool in user.master_of_pools %}
-                                    <li>
-                                        {{pool.name}}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            {% endif %}
-                            {% endif %}
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            Actions
-                        </div>
-                        <!-- /.Pagination -->
-                    </div>
-                    <!-- /.card -->
                 </section>
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:100%;">
+                    {% if user.is_verified_master %}
+                    <div class="card bg-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">Master of Pools</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Size</td>
+                                        <td>Filled</td>
+                                        <td>Investment</td>
+                                    </tr>
+                                </thead>
+                                {% if user.master_of_pools.all %}
+                                <tbody>
+                                    {% for pool in user.master_of_pools.all %}
+                                    <tr>
+                                        <td>{{pool.name}}</td>
+                                        <td>{{pool.size}}</td>
+                                        <td>{{pool.members.count}}</td>
+                                        <td>{{pool.investment}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    {% endif %}
+
+                    <div class="card bg-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">Member of Pools</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            {% if user.identity_verified and user.contact_verified %}
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Size</td>
+                                        <td>Investment</td>
+                                        <td>PoolMaster</td>
+                                    </tr>
+                                </thead>
+                                {% if user.member_of_pools.all %}
+                                <tbody>
+                                    {% for pool in user.member_of_pools.all %}
+                                    <tr>
+                                        <td>{{pool.name}}</td>
+                                        <td>{{pool.size}}</td>
+                                        <td>{{pool.investment}}</td>
+                                        <td>{{pool.master}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                            {% endif %}
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
                 </section>
                 <!-- right col -->
             </div>
