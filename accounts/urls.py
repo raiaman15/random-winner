@@ -9,7 +9,7 @@ urlpatterns = [
     path('contact', UserContactView.as_view(), name='contact'),
     path('contact/verify', UserContactConfirmView.as_view(),
          name='contact_confirm'),
-    path('dashboard', DashboardView.as_view(), name='dashboard'),
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('search/', SearchResultsListView.as_view(),
          name='search_results'),
     path('status', UserStatusView.as_view(), name='status'),

@@ -1,6 +1,7 @@
 {% extends "layouts/base.html" %}
 
 {% load static %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
 {% block title %} User Detail {% endblock %}
@@ -218,7 +219,10 @@
                                         <td>{{pool.name}}</td>
                                         <td>{{pool.size}}</td>
                                         <td>{{pool.members.count}}</td>
-                                        <td>{{pool.investment}}</td>
+                                        <td>
+                                            {% widthratio pool.investment 1 pool.members.count %}
+                                            ({{pool.investment|intcomma}} / Member)
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -258,8 +262,8 @@
                                     <tr>
                                         <td>{{pool.name}}</td>
                                         <td>{{pool.size}}</td>
-                                        <td>{{pool.investment}}</td>
-                                        <td>{{pool.master}}</td>
+                                        <td>{{pool.investment|intcomma}}</td>
+                                        <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

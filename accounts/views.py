@@ -162,14 +162,10 @@ class SearchResultsListView(ListView):
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
+    model = CustomUser
+    context_object_name = 'user'
+    template_name = 'account/user_detail.html'
+    login_url = 'account_login'
 
-    def get_template_names(self):
-        user = self.request.user
-        if user.is_superuser and user.groups.filter(name='manager').exists():
-            return 'accounts/manager/dashboard.html'
-        elif user.is_staff and user.groups.filter(name='master').exists():
-            return 'accounts/master/dashboard.html'
-        elif user.is_active and user.groups.filter(name='member').exists():
-            return 'accounts/member/dashboard.html'
-        else:
-            return '403.html'
+    def get_object(self):
+        return get_object_or_404(self.model, pk=self.request.user.pk)
