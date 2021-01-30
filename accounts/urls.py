@@ -10,7 +10,6 @@ urlpatterns = [
     path('contact/verify', UserContactConfirmView.as_view(),
          name='contact_confirm'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('search/', SearchResultsListView.as_view(),
-         name='search_results'),
+    path('search/', SearchResultsListView.as_view(), name='user_search_results'),
     path('status', UserStatusView.as_view(), name='status'),
 ]

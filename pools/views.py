@@ -27,10 +27,8 @@ class PoolDetailView(
 class SearchResultsListView(ListView):
     model = Pool
     context_object_name = 'pool_list'
-    template_name = 'pools/search_results.html'
+    template_name = 'pools/pool_list.html'
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        return Pool.objects.filter(
-            Q(name__icontains=query) | Q(master__icontains=query)
-        )
+        return Pool.objects.filter(Q(name__icontains=query))

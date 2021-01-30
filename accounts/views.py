@@ -151,7 +151,8 @@ class UserContactConfirmView(LoginRequiredMixin, TemplateView):
 class SearchResultsListView(ListView):
     model = CustomUser
     context_object_name = 'user_list'
-    template_name = 'account/search_results.html'
+    template_name = 'account/user_list.html'
+    paginate_by = 25
 
     def get_queryset(self):
         query = self.request.GET.get('q')

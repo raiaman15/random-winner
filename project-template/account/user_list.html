@@ -38,26 +38,29 @@
         <div class="container-fluid">
             <!-- Main row -->
             <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-6 connectedSortable">
+                <!-- Section -->
+                <section class="col-lg-12 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-white elevation-2">
+                    <div class="card bg-warning elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-id-card"></i>
+                                <i class="fas fa-users"></i>
                                 Users List
                             </h3>
 
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool btn-fullscreen" title="Maximize">
-                                    <i class="fas fa-expand-arrows-alt"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Close">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                                <!-- SEARCH FORM -->
+                                <form action="{% url 'user_search_results' %}" class="form-inline ml-3">
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control form-control-navbar bg-white border" type="search"
+                                            placeholder="User Search" aria-label="User Search" name="q">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-navbar bg-secondary" type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
 
                         </div><!-- /.card-header -->
@@ -65,13 +68,13 @@
                         <div class="card-body">
                             <div class="card-body table-responsive p-0" style="height: 300px;">
 
-                                
-                                <table class="table table-bordered table-head-fixed text-nowrap">
-                                    <thead class="bg-primary">
+
+                                <table class="table">
+                                    <thead>
                                         <tr>
+                                            <th>Email</th>
                                             <th>First Name</th>
                                             <th>Last Name</th>
-                                            <th>Email</th>
                                             <th>Identity Verified</th>
                                             <th>Contact verified</th>
                                             <th>Willing PoolMaster</th>
@@ -79,10 +82,10 @@
                                     </thead>
                                     <tbody>
                                         {% for user in user_list %}
-                                        <tr onclick="{% url 'user_detail' user.id %}">
+                                        <tr>
+                                            <td><a href="{% url 'user_detail' user.id %}">{{ user.email }}</a></td>
                                             <td>{{ user.first_name }}</td>
                                             <td>{{ user.last_name }}</td>
-                                            <td>{{ user.email }}</td>
                                             <td>{{ user.identity_verified }}</td>
                                             <td>{{ user.contact_verified }}</td>
                                             <td>{{ user.is_willing_master }}</td>
@@ -107,7 +110,7 @@
                                     {% endif %}
 
                                     <span class="current">
-                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                                     </span>
 
                                     {% if page_obj.has_next %}
@@ -123,12 +126,7 @@
                         </div>
                         <!-- /.card -->
                 </section>
-                <!-- /.Left col -->
-                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:100%;">
-                </section>
-                <!-- right col -->
+                <!-- /.Section -->
             </div>
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->
