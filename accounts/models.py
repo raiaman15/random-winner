@@ -1,5 +1,4 @@
 import pyotp
-from datetime import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
@@ -41,24 +40,13 @@ class CustomUser(AbstractUser):
         default=0.00, max_digits=7, decimal_places=2)
 
     def generate_otp(self):
-        try:
-            attempt = ContactNumberOTP.objects.get(
-                contact_number=self.contact_number)
-            print((datetime.now() - attempt.created_at.replace(tzinfo=None)).seconds//60)
-            if (datetime.now() - attempt.created_at.replace(tzinfo=None)).seconds//60 > 5:
-                ContactNumberOTP.objects.get(
-                    contact_number=self.contact_number).delete()
-                return self.generate_otp()
-
-        except ContactNumberOTP.DoesNotExist:
-            # Generate fresh OTP
-            self.contact_secret = pyotp.random_base32()
-            totp = pyotp.TOTP(self.contact_secret, interval=60).now()
-            # TODO-URGENT: Send the OPT to contact number via SMS
-            print('-'*60+'\n'+f'OTP: {totp}'+'\n'+'-'*60)
-            ContactNumberOTP(
-                contact_number=self.contact_number, otp=totp).save()
-            return True
+        self.contact_secret = pyotp.random_base32()
+        totp = pyotp.TOTP(self.contact_secret, interval=125).now()
+        # TODO-URGENT: Send the OPT to contact number via SMS
+        print('-'*60+'\n'+f'OTP: {totp}'+'\n'+'-'*60)
+        ContactNumberOTP(
+            contact_number=self.contact_number, otp=totp).save()
+        return True
 
     def apply_for_master(self):
         if self.identity_verified and self.contact_verified:

@@ -71,16 +71,26 @@
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
                         {% if user.contact_verified %}
-                        <div class="card-footer text-center">
-                            <a href="{% url 'identity' %}" class="btn btn-danger">BACK TO UPDATE Identity</a>
-                            <a href="{% url 'dashboard' %}" class="btn btn-success">PROCEED TO DASHBOARD</a>
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">
+                                    You have successfully updated your Contact Number.
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="float-sm-right">
+                                    <a href="{% url 'dashboard' %}" class="btn btn-sm btn-success">
+                                        PROCEED TO DASHBOARD
+                                    </a>
+                                </p>
+                            </div>
                         </div>
                         {% else %}
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-6">
                                 <p class="float-sm-left">
                                     <a href="{% url 'identity' %}" class="btn btn-sm btn-danger">
-                                        BACK TO UPDATE Identity
+                                        BACK TO IDENTITY PAGE
                                     </a>
                                 </p>
                             </div><!-- /.col -->

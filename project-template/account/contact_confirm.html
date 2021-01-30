@@ -9,54 +9,7 @@
 {% block body_class %} sidebar-mini {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}
-<style>
-    #progressBar {
-        width: 90%;
-        margin: 10px auto;
-        height: 22px;
-        background-color: #0A5F44;
-    }
-
-    #progressBar div {
-        height: 100%;
-        text-align: right;
-        padding: 0 10px;
-        line-height: 22px;
-        /* same as #progressBar height if we want text middle aligned */
-        width: 0;
-        background-color: #CBEA00;
-        box-sizing: border-box;
-    }
-
-    /* Do not take in account */
-    html {
-        padding-top: 30px
-    }
-
-    a.solink {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        text-align: center;
-        background: #f3f5f6;
-        color: #cfd6d9;
-        border: 1px solid #cfd6d9;
-        line-height: 30px;
-        text-decoration: none;
-        transition: all .3s;
-        z-index: 999
-    }
-
-    a.solink::first-letter {
-        text-transform: capitalize
-    }
-
-    a.solink:hover {
-        color: #428bca
-    }
-</style>
-{% endblock stylesheets %}
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
@@ -110,6 +63,9 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
+                            {% if message %}
+                            {{ message }}
+                            {% else %}
                             <form method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
@@ -121,12 +77,28 @@
                                 <br />
                                 <input id="otp_submit" type="submit" value="Confirm">
                             </form>
+                            {% endif %}
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
+                        {% if message %}
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">
+                                    <a href="{% url 'contact' %}" class="btn btn-sm btn-danger">
+                                        BACK TO CONTACT NUMBER
+                                    </a>
+                                </p>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <p class="float-sm-right">{{ message }}</p>
+                            </div><!-- /.col -->
+                        </div>
+                        {% else %}
                         <div class="card-footer text-center">
                             An OTP was sent to your contact number {{user.contact_number}}. Kindly confirm the OTP
                             within <span id="seconds"></span> seconds to complete your onboarding!
                         </div>
+                        {% endif %}
                         <!-- /.Help Text -->
                     </div>
                     <!-- /.card -->
@@ -149,7 +121,7 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
-    const TOTALTIME = 20
+    const TOTALTIME = 120
     var timeleft = TOTALTIME;
     var color = "green";
     var downloadTimer = setInterval(function () {

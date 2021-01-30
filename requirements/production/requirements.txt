@@ -3,6 +3,7 @@ gunicorn==20.0.4
 psycopg2-binary==2.8.6
 Pillow==8.1.0
 pyotp==2.4.1
+python-stdnum==1.15
 django-crispy-forms==1.10.0
 django-allauth==0.44.0
 environs==9.3.0
