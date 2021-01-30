@@ -13,8 +13,7 @@
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
         {% if user.picture %}
-        <img src="{{ user.picture.url }}" class="img-circle elevation-1" style="height:2rem; width:2rem;"
-          alt="User Image">
+        <img src="{{ user.picture.url }}" class="img-circle" style="height:2rem; width:2rem;" alt="User Image">
         {% else %}
         <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1" alt="User Image">
         {% endif %}
@@ -112,7 +111,7 @@
 
         <li class="nav-header">USERS</li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link {% if 'users' in request.path %}active{% endif %}">
+          <a href="{% url 'user_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-columns"></i>
             <p>
               All Available USERS

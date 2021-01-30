@@ -1,47 +1,130 @@
-{% extends 'layouts/base.html' %}
+{% extends "layouts/base.html" %}
 
-{% block title %}{{ user.first_name }} {{ user.last_name }}{% endblock title %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Profile {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-<div class="pool-detail">
 
-    <h2><a href="">{{ user.first_name }} {{ user.last_name }}</a></h2>
-    <p>Email ID: {{ user.email }}</p>
-    <p>Joined Since: {{ user.date_joined }}</p>
-    <p>Balance Amount: {{ user.balance_investment }}</p>
-    <p>Invested Amount: {{ user.balance_investment }}</p>
-    <p>Identity Verified: {% if user.identity_verified %} Yes {% else %} No {% endif %}</p>
-    <p>Contact Verified: {% if user.contact_verified %} Yes {% else %} No {% endif %}</p>
-    {% if user.is_verified_master %}
-    <div>
-        <h3>Pool Master of Pools</h3>
-        <ul>
-            {% if user.master_of_pools %}
-            {% for pool in user.master_of_pools %}
-            <li>
-                {{pool.name}}
-            </li>
-            {% endfor %}
-            {% endif %}
+<div class="content-wrapper">
 
-        </ul>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">User List</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">User List</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
-    {% endif %}
+    <!-- /.content-header -->
 
-    {% if user.is_verified_master %}
-    <div>
-        <h3>Pool Member of Pools</h3>
-        <ul>
-            {% if user.member_of_pools %}
-            {% for pool in user.member_of_pools %}
-            <li>
-                {{pool.name}}
-            </li>
-            {% endfor %}
-            {% endif %}
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-6 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-white elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card"></i>
+                                Users List
+                            </h3>
 
-        </ul>
-    </div>
-    {% endif %}
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool btn-fullscreen" title="Maximize">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Close">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            <h2><a href="">{{ user.first_name }} {{ user.last_name }}</a></h2>
+                            <p>Email ID: {{ user.email }}</p>
+                            <p>Joined Since: {{ user.date_joined }}</p>
+                            <p>Balance Amount: {{ user.balance_investment }}</p>
+                            <p>Invested Amount: {{ user.balance_investment }}</p>
+                            <p>Identity Verified: {% if user.identity_verified %} Yes {% else %} No {% endif %}</p>
+                            <p>Contact Verified: {% if user.contact_verified %} Yes {% else %} No {% endif %}</p>
+                            {% if user.is_verified_master %}
+                            <div>
+                                <h3>Pool Master of Pools</h3>
+                                <ul>
+                                    {% if user.master_of_pools %}
+                                    {% for pool in user.master_of_pools %}
+                                    <li>
+                                        {{pool.name}}
+                                    </li>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+                            {% endif %}
+
+                            {% if user.is_verified_master %}
+                            <div>
+                                <h3>Pool Member of Pools</h3>
+                                <ul>
+                                    {% if user.member_of_pools %}
+                                    {% for pool in user.member_of_pools %}
+                                    <li>
+                                        {{pool.name}}
+                                    </li>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div><!-- /.card-body -->
+                        <!-- Pagination -->
+                        <div class="card-footer text-center">
+                            Actions
+                        </div>
+                        <!-- /.Pagination -->
+                    </div>
+                    <!-- /.card -->
+                </section>
+                <!-- /.Left col -->
+                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
+                <section class="col-lg-6 connectedSortable text-center">
+                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:100%;">
+                </section>
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
 </div>
+
 {% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

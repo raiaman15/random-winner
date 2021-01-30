@@ -12,6 +12,7 @@ from .forms import CustomUserProfileUpdateForm
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 
 
 class UserStatusView(LoginRequiredMixin, View):
@@ -34,12 +35,22 @@ class UserListView(LoginRequiredMixin, ListView):
     template_name = 'account/user_list.html'
     login_url = 'account_login'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('user_permission.user_edit'):
+            raise PermissionDenied
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
+
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/user_detail.html'
     login_url = 'account_login'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('user_permission.user_edit'):
+            raise PermissionDenied
+        return super(UserDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class UserProfileView(LoginRequiredMixin, UpdateView):
