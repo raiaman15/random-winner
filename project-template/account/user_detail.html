@@ -44,7 +44,8 @@
                     <div class="card card-widget widget-user shadow">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
                         <div class="widget-user-header bg-warning">
-                            <h3 class="widget-user-username">{{user.first_name}} {{user.last_name}}</h3>
+                            <h3 class="widget-user-username font-weight-bold">{{user.first_name}} {{user.last_name}}
+                            </h3>
                             <h5 class="widget-user-desc">
                                 {% if user.is_verified_master %}
                                 MASTER - <i class="fas fa-check-circle text-primary"></i>
@@ -57,7 +58,8 @@
                         </div>
                         <div class="widget-user-image">
                             {% if user.picture %}
-                            <img src="{{ user.picture.url }}" class="img-circle elevation-2" alt="User Image">
+                            <img src="{{ user.picture.url }}" class="img-circle elevation-2"
+                                style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
                             {% else %}
                             <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
                                 alt="User Image">
@@ -65,26 +67,36 @@
                         </div>
                         <div class="card-footer">
                             <div class="row">
-                                <div class="col-sm-4 border-right">
+                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">3,200</h5>
-                                        <span class="description-text">SALES</span>
+                                        <h5 class="description-header">{{user.balance_amount}}</h5>
+                                        <span class="description-text">BALANCE AMOUNT</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-sm-4 border-right">
+                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">FOLLOWERS</span>
+                                        <h5 class="description-header">{{user.member_of_pools.all.count}}</h5>
+                                        <span class="description-text">MEMBER OF POOLS</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-sm-4">
+                                {% if user.is_verified_master %}
+                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">35</h5>
-                                        <span class="description-text">PRODUCTS</span>
+                                        <h5 class="description-header">{{user.member_of_pools.all.count}}</h5>
+                                        <span class="description-text">MASTER OF POOLS</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                {% endif %}
+                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%}">
+                                    <div class="description-block">
+                                        <h5 class="description-header">{{user.investment_amount}}</h5>
+                                        <span class="description-text">INVESTMENT AMOUNT</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
@@ -92,6 +104,73 @@
                             </div>
                             <!-- /.row -->
                         </div>
+                    </div>
+
+                    <div class="card bg-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">Profile Details</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td width="40%">Email ID</td>
+                                        <td>{{user.email}}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>First Name</td>
+                                        <td>{{user.first_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Name</td>
+                                        <td>{{user.last_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Number</td>
+                                        <td>{{user.contact_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aadhaar Number</td>
+                                        <td>{{user.aadhaar_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Identity Proof</td>
+                                        <td>{{user.identity_proof.url}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Identity Verified</td>
+                                        <td>
+                                            {% if user.identity_verified %}
+                                            <i class="fas fa-check-circle text-primary"></i>
+                                            {% else %}
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Verified</td>
+                                        <td>
+                                            {% if user.contact_verified %}
+                                            <i class="fas fa-check-circle text-primary"></i>
+                                            {% else %}
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
                     </div>
 
                     <div class="card bg-white elevation-2">
@@ -117,43 +196,42 @@
                         <!-- Ongoing Live Class -->
 
                         <div class="card-body">
-                            <h2><a href="">{{ user.first_name }} {{ user.last_name }}</a></h2>
+                            <h2><a href=""></a></h2>
                             <p>Email ID: {{ user.email }}</p>
                             <p>Joined Since: {{ user.date_joined }}</p>
                             <p>Balance Amount: {{ user.balance_investment }}</p>
                             <p>Invested Amount: {{ user.balance_investment }}</p>
                             <p>Identity Verified: {% if user.identity_verified %} Yes {% else %} No {% endif %}</p>
                             <p>Contact Verified: {% if user.contact_verified %} Yes {% else %} No {% endif %}</p>
+
+                            {% if user.identity_verified and user.contact_verified %}
+                            {% if user.member_of_pools.all %}
+                            <div>
+                                <h3>Pool Member of Pools</h3>
+                                <ul>
+                                    {% for pool in user.master_of_pools.all %}
+                                    <li>
+                                        {{pool.name}}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+
                             {% if user.is_verified_master %}
+                            {% if user.master_of_pools.all %}
                             <div>
                                 <h3>Pool Master of Pools</h3>
                                 <ul>
-                                    {% if user.master_of_pools %}
                                     {% for pool in user.master_of_pools %}
                                     <li>
                                         {{pool.name}}
                                     </li>
                                     {% endfor %}
-                                    {% endif %}
-
                                 </ul>
                             </div>
                             {% endif %}
-
-                            {% if user.is_verified_master %}
-                            <div>
-                                <h3>Pool Member of Pools</h3>
-                                <ul>
-                                    {% if user.member_of_pools %}
-                                    {% for pool in user.member_of_pools %}
-                                    <li>
-                                        {{pool.name}}
-                                    </li>
-                                    {% endfor %}
-                                    {% endif %}
-
-                                </ul>
-                            </div>
                             {% endif %}
                         </div><!-- /.card-body -->
                         <!-- Pagination -->
