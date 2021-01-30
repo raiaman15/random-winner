@@ -33,12 +33,12 @@ def validate_aadhaar_number(value):
 
     if not aadhaar_re.match(number):
         raise ValidationError(
-            _('%(value)s is not a valid Aadhaar Number. It must be in valid format XXXX XXXX XXXX!'),
+            _('%(value)s is not a valid Aadhaar Number. Type the XXXX XXXX XXXX formatted number from your Aadhaar Card! (without spaces)'),
             params={'value': value},)
 
     try:
         verhoeff.validate(number)
     except:
         raise ValidationError(
-            _('%(value)s is not a valid Aadhaar Number. Please confirm it from your Aadhaar Card!'),
+            _('%(value)s is not your valid Aadhaar Number. Type the XXXX XXXX XXXX formatted number from your Aadhaar Card! (without spaces)'),
             params={'value': value},)
