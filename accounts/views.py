@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import (
 )
 from django.db.models import Q
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
-from .models import CustomUser
+from .models import CustomUser, ContactNumberOTP
 from .forms import CustomUserProfileUpdateForm
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -39,7 +39,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     login_url = 'account_login'
 
 
-class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
+class UserProfileView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'picture']
     context_object_name = 'user'
@@ -51,7 +51,7 @@ class UserUpdateProfileView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
-class UserUpdateIdentityView(LoginRequiredMixin, UpdateView):
+class UserIdentityView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['aadhaar_number', 'identity_proof']
     context_object_name = 'user'
@@ -63,16 +63,53 @@ class UserUpdateIdentityView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
-class UserUpdatePhoneView(LoginRequiredMixin, UpdateView):
+class UserContactView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['contact']
+    fields = ['contact_number']
     context_object_name = 'user'
     template_name = 'account/contact.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('contact')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
+
+    def get_success_url(self):
+        if not self.request.user.generate_otp():
+            return HttpResponse('You requested for an OTP within last 5 minutes. Please try again later!')
+        return reverse_lazy('contact_confirm')
+
+
+class UserContactConfirmView(LoginRequiredMixin, TemplateView):
+    model = CustomUser
+    context_object_name = 'user'
+    template_name = 'account/contact_confirm.html'
+    login_url = 'account_login'
+    success_url = reverse_lazy('contact_confirm')
+
+    def get_object(self):
+        return get_object_or_404(self.model, pk=self.request.user.pk)
+
+    def post(self, request):
+        if request.user.contact_verified:
+            return redirect('contact')
+
+        user_otp = 0
+        if isinstance(request.POST.get("otp_confirm"), str):
+            if len(request.POST.get("otp_confirm")) == 6:
+                user_otp = int(request.POST.get("otp_confirm"))
+
+        try:
+            truth = ContactNumberOTP.objects.get(
+                contact_number=self.request.user.contact_number)
+            print(f'{"-"*60}\nComparing{user_otp} and {truth.objects.otp}\n{"-"*60}')
+            if user_otp == truth.objects.otp:
+                request.user.contact_verified = True
+                request.user.save()
+                truth.delete()
+        except ContactNumberOTP.DoesNotExist:
+            pass
+        finally:
+            return redirect('contact')
 
 
 class SearchResultsListView(ListView):

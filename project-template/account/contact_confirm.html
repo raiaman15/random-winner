@@ -3,13 +3,60 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Phone {% endblock %}
+{% block title %} Contact {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+    #progressBar {
+        width: 90%;
+        margin: 10px auto;
+        height: 22px;
+        background-color: #0A5F44;
+    }
+
+    #progressBar div {
+        height: 100%;
+        text-align: right;
+        padding: 0 10px;
+        line-height: 22px;
+        /* same as #progressBar height if we want text middle aligned */
+        width: 0;
+        background-color: #CBEA00;
+        box-sizing: border-box;
+    }
+
+    /* Do not take in account */
+    html {
+        padding-top: 30px
+    }
+
+    a.solink {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        text-align: center;
+        background: #f3f5f6;
+        color: #cfd6d9;
+        border: 1px solid #cfd6d9;
+        line-height: 30px;
+        text-decoration: none;
+        transition: all .3s;
+        z-index: 999
+    }
+
+    a.solink::first-letter {
+        text-transform: capitalize
+    }
+
+    a.solink:hover {
+        color: #428bca
+    }
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -20,12 +67,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Phone</h1>
+                    <h1 class="m-0">Contact</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Phone</li>
+                        <li class="breadcrumb-item active">Contact</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -45,7 +92,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Update Phone Number
+                                Update Contact Number
                             </h3>
 
                             <div class="card-tools">
@@ -63,34 +110,23 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            <form method="post" enctype="multipart/form-data">
+                            <form method="post">
                                 {% csrf_token %}
-                                {{ form | crispy }}
-                                <input type="submit" value="Update">
+                                <div class="form-group">
+                                    <label for="otp_confirm">Confirm OTP</label>
+                                    <input type="text" class="textinput form-control" id="otp_confirm"
+                                        name="otp_confirm" placeholder="Enter the OTP here">
+                                </div>
+                                <div id="countdown" class="countdown text-bold"></div>
+                                <br />
+                                <input id="otp_submit" type="submit" value="Confirm">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.contact_verified %}
                         <div class="card-footer text-center">
-                            <a href="{% url 'identity' %}" class="btn btn-danger">BACK TO UPDATE Identity</a>
-                            <a href="{% url 'dashboard' %}" class="btn btn-success">PROCEED TO DASHBOARD</a>
+                            An OTP was sent to your contact number {{user.contact_number}}. Kindly confirm the OTP
+                            within <span id="seconds"></span> seconds to complete your onboarding!
                         </div>
-                        {% else %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-6">
-                                <p class="float-sm-left">
-                                    <a href="{% url 'identity' %}" class="btn btn-sm btn-danger">
-                                        BACK TO UPDATE Identity
-                                    </a>
-                                </p>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
-                                <p class="float-sm-right">
-                                    Kindly ensure proper network coverage for the OTP verification.
-                                </p>
-                            </div><!-- /.col -->
-                        </div>
-                        {% endif %}
                         <!-- /.Help Text -->
                     </div>
                     <!-- /.card -->
@@ -98,7 +134,6 @@
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:100%;">
                 </section>
                 <!-- right col -->
             </div>
@@ -112,4 +147,30 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    const TOTALTIME = 20
+    var timeleft = TOTALTIME;
+    var color = "green";
+    var downloadTimer = setInterval(function () {
+        if (timeleft <= 0) {
+            clearInterval(downloadTimer);
+            $("#countdown").html("OTP Expired!");
+            $("#otp_confirm").prop('disabled', true);
+            $("#otp_submit").remove();
+            $("#seconds").html(timeleft);
+
+        } else {
+            if (timeleft == Math.floor(TOTALTIME / 2)) {
+                $("#countdown").css("color", "orange");
+            }
+            if (timeleft == Math.floor(TOTALTIME / 4)) {
+                $("#countdown").css("color", "red");
+            }
+            $("#countdown").html(timeleft + " seconds remaining");
+            $("#seconds").html(timeleft);
+        }
+        timeleft -= 1;
+    }, 1000);
+</script>
+{% endblock javascripts %}

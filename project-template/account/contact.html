@@ -3,7 +3,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Identity {% endblock %}
+{% block title %} Contact {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Identity</h1>
+                    <h1 class="m-0">Contact</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Identity</li>
+                        <li class="breadcrumb-item active">Contact</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -45,7 +45,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Update Identity
+                                Update Contact Number
                             </h3>
 
                             <div class="card-tools">
@@ -66,44 +66,27 @@
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Update">
+                                <input type="submit" value="Verify">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.identity_verified %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-6">
-                                <p class="float-sm-left">
-                                    You have successfully updated your Identity.
-                                </p>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
-                                <p class="float-sm-right">
-                                    <a href="{% url 'contact' %}" class="btn btn-sm btn-success">
-                                        PROCEED TO UPDATE PHONE NUMBER
-                                    </a>
-                                </p>
-                            </div><!-- /.col -->
-                        </div>
-                        {% elif user.identity_proof %}
-                        <div class="card-footer text-center text-bold">
-                            Your Identity verification is in progress. It may take some time for the verification to
-                            complete. Please revisit in some time to proceed further.
-                            <br />
-
+                        {% if user.contact_verified %}
+                        <div class="card-footer text-center">
+                            <a href="{% url 'identity' %}" class="btn btn-danger">BACK TO UPDATE Identity</a>
+                            <a href="{% url 'dashboard' %}" class="btn btn-success">PROCEED TO DASHBOARD</a>
                         </div>
                         {% else %}
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-6">
                                 <p class="float-sm-left">
-                                    <a href="{% url 'profile' %}" class="btn btn-sm btn-danger">
-                                        BACK TO UPDATE PROFILE
+                                    <a href="{% url 'identity' %}" class="btn btn-sm btn-danger">
+                                        BACK TO UPDATE Identity
                                     </a>
                                 </p>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <p class="float-sm-right">
-                                    Your profile is incomplete; kindly fill all the fields here.
+                                    Kindly ensure proper network coverage for the OTP verification.
                                 </p>
                             </div><!-- /.col -->
                         </div>
