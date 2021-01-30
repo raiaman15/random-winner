@@ -34,6 +34,7 @@ class UserListView(LoginRequiredMixin, ListView):
     context_object_name = 'user_list'
     template_name = 'account/user_list.html'
     login_url = 'account_login'
+    paginate_by = 1
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):

@@ -3,7 +3,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Profile {% endblock %}
+{% block title %} User Detail {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -20,7 +20,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">User List</h1>
+                    <h1 class="m-0">User Detail</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -41,6 +41,59 @@
                 <!-- Left col -->
                 <section class="col-lg-6 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card card-widget widget-user shadow">
+                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                        <div class="widget-user-header bg-warning">
+                            <h3 class="widget-user-username">{{user.first_name}} {{user.last_name}}</h3>
+                            <h5 class="widget-user-desc">
+                                {% if user.is_verified_master %}
+                                MASTER - <i class="fas fa-check-circle text-primary"></i>
+                                {% elif user.identity_verified and user.contact_verified %}
+                                MEMBER - <i class="fas fa-check-circle text-primary"></i>
+                                {% else %}
+                                MEMBER - <i class="fas fa-times-circle text-danger"></i>
+                                {% endif %}
+                            </h5>
+                        </div>
+                        <div class="widget-user-image">
+                            {% if user.picture %}
+                            <img src="{{ user.picture.url }}" class="img-circle elevation-2" alt="User Image">
+                            {% else %}
+                            <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
+                                alt="User Image">
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-4 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">3,200</h5>
+                                        <span class="description-text">SALES</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">13,000</h5>
+                                        <span class="description-text">FOLLOWERS</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4">
+                                    <div class="description-block">
+                                        <h5 class="description-header">35</h5>
+                                        <span class="description-text">PRODUCTS</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                    </div>
+
                     <div class="card bg-white elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -62,6 +115,7 @@
 
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
+
                         <div class="card-body">
                             <h2><a href="">{{ user.first_name }} {{ user.last_name }}</a></h2>
                             <p>Email ID: {{ user.email }}</p>

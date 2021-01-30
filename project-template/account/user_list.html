@@ -63,19 +63,65 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            {% for user in user_list %}
-                            <div>
-                                <h2><a href="{% url 'user_detail' user.id %}">{{ user.email }}</a></h2>
+                            <div class="card-body table-responsive p-0" style="height: 300px;">
+
+                                
+                                <table class="table table-bordered table-head-fixed text-nowrap">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email</th>
+                                            <th>Identity Verified</th>
+                                            <th>Contact verified</th>
+                                            <th>Willing PoolMaster</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in user_list %}
+                                        <tr onclick="{% url 'user_detail' user.id %}">
+                                            <td>{{ user.first_name }}</td>
+                                            <td>{{ user.last_name }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.identity_verified }}</td>
+                                            <td>{{ user.contact_verified }}</td>
+                                            <td>{{ user.is_willing_master }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
-                            {% endfor %}
+                            <!-- /.card-body -->
                         </div><!-- /.card-body -->
                         <!-- Pagination -->
                         <div class="card-footer text-center">
-                            Pagination
+                            <div class="pagination">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        &laquo; First
+                                    </a>
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        Previous
+                                    </a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if page_obj.has_next %}
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        Next
+                                    </a>
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Last &raquo;
+                                    </a>
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
-                        <!-- /.Pagination -->
-                    </div>
-                    <!-- /.card -->
+                        <!-- /.card -->
                 </section>
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
