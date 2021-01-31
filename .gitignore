@@ -261,5 +261,5 @@ tags
 .pytest_cache/
 .ipython/
 .env
-!.envs/*
+.envs/*
 !.envs/.local/
