@@ -2,6 +2,7 @@
 MIMIC_PRODUCTION_LOCALLY=True
 
 SECRET_KEY=L\HS@*Wi@H%z9]Wdy@ILoY]2s&:_P"`{~%e}0wc}`MWc!!a"aS
+
 ALLOWED_HOSTS=0.0.0.0 test.infroid.com
 SQL_ENGINE=django.db.backends.postgresql
 SQL_DATABASE=product_name_db
@@ -10,10 +11,18 @@ SQL_PASSWORD=product#name#db#user#password
 SQL_HOST=postgres_production
 SQL_PORT=5432
 
-PRODUCT_NAME=YourProjectName
-COMPANY_NAME=YourCompanyName
+PRODUCT_NAME=BitBoomer
+COMPANY_NAME=BitBoomer
 
 WEBMASTER_NAME=Webmaster
-WEBMASTER_EMAIL=webmaster@test.infroid.com
-ADMINISTRATOR_NAME=Administrator
-ADMINISTRATOR_EMAIL=administrator@test.infroid.com
+WEBMASTER_EMAIL=webmaster@bit-boomer.com
+ADMINISTRATOR_NAME=Admin
+ADMINISTRATOR_EMAIL=admin@bit-boomer.com
+
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_HOST_USER=developer@bit-boomer.com
+EMAIL_HOST_PASSWORD=app_key_or_pass
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=no-reply@bit-boomer.com

@@ -54,25 +54,28 @@ CACHE_MIDDLEWARE_KEY_PREFIX = ''
 if env.bool("MIMIC_PRODUCTION_LOCALLY", False):
     pass
 else:
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     # TODO-NORMAL: Update to 7 days or 30 days once working properly
-    SECURE_HSTS_SECONDS = env.int("DJANGO_SECURE_HSTS_SECONDS", default=60)
-    SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
+    SECURE_HSTS_SECONDS = env.int("DJANGO_SECURE_HSTS_SECONDS", default=3600)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    CSRF_COOKIE_SECURE = True
+
+# Email Settings
+# GMAIL SMTP: https://dev.to/abderrahmanemustapha/how-to-send-email-with-django-and-gmail-in-production-the-right-way-24ab
+EMAIL_BACKEND = env.int(
+    "EMAIL_BACKEND", default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env.int("EMAIL_HOST", default='smtp.gmail.com')
+EMAIL_HOST_USER = env.int(
+    "EMAIL_HOST_USER", default='yoorusername@yourdomain.com')
+EMAIL_HOST_PASSWORD = env.int("EMAIL_HOST_PASSWORD", default='app key or pass')
+EMAIL_PORT = env.int("EMAIL_HOST_PASSWORD", default=587)
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = env.int(
+    "EMAIL_HOST_PASSWORD", default='no-reply@yourdomain.com')
 
 # Admin Honeypot config
 ADMIN_HONEYPOT_EMAIL_ADMINS = True
-
-# Anymail
-# TODO-NORMAL: Remove console backend and switch to Twilio Sendgrid
-# EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-# ANYMAIL = {
-#     "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
-#     "SENDGRID_GENERATE_MESSAGE_ID": env("SENDGRID_GENERATE_MESSAGE_ID"),
-#     "SENDGRID_MERGE_FIELD_FORMAT": env("SENDGRID_MERGE_FIELD_FORMAT"),
-#     "SENDGRID_API_URL": env("SENDGRID_API_URL", default="https://api.sendgrid.com/v3/"),
-# }
