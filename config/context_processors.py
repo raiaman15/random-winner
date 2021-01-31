@@ -1,8 +1,8 @@
-import os
+from django.conf import settings
 
 
 def export_vars(request):
     data = {}
-    data['PRODUCT_NAME'] = os.environ.get("PRODUCT_NAME")
-    data['COMPANY_NAME'] = os.environ.get("COMPANY_NAME")
+    data['PRODUCT_NAME'] = settings.PRODUCT_NAME
+    data['COMPANY_NAME'] = settings.COMPANY_NAME
     return data

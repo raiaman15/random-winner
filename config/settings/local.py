@@ -10,7 +10,12 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# The URL on which the project is hosted (example 0.0.0.0)
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
+
+# The name of Product/Project and Company
+PRODUCT_NAME = env.str("PRODUCT_NAME")
+COMPANY_NAME = env.str("COMPANY_NAME")
 
 # Add INSTALLED_APPS on top
 INSTALLED_APPS = [] + INSTALLED_APPS
@@ -79,4 +84,10 @@ RUNSERVER_PLUS_EXTRA_FILES = []
 EMAIL_BACKEND = env.str(
     "EMAIL_BACKEND", default='django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = env.str(
-    "EMAIL_HOST_PASSWORD", default='no-reply@yourdomain.com')
+    "DEFAULT_FROM_EMAIL", default='no-reply@yourdomain.com')
+EMAIL_HOST = env.str("EMAIL_HOST", default='smtp.gmail.com')
+EMAIL_HOST_USER = env.str(
+    "EMAIL_HOST_USER", default='yoorusername@yourdomain.com')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='app key or pass')
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = True

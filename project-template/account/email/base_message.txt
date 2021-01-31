@@ -3,5 +3,7 @@
 {% block content %}{% endblock %}
 
 {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you for using {{ site_name }}!
-{{ site_domain }}{% endblocktrans %}
+
+Regards,
+Team {{ site_domain }}{% endblocktrans %}
 {% endautoescape %}

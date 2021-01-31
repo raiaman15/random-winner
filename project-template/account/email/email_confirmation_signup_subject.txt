@@ -1,1 +1,1 @@
-{% include "account/email/email_confirmation_subject.txt" %} & Join BitBoomer 🥳
+✔️ {% include "account/email/email_confirmation_subject.txt" %} for BitBoomer

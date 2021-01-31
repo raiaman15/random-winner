@@ -125,6 +125,22 @@
                             <!-- END timeline item -->
                             <!-- timeline item -->
                             <div>
+                                {% if user.picture and user.first_name or user.lastname %}
+                                <i class="fas fa-user bg-success"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header text-left">
+                                        <a href="#">Profile Completion</a>
+                                        <small><strong>DONE</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You update your name and photograph. These details would be used throughout the
+                                        website.
+                                        You won't be allowed to change these settings, once your identity is verified.
+                                        In case of any discrepency with the Identification Proof Documents, your profile
+                                        verification would fail!
+                                    </div>
+                                </div>
+                                {% else %}
                                 <i class="fas fa-user bg-warning"></i>
                                 <div class="timeline-item">
                                     <h3 class="timeline-header text-left">
@@ -139,6 +155,7 @@
                                         verification would fail!
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             <!-- END timeline item -->
                             <!-- timeline item -->

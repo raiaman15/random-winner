@@ -16,3 +16,7 @@ class CompanyPageView(TemplateView):
 
 class ProductPageView(TemplateView):
     template_name = 'pages/product.html'
+
+    def dispatch(self, request):
+        if request.user.is_authenticated:
+            return redirect('status')

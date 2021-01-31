@@ -10,5 +10,11 @@ SQL_PORT=5432
 PRODUCT_NAME=BitBoomer
 COMPANY_NAME=BitBoomer
 
+# EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-DEFAULT_FROM_EMAIL=no-reply@yourdomain.com
+EMAIL_HOST=smtp-relay.sendinblue.com
+EMAIL_HOST_USER=developer@infroid.com
+EMAIL_HOST_PASSWORD=xsmtpsib-dc2c207e05dcac9ce31e491b07e10fa9e64f9faf6ec929656daf06cfa74e00fc-jSyRHsfbraQKm9q8
+EMAIL_PORT=587
+EMAIL_USE_TLS=False
+DEFAULT_FROM_EMAIL=no-reply@infroid.com

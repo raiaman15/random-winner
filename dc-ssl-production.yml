@@ -1,3 +1,4 @@
+# Verify at http://yaml-online-parser.appspot.com/
 version: "3.8"
    
 services:
@@ -12,8 +13,8 @@ services:
       - static_volume:/app/files-static
       - media_volume:/app/files-media
     ports:
-      - 80:80
-      - 443:443
+      - 80:80 # HOST:CONTAINER
+      - 443:443 # HOST:CONTAINER
     depends_on:
       - django_production
   
@@ -27,7 +28,7 @@ services:
       - static_volume:/app/files-static
       - media_volume:/app/files-media
     expose:
-      - 8000
+      - "8000"
     env_file:
       - ./.envs/.production/.django
     depends_on:

@@ -22,6 +22,6 @@ echo "from django.contrib.auth import get_user_model; user = get_user_model().ob
 
 echo "STARTING DJANGO BUILT-IN SERVER"
 # SSL Enabled Mode
-# python manage.py runserver_plus 0.0.0.0:8000 --cert-file /tmp/cert.crt
+# python manage.py runserver_plus 0.0.0.0:8000 --nopin --cert-file /tmp/cert.crt
 # SSL Disabled Mode
-python manage.py runserver_plus 0.0.0.0:8000
+python manage.py runserver_plus 0.0.0.0:8000 --nopin

@@ -17,7 +17,12 @@ DEBUG = False
 # It is recommended to use SSL based container (dc-ssl-production) is you have SSL
 MIMIC_PRODUCTION_LOCALLY = env.bool("MIMIC_PRODUCTION_LOCALLY", False)
 
+# The URL on which the project is hosted (example 0.0.0.0)
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
+
+# The name of Product/Project and Company
+PRODUCT_NAME = env.str("PRODUCT_NAME")
+COMPANY_NAME = env.str("COMPANY_NAME")
 
 # ADMINS = [
 #     (
@@ -69,14 +74,14 @@ else:
 # GMAIL SMTP: https://dev.to/abderrahmanemustapha/how-to-send-email-with-django-and-gmail-in-production-the-right-way-24ab
 EMAIL_BACKEND = env.str(
     "EMAIL_BACKEND", default='django.core.mail.backends.smtp.EmailBackend')
+DEFAULT_FROM_EMAIL = env.str(
+    "DEFAULT_FROM_EMAIL", default='no-reply@yourdomain.com')
 EMAIL_HOST = env.str("EMAIL_HOST", default='smtp.gmail.com')
 EMAIL_HOST_USER = env.str(
     "EMAIL_HOST_USER", default='yoorusername@yourdomain.com')
-EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", default='app key or pass')
-EMAIL_PORT = env.int("EMAIL_HOST_PASSWORD", default=587)
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='app key or pass')
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = env.str(
-    "EMAIL_HOST_PASSWORD", default='no-reply@yourdomain.com')
 
 # Admin Honeypot config
 ADMIN_HONEYPOT_EMAIL_ADMINS = True
