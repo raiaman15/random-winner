@@ -67,15 +67,15 @@ else:
 
 # Email Settings
 # GMAIL SMTP: https://dev.to/abderrahmanemustapha/how-to-send-email-with-django-and-gmail-in-production-the-right-way-24ab
-EMAIL_BACKEND = env.int(
+EMAIL_BACKEND = env.str(
     "EMAIL_BACKEND", default='django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = env.int("EMAIL_HOST", default='smtp.gmail.com')
-EMAIL_HOST_USER = env.int(
+EMAIL_HOST = env.str("EMAIL_HOST", default='smtp.gmail.com')
+EMAIL_HOST_USER = env.str(
     "EMAIL_HOST_USER", default='yoorusername@yourdomain.com')
-EMAIL_HOST_PASSWORD = env.int("EMAIL_HOST_PASSWORD", default='app key or pass')
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", default='app key or pass')
 EMAIL_PORT = env.int("EMAIL_HOST_PASSWORD", default=587)
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = env.int(
+DEFAULT_FROM_EMAIL = env.str(
     "EMAIL_HOST_PASSWORD", default='no-reply@yourdomain.com')
 
 # Admin Honeypot config

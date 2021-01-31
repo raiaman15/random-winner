@@ -76,7 +76,7 @@ RUNSERVER_PLUS_EXTRA_FILES = []
 
 # Email Settings
 # Allows to see the email output in the console window
-EMAIL_BACKEND = env.int(
+EMAIL_BACKEND = env.str(
     "EMAIL_BACKEND", default='django.core.mail.backends.console.EmailBackend')
-DEFAULT_FROM_EMAIL = env.int(
+DEFAULT_FROM_EMAIL = env.str(
     "EMAIL_HOST_PASSWORD", default='no-reply@yourdomain.com')

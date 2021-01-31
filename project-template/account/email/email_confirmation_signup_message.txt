@@ -1,1 +1,9 @@
 {% include "account/email/email_confirmation_message.txt" %}
+
+We have a 3-step easy onboarding mechanism to ensure legitimate user base.
+
+1. Profile Completion
+2. Identitity Verification
+3. Contact Verification
+
+🤠 We look forward to seeing you on our platform.
