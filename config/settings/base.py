@@ -161,7 +161,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_SESSION_REMEMBER = None
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -176,6 +175,3 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 # FIX-NORMAL: ACCOUNT_USER_DISPLAY (if needed)
 def ACCOUNT_USER_DISPLAY(user): return user.email
-
-
-DEFAULT_FROM_EMAIL = 'no-reply@test.infroid.com'

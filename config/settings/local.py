@@ -26,9 +26,6 @@ ROOT_URLCONF = 'config.urls.local'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# django-allauth config
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # django-extensions
 # runserver_plus
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
@@ -68,11 +65,18 @@ LOGGING = {
         },
     },
 }
-# Truncate SQL queries to this many characters (None means no truncation)
-RUNSERVER_PLUS_PRINT_SQL_TRUNCATE = 1000
+# Truncate printing of SQL queries to this many characters (None means no truncation)
+RUNSERVER_PLUS_PRINT_SQL_TRUNCATE = None
 # After how many seconds auto-reload should scan for updates in poller-mode
-RUNSERVERPLUS_POLLER_RELOADER_INTERVAL = 2
+RUNSERVERPLUS_POLLER_RELOADER_INTERVAL = 5
 # Werkzeug reloader type [auto, watchdog, or stat]
 RUNSERVERPLUS_POLLER_RELOADER_TYPE = 'auto'
 # Add extra files to watch
 RUNSERVER_PLUS_EXTRA_FILES = []
+
+# Email Settings
+# Allows to see the email output in the console window
+EMAIL_BACKEND = env.int(
+    "EMAIL_BACKEND", default='django.core.mail.backends.console.EmailBackend')
+DEFAULT_FROM_EMAIL = env.int(
+    "EMAIL_HOST_PASSWORD", default='no-reply@yourdomain.com')

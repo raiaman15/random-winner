@@ -12,6 +12,11 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# SECURITY WARNING: don't run with MIMIC_PRODUCTION_LOCALLY turned on in production!
+# This setting is only for testing the actual production setup locally (Without SSL)
+# It is recommended to use SSL based container (dc-ssl-production) is you have SSL
+MIMIC_PRODUCTION_LOCALLY = env.bool("MIMIC_PRODUCTION_LOCALLY", False)
+
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # ADMINS = [
@@ -40,10 +45,6 @@ ROOT_URLCONF = 'config.urls.production'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# django-allauth config
-# FIX-URGENT: Change to production specific email backend
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # Cache config
 CACHE_MIDDLEWARE_ALIAS = 'default'
 # TODO-NORMAL: Update to 7 days once working properly
@@ -51,7 +52,7 @@ CACHE_MIDDLEWARE_SECONDS = 3600
 CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Security config
-if env.bool("MIMIC_PRODUCTION_LOCALLY", False):
+if MIMIC_PRODUCTION_LOCALLY:
     pass
 else:
     SECURE_SSL_REDIRECT = True

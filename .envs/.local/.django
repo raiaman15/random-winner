@@ -10,7 +10,5 @@ SQL_PORT=5432
 PRODUCT_NAME=BitBoomer
 COMPANY_NAME=BitBoomer
 
-WEBMASTER_NAME=Webmaster
-WEBMASTER_EMAIL=webmaster@test.infroid.com
-ADMINISTRATOR_NAME=Admin
-ADMINISTRATOR_EMAIL=admin@test.infroid.com
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DEFAULT_FROM_EMAIL=no-reply@yourdomain.com
