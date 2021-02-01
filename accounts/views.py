@@ -75,6 +75,10 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
                     os.remove(request.user.picture.path)
                     request.user.picture = None
                     request.user.save()
+        # Clean Request Data
+        request.user.first_name = request.POST.get('first_name')
+        request.user.last_name = request.POST.get('last_name')
+        request.user.save()
         return super(UserProfileView, self).post(request, *args, **kwargs)
 
 
@@ -100,7 +104,9 @@ class UserIdentityView(LoginRequiredMixin, UpdateView):
                     os.remove(request.user.identity_proof.path)
                     request.user.identity_proof = None
                     request.user.save()
-        return super(UserProfileView, self).post(request, *args, **kwargs)
+        request.user.aadhaar_number = request.POST.get('aadhaar_number')
+        request.user.save()
+        return super(UserIdentityView, self).post(request, *args, **kwargs)
 
 
 class UserContactView(LoginRequiredMixin, UpdateView):

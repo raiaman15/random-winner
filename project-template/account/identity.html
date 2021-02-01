@@ -67,7 +67,7 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            <form method="post" enctype="multipart/form-data">
+                            <form id="identity_form" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form | crispy }}
                                 <input type="submit" value="Submit & Proceed">
@@ -262,7 +262,7 @@
 <script>
     $(function () {
         /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
-        $("#id_picture").change(function () {
+        $("#id_identity_proof").change(function () {
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
@@ -309,7 +309,7 @@
             $("#id_y").val(cropData["y"]);
             $("#id_height").val(cropData["height"]);
             $("#id_width").val(cropData["width"]);
-            $("#profile_form").submit();
+            $("#identity_form").submit();
         });
     });
 </script>

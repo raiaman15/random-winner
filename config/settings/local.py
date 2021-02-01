@@ -13,10 +13,6 @@ DEBUG = True
 # The URL on which the project is hosted (example 0.0.0.0)
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
 
-# The name of Product/Project and Company
-PRODUCT_NAME = env.str("PRODUCT_NAME")
-COMPANY_NAME = env.str("COMPANY_NAME")
-
 # Add INSTALLED_APPS on top
 INSTALLED_APPS = [] + INSTALLED_APPS
 # Add INSTALLED_APPS at bottom

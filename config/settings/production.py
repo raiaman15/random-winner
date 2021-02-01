@@ -20,10 +20,6 @@ MIMIC_PRODUCTION_LOCALLY = env.bool("MIMIC_PRODUCTION_LOCALLY", False)
 # The URL on which the project is hosted (example 0.0.0.0)
 ALLOWED_HOSTS = env.str("DJANGO_ALLOWED_HOSTS").split(" ")
 
-# The name of Product/Project and Company
-PRODUCT_NAME = env.str("PRODUCT_NAME")
-COMPANY_NAME = env.str("COMPANY_NAME")
-
 # ADMINS = [
 #     (
 #         env.str("WEBMASTER_NAME", default="Webmaster"),
