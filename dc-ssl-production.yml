@@ -19,6 +19,7 @@ services:
       - django_production
   
   django_production:
+  restart: unless-stopped
     container_name: django_production
     build:
       context: .

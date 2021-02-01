@@ -7,5 +7,4 @@ python-stdnum==1.15
 django-crispy-forms==1.10.0
 django-allauth==0.44.0
 environs==9.3.0
-# django-extensions==3.1.0
 django-admin-honeypot==1.1.0
