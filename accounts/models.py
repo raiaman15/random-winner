@@ -6,17 +6,9 @@ from config.validators import validate_aadhaar_number
 
 
 class CustomUser(AbstractUser):
-    USER_TYPE = (
-        ('MM', 'Manager'),
-        ('MA', 'Master'),
-        ('ME', 'Member')
-    )
-    user_type = models.CharField(
-        max_length=2, choices=USER_TYPE, default='ME', blank=True
-    )
     picture = models.ImageField(
         upload_to='picture/', blank=True,
-        help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format.'
+        help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format. (Max 1 MB)'
     )
     aadhaar_number = models.CharField(
         max_length=12, validators=[validate_aadhaar_number], blank=True,
@@ -24,7 +16,7 @@ class CustomUser(AbstractUser):
     )
     identity_proof = models.ImageField(
         upload_to='identity/', blank=True,
-        help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format.'
+        help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 1 MB)'
     )
     identity_verified = models.BooleanField(default=False)
     contact_number = models.CharField(

@@ -4,11 +4,12 @@ from django.contrib.auth.mixins import (
 )
 from datetime import datetime
 import pytz
-from PIL import Image
+
 from django.db.models import Q
+from django.views.generic.edit import FormView
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
 from .models import CustomUser, ContactNumberOTP
-from .forms import CustomUserProfileUpdateForm
+from .forms import UserProfileForm
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.http import HttpResponse
@@ -55,8 +56,9 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
 
 class UserProfileView(LoginRequiredMixin, UpdateView):
+
     model = CustomUser
-    fields = ['first_name', 'last_name', 'picture']
+    form_class = UserProfileForm
     context_object_name = 'user'
     template_name = 'account/profile.html'
     login_url = 'account_login'
@@ -64,6 +66,12 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
+
+    def post(self, request, *args, **kwargs):
+        if request.FILES:
+            if request.FILES['picture'].size > 2048000:
+                return HttpResponse('File size exceeded specified limit!')
+        return super(UserProfileView, self).post(request, *args, **kwargs)
 
 
 class UserIdentityView(LoginRequiredMixin, UpdateView):
@@ -156,7 +164,7 @@ class SearchResultsListView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        return CustomUser.objects.filter(
+        return self.model.objects.filter(
             Q(email__icontains=query) | Q(first_name__icontains=query) |
             Q(last_name__icontains=query) | Q(username__icontains=query)
         )
