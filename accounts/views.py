@@ -1,15 +1,14 @@
+import os
+import pytz
+from datetime import datetime
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin
 )
-from datetime import datetime
-import pytz
-
 from django.db.models import Q
-from django.views.generic.edit import FormView
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
 from .models import CustomUser, ContactNumberOTP
-from .forms import UserProfileForm
+from .forms import UserProfileForm, UserIdentityForm
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.http import HttpResponse
@@ -56,7 +55,6 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
 
 class UserProfileView(LoginRequiredMixin, UpdateView):
-
     model = CustomUser
     form_class = UserProfileForm
     context_object_name = 'user'
@@ -71,12 +69,19 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
         if request.FILES:
             if request.FILES['picture'].size > 2048000:
                 return HttpResponse('File size exceeded specified limit!')
+            else:
+                # Delete old image file from system
+                if request.user.picture:
+                    os.remove(request.user.picture.path)
+                    request.user.picture = None
+                    request.user.save()
         return super(UserProfileView, self).post(request, *args, **kwargs)
 
 
 class UserIdentityView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['aadhaar_number', 'identity_proof']
+    form_class = UserIdentityForm
+    # fields = ['aadhaar_number', 'identity_proof']
     context_object_name = 'user'
     template_name = 'account/identity.html'
     login_url = 'account_login'
@@ -84,6 +89,18 @@ class UserIdentityView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
+
+    def post(self, request, *args, **kwargs):
+        if request.FILES:
+            if request.FILES['identity_proof'].size > 2048000:
+                return HttpResponse('File size exceeded specified limit!')
+            else:
+                # Delete old image file from system
+                if request.user.identity_proof:
+                    os.remove(request.user.identity_proof.path)
+                    request.user.identity_proof = None
+                    request.user.save()
+        return super(UserProfileView, self).post(request, *args, **kwargs)
 
 
 class UserContactView(LoginRequiredMixin, UpdateView):
