@@ -2,8 +2,9 @@ import pyotp
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
-from config.validators import validate_aadhaar_number
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, DecimalValidator
+from config.validators import validate_aadhaar_number, validate_conatct_number, validate_amount, validate_otp, validate_balance_transaction_type
+from config.utils import send_otp
 
 
 class CustomUser(AbstractUser):
@@ -18,26 +19,32 @@ class CustomUser(AbstractUser):
     )
     identity_proof = models.ImageField(
         upload_to='identity/', blank=True,
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
         help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 1 MB)'
     )
     identity_verified = models.BooleanField(default=False)
     contact_number = models.CharField(
-        max_length=17, blank=True, help_text='Your valid mobile number for OTP verification.'
+        max_length=12, blank=True,
+        validators=[validate_conatct_number],
+        help_text='Your valid mobile number for OTP verification.'
     )
     contact_secret = models.CharField(max_length=16, blank=True)
     contact_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
     is_verified_master = models.BooleanField(default=False)
     balance_amount = models.DecimalField(
-        default=0.00, max_digits=7, decimal_places=2)
+        default=0.00, max_digits=7, decimal_places=2,
+        validators=[DecimalValidator, validate_amount]
+    )
     investment_amount = models.DecimalField(
-        default=0.00, max_digits=7, decimal_places=2)
+        default=0.00, max_digits=7, decimal_places=2,
+        validators=[DecimalValidator, validate_amount]
+    )
 
     def generate_otp(self):
         self.contact_secret = pyotp.random_base32()
         totp = pyotp.TOTP(self.contact_secret, interval=125).now()
-        # TODO-URGENT: Send the OPT to contact number via SMS
-        print('-'*60+'\n'+f'OTP: {totp}'+'\n'+'-'*60)
+        send_otp(self.contact_number, self.first_name, self.last_name, totp)
         ContactNumberOTP(
             contact_number=self.contact_number, otp=totp).save()
         return True
@@ -57,28 +64,34 @@ class CustomUser(AbstractUser):
 
 class ContactNumberOTP(models.Model):
     contact_number = models.CharField(
-        max_length=17, blank=False, unique=True, editable=False
+        max_length=17, blank=False, unique=True,
+        validators=[validate_conatct_number], editable=False
     )
     otp = models.CharField(
-        max_length=6, blank=False, editable=False
+        max_length=6, blank=False,
+        validators=[validate_otp], editable=False
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
 
 class BalanceTransaction(models.Model):
     TRANSACTION_TYPE = (
-        ('D', 'Deposit'),
-        ('W', 'Withdraw')
+        ('D', 'Debit'),
+        ('C', 'Credit')
     )
     transaction_type = models.CharField(
-        max_length=1, choices=TRANSACTION_TYPE, blank=False
+        max_length=1, choices=TRANSACTION_TYPE, blank=False,
+        validators=[validate_balance_transaction_type]
     )
     transaction_amount = models.DecimalField(
-        null=False, blank=False, max_digits=7, decimal_places=2
+        null=False, blank=False, max_digits=7,
+        validators=[validate_amount], decimal_places=2
     )
-    transaction_by = models.ForeignKey(
+    transaction_user = models.ForeignKey(
         CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transactions', blank=False
     )
+    
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.transaction_by.email + ':' + self.transaction_type + ':' + self.transaction_amount
+        return self.transaction_user.email + ':' + self.transaction_type + ':' + str(self.transaction_amount)

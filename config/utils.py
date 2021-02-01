@@ -6,19 +6,25 @@ Various utilities including:
 import urllib.request
 import urllib.parse
 from decimal import *
+from django.conf import settings
 
-key = 'x9Wv/NxkW+M-PIYn7TIxcmYFvnsSemmDaB2meS9QAG'
+key = 'x9Wv/NxkW+M-PIYn7TIxcaB2meS9QAG'
 sender = 'Infroid Shiksha API'
 
 
 def sendSMS(apikey, numbers, sender, message):
+    """ #TODO-URGENT: Send the OPT to contact number via SMS """
+
+    if settings.DEBUG:
+        print(message)
+
     data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
                                    'message': message, 'sender': sender})
     data = data.encode('utf-8')
     request = urllib.request.Request("https://api.textlocal.in/send/?")
     f = urllib.request.urlopen(request, data)
     fr = f.read()
-    return(fr)
+    return fr
 
 
 def send_otp(number, first_name, last_name, otp):
@@ -46,5 +52,5 @@ def send_otp(number, first_name, last_name, otp):
     )
 
     message = '%n'.join(lines)
-
-    return sendSMS(key, number, sender, message)
+    response = sendSMS(key, number, sender, message)
+    print(response)

@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
+from .models import ContactNumberOTP, BalanceTransaction
 from .forms import CustomUserAdminForm
 
 CustomUser = get_user_model()
@@ -18,3 +19,20 @@ class CustomUserAdmin(admin.ModelAdmin):
 
     class Meta:
         ordering = ('first_name', 'last_name')
+
+
+@admin.register(ContactNumberOTP)
+class ContactNumberOTPAdmin(admin.ModelAdmin):
+    list_display = ('contact_number', 'otp', 'created_at')
+
+    class Meta:
+        ordering = ('contact_number')
+
+
+@admin.register(BalanceTransaction)
+class BalanceTransactionAdmin(admin.ModelAdmin):
+    list_display = ('transaction_type', 'transaction_amount',
+                    'transaction_user', 'created_at')
+
+    class Meta:
+        ordering = ()

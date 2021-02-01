@@ -4,30 +4,21 @@ from django.core.files import File
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-
-class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = get_user_model()
-        fields = ('email', 'username')
-
-
-class CustomUserChangeForm(UserChangeForm):
-    class Meta:
-        model = get_user_model()
-        fields = ('email', 'username', 'picture', 'identity_proof',
-                  'contact_number', 'identity_verified', 'contact_verified')
+from .models import ContactNumberOTP, BalanceTransaction
 
 
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('identity_verified', 'is_verified_master',)
+        fields = ('email', 'username', 'picture', 'aadhaar_number', 'identity_proof', 'identity_verified',
+                  'contact_number', 'contact_verified', 'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
 
 
-class CustomUserProfileUpdateForm(forms.ModelForm):
+class BalanceTransactionAdmin(forms.ModelForm):
     class Meta:
-        model = get_user_model()
-        fields = ('first_name', 'last_name', 'picture')
+        model = BalanceTransaction
+        fields = ('transaction_type', 'transaction_amount',
+                  'transaction_user')
 
 
 class UserProfileForm(forms.ModelForm):

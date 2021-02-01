@@ -1,13 +1,23 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from config.validators import validate_investment
+from config.validators import validate_investment, validate_name, validate_number, validate_investment_transaction_type, validate_amount
 
 
 class Pool(models.Model):
+    # Self Generate & Validate
+    codename = models.CharField(
+        null=False, blank=False, unique=True, editable=False, max_length=250,
+        help_text='Codename for the Pool'
+    )
     name = models.CharField(
-        null=False, blank=False, unique=True, editable=False, max_length=250, help_text='Unique name for the Pool')
+        null=False, blank=False, unique=False, editable=False, max_length=250,
+        validators=[validate_name], help_text='Name for the Pool'
+    )
     size = models.IntegerField(
-        default=20, null=False, blank=False, help_text='Pool size, i.e. maximum member count for the Pool')
+        default=20, null=False, blank=False,
+        validators=[
+            validate_number], help_text='Pool size, i.e. maximum member count for the Pool'
+    )
     investment = models.DecimalField(
         default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False, editable=False,
     )
@@ -61,10 +71,12 @@ class InvestmentTransaction(models.Model):
         ('D', 'Disinvest')
     )
     transaction_type = models.CharField(
-        max_length=1, choices=TRANSACTION_TYPE, blank=False
+        max_length=1, choices=TRANSACTION_TYPE, blank=False,
+        validators=[validate_investment_transaction_type]
     )
     transaction_amount = models.DecimalField(
-        null=False, blank=False, max_digits=7, decimal_places=2
+        null=False, blank=False, max_digits=7, decimal_places=2,
+        validators=[validate_amount]
     )
     transaction_from = models.ForeignKey(
         get_user_model(), on_delete=models.DO_NOTHING, related_name='outgoing_investment_transactions', blank=False
@@ -77,4 +89,4 @@ class InvestmentTransaction(models.Model):
     )
 
     def __str__(self):
-        return self.transaction_from.email + ':' + self.transaction_type + ':' + self.transaction_for_pool + ':' + self.transaction_amount + ':' + self.transaction_to
+        return self.transaction_from.email + ':' + self.transaction_type + ':' + self.transaction_for_pool + ':' + str(self.transaction_amount) + ':' + self.transaction_to.email
