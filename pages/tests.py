@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from .views import CompanyPageView, ProductPageView
@@ -13,10 +14,16 @@ class CompanyPageTests(SimpleTestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_companypage_template(self):
-        self.assertTemplateUsed(self.response, 'pages/company.html')
+        """
+        For Product based company, product page is company page
+        """
+        if settings.PRODUCT_NAME == settings.COMPANY_NAME:
+            self.assertTemplateUsed('pages/product.html')
+        else:
+            self.assertTemplateUsed('pages/company.html')
 
     def test_companypage_contains_correct_html(self):
-        self.assertContains(self.response, 'Company Details Page')
+        self.assertContains(self.response, 'All Rights Reserved')
 
     def test_companypage_does_not_contain_incorrect_html(self):
         self.assertNotContains(
