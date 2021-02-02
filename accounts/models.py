@@ -110,3 +110,52 @@ class BalanceTransaction(models.Model):
 
     def __str__(self):
         return self.transaction_user.contact_number + ':' + self.transaction_type + ':' + str(self.transaction_amount)
+
+
+class BillingAddress(models.Model):
+    COUNTRY = (
+        ('IN', 'India')
+    )
+
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.DO_NOTHING, related_name='address', blank=False
+    )
+
+    name = models.CharField(
+        "Full name",
+        max_length=1024,
+    )
+
+    address1 = models.CharField(
+        "Address line 1",
+        max_length=1024,
+    )
+
+    address2 = models.CharField(
+        "Address line 2",
+        max_length=1024,
+    )
+
+    zip_code = models.CharField(
+        "ZIP / Postal code",
+        max_length=12,
+    )
+
+    city = models.CharField(
+        "City",
+        max_length=1024,
+    )
+
+    city = models.CharField(
+        "City",
+        max_length=1024,
+    )
+
+    country = models.CharField(
+        "Country",
+        max_length=3,
+        choices=COUNTRY,
+    )
+
+    def __str__(self):
+        return self.name + ', ' + self.address1 + ', ' + self.address2

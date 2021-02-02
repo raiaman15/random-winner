@@ -1,15 +1,19 @@
 {% extends "layouts/base.html" %}
 
 {% load static %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
-{% block title %} Contact {% endblock %}
+{% block title %} Update Name {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<!-- Cropper.js -->
+<link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -20,12 +24,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Contact</h1>
+                    <h1 class="m-0">Update Details</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Contact</li>
+                        <li class="breadcrumb-item active">Update Details</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -44,8 +48,8 @@
                     <div class="card bg-white elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-phone-alt"></i>
-                                Verify Contact Number
+                                <i class="fas fa-id-card"></i>
+                                Update Your Details
                             </h3>
 
                             <div class="card-tools">
@@ -62,39 +66,29 @@
 
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
-                        <div id="otp_confirm_form" class="card-body">
+                        <div class="card-body">
                             <form method="post">
                                 {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="otp_confirm">Confirm OTP</label>
-                                    <input type="text" class="textinput form-control" id="otp_confirm"
-                                        name="otp_confirm" placeholder="Enter the OTP here">
-                                </div>
-                                <div id="countdown" class="countdown text-bold"></div>
-                                <br />
-                                <input id="otp_submit" type="submit" value="Confirm">
+                                {{ form | crispy }}
+                                <input type="submit" class="btn btn-light" value="Update">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
                         {% if messages %}
                         <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 text-center">
                                 {% for message in messages %}
                                 <p>{{ message }}</p>
-                                <script>
-                                    document.getElementById("otp_confirm_form").innerHTML = "Redirecting to Dashboard in 5 seconds...";
-
-                                    setTimeout(function () {
-                                        window.location.href = '/';
-                                    }, 5000);
-                                </script>
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>
                         {% else %}
-                        <div class="card-footer text-center">
-                            An OTP was sent to your contact number {{user.contact_number}}. Kindly confirm the OTP
-                            within <span id="seconds"></span> seconds to complete your onboarding!
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Click <a href="{% url 'status' %}">here</a> go back to your Dashboard.
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% endif %}
                         <!-- /.Help Text -->
@@ -102,9 +96,8 @@
                     <!-- /.card -->
                 </section>
                 <!-- /.Left col -->
-                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
+                <!-- Right col -->
                 <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/otp.png' %}" style="max-width:100%;">
                 </section>
                 <!-- right col -->
             </div>
@@ -112,36 +105,9 @@
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-
 </div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}
-<script>
-    const TOTALTIME = 120
-    var timeleft = TOTALTIME;
-    var color = "green";
-    var downloadTimer = setInterval(function () {
-        if (timeleft <= 0) {
-            clearInterval(downloadTimer);
-            $("#countdown").html("OTP Expired!");
-            $("#otp_confirm").prop('disabled', true);
-            $("#otp_submit").remove();
-            $("#seconds").html(timeleft);
-
-        } else {
-            if (timeleft == Math.floor(TOTALTIME / 2)) {
-                $("#countdown").css("color", "orange");
-            }
-            if (timeleft == Math.floor(TOTALTIME / 4)) {
-                $("#countdown").css("color", "red");
-            }
-            $("#countdown").html(timeleft + " seconds remaining");
-            $("#seconds").html(timeleft);
-        }
-        timeleft -= 1;
-    }, 1000);
-</script>
-{% endblock javascripts %}
+{% block javascripts %}{% endblock javascripts %}

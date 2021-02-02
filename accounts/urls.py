@@ -12,11 +12,13 @@ urlpatterns = [
     path('dashboard/', accounts_views.DashboardView.as_view(), name='dashboard'),
     path('profile/name', accounts_views.UserProfileNameUpdateView.as_view(),
          name='profile_name'),
-    # TODO-URGENT: Update Profile Details (including all fields)
     path('profile/datail', accounts_views.UserProfileDetailUpdateView.as_view(),
          name='profile_detail'),
     path('profile/picture', accounts_views.UserProfilePictureUploadView.as_view(),
          name='profile_picture'),
+
+    path('poolmaster/apply', accounts_views.UserPoolMasterApplicationView.as_view(),
+         name='apply_for_poolmaster'),
 
     path('users/', accounts_views.UserListView.as_view(), name='user_list'),
     path('users/<int:pk>', accounts_views.UserDetailView.as_view(), name='user_detail'),

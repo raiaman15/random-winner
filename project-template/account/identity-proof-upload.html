@@ -28,7 +28,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
                         <li class="breadcrumb-item active">Identity Verification</li>
                     </ol>
                 </div><!-- /.col -->
@@ -82,12 +82,17 @@
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>
-                        {% elif user.identity_proof %}
+                        {% elif user.identity_proof and not user.identity_reject_reason %}
                         <div class="card-footer text-center text-bold">
                             Your Identity verification is in progress. It may take some time for the verification to
                             complete. Please revisit in some time to proceed further.
-                            <br />
-
+                        </div>
+                        {% elif user.identity_reject_reason %}
+                        <div class="card-footer text-center text-bold">
+                            <span class="text-danger">ID Proof Verification Failed!</span><br />
+                            {{user.identity_reject_reason}}
+                            <hr />
+                            <span class="text-danger">Please submit valid document again!</span><br />
                         </div>
                         {% else %}
                         <div class="row card-footer text-center pb-0">
@@ -233,7 +238,8 @@
                         <div class="col-lg-2 col-md-2 col-sm-2"></div>
                     </div>
                     <div class="row">
-                        <div class="col-12 text-center">The cropped photograph must contain your face.</div>
+                        <div class="col-12 text-center">The cropped photograph must contain your ID card (with clear
+                            face and number).</div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->

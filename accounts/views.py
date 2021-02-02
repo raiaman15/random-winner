@@ -27,7 +27,7 @@ class UserStatusView(LoginRequiredMixin, View):
         if (EmailAddress.objects.filter(user=user).exists() and not user.contact_verified):
             if (EmailAddress.objects.filter(user=user, verified=False).exists()):
                 return redirect('contact_confirmation_option')
-            elif not user.identity_verified:
+            elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('identity_proof_upload')
             elif not (user.first_name or user.lastname):
                 return redirect('profile_name')
@@ -38,7 +38,7 @@ class UserStatusView(LoginRequiredMixin, View):
         if user.contact_number:
             if not user.contact_verified:
                 return redirect('contact_sms_confirm')
-            elif not user.identity_verified:
+            elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('identity_proof_upload')
             elif not (user.first_name or user.lastname):
                 return redirect('profile_name')
@@ -60,7 +60,7 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.contact_verified:
-            #self.message = "You have already verified your contact number!"
+            # self.message = "You have already verified your contact number!"
             messages.success(
                 request, 'You have already verified your contact number!')
         elif ContactNumberOTP.objects.filter(contact_number=user.contact_number).exists():
@@ -69,7 +69,7 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
             now = pytz.timezone("Asia/Kolkata").localize(datetime.now())
             print((now-attempt.created_at).total_seconds()//60)
             if (now-attempt.created_at).total_seconds()//60 < 5:
-                #self.message = "You requested OTP within past 5 minutes. Please try again later!"
+                # self.message = "You requested OTP within past 5 minutes. Please try again later!"
                 messages.warning(
                     request, 'You requested OTP within past 5 minutes. Please try again later!')
             else:
@@ -173,9 +173,9 @@ class UserProfileNameUpdateView(LoginRequiredMixin, UpdateView):
 
 class UserProfileDetailUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['first_name', 'last_name']
+    fields = ['first_name', 'last_name', 'aadhaar_number', 'pan_number']
     context_object_name = 'user'
-    template_name = 'account/dashboard.html'
+    template_name = 'account/profile-detail.html'
     login_url = 'account_login'
     success_url = reverse_lazy('profile_detail')
 
@@ -206,6 +206,26 @@ class UserProfilePictureUploadView(LoginRequiredMixin, UpdateView):
                     request.user.save()
 
         return super(UserProfilePictureUploadView, self).post(request, *args, **kwargs)
+
+
+class UserPoolMasterApplicationView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    fields = ['is_willing_master']
+    context_object_name = 'user'
+    template_name = 'account/poolmaster-apply.html'
+    login_url = 'account_login'
+    success_url = reverse_lazy('status')
+
+    def get_object(self):
+        return get_object_or_404(self.model, pk=self.request.user.pk)
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if not user.identity_verified:
+            messages.error(
+                self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
+
+        return super(UserPoolMasterApplicationView, self).post(request, *args, **kwargs)
 
 
 class UserListView(LoginRequiredMixin, ListView):
