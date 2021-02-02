@@ -3,9 +3,14 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin
 )
 from django.db.models import Q
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Pool, InvestmentTransaction
 
+
+class PoolCreateView(CreateView):
+    model = Pool
+    fields = ['name', 'size', 'investment']
+    
 
 class PoolListView(LoginRequiredMixin, ListView):
     model = Pool

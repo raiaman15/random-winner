@@ -18,7 +18,7 @@ echo "SEEDING DATABASE | REFRESH"
 echo "RUNNING ALL TEST CASES"
 python manage.py test
 echo "CREATING TEST SUPERUSER"
-echo "from django.contrib.auth import get_user_model; user = get_user_model().objects.create_user(username='admin', email='admin@infroid.com', password='DevTeam@123'); user.is_superuser=True; user.is_staff=True; user.save()" | python manage.py shell
+echo "from django.contrib.auth import get_user_model; user = get_user_model().objects.create_user(username='7007488735', email='admin@infroid.com', password='DevTeam@123'); user.is_superuser=True; user.is_staff=True; user.save()" | python manage.py shell
 
 echo "STARTING DJANGO BUILT-IN SERVER"
 # SSL Enabled Mode

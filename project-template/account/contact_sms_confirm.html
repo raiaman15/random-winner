@@ -80,20 +80,14 @@
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-12">
                                 {% for message in messages %}
-                                <p>{{ message }}</p>
-                                <script>
-                                    document.getElementById("otp_confirm_form").innerHTML = "Redirecting to Dashboard in 5 seconds...";
-
-                                    setTimeout(function () {
-                                        window.location.href = '/';
-                                    }, 5000);
-                                </script>
+                                <p>{{ message }}</p><br />
+                                <p>Click <a href="{% url 'status' %}">here</a> to go to Dashboard.</p>
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>
                         {% else %}
                         <div class="card-footer text-center">
-                            An OTP was sent to your contact number {{user.contact_number}}. Kindly confirm the OTP
+                            An OTP was sent to your contact number {{user.username}}. Kindly confirm the OTP
                             within <span id="seconds"></span> seconds to complete your onboarding!
                         </div>
                         {% endif %}

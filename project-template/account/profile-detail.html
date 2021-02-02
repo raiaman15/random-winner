@@ -81,6 +81,11 @@
                                 <p>{{ message }}</p>
                                 {% endfor %}
                             </div><!-- /.col -->
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Click <a href="{% url 'status' %}">here</a> go back to your Dashboard.
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% else %}
                         <div class="row card-footer text-center pb-0">

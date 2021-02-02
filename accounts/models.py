@@ -3,56 +3,66 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import validate_name, validate_aadhaar_number, validate_pan_number, validate_conatct_number, validate_amount, validate_otp, validate_balance_transaction_type
+from config.validators import validate_name, validate_aadhaar_number, validate_pan_number, validate_username, validate_amount, validate_otp, validate_balance_transaction_type
 from config.utils import send_otp
 
 
 class CustomUser(AbstractUser):
+    username = models.CharField(
+        'Contact Number',
+        max_length=12, blank=False, unique=True,
+        validators=[validate_username],
+        help_text='Your valid mobile number for OTP verification.'
+    )
     first_name = models.CharField(
+        'First Name',
         max_length=26, validators=[validate_name], blank=True,
         help_text='Your first name. (to be used in future transactions)'
     )
     last_name = models.CharField(
+        'Last Name',
         max_length=26, validators=[validate_name], blank=True,
         help_text='Your last name. (to be used in future transactions)'
     )
     picture = models.ImageField(
+        'Profile Picture',
         upload_to='picture/', blank=True,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
         help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format. (Max 2 MB)'
     )
     aadhaar_number = models.CharField(
+        'Aadhaar Card Number',
         max_length=12, validators=[validate_aadhaar_number], blank=True,
         help_text='Your 12 digit Aadhaar Number (as written on your aadhaar card).'
     )
     pan_number = models.CharField(
+        'PAN Card Number',
         max_length=10, validators=[validate_pan_number], blank=True,
         help_text='Your 10 digit PAN Number (as written on your PAN card).'
     )
     identity_proof = models.ImageField(
+        'Photograph of Identity Proof',
         upload_to='identity/', blank=True,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
         help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 2 MB)'
     )
     identity_verified = models.BooleanField(default=False)
     identity_reject_reason = models.CharField(
+        'ID Proof Rejection Reason',
         max_length=250, blank=True,
         help_text='The reason to Reject user\'s Identity Verification (by Internal Team).'
-    )
-    contact_number = models.CharField(
-        max_length=12, blank=True,
-        validators=[validate_conatct_number],
-        help_text='Your valid mobile number for OTP verification.'
     )
     contact_secret = models.CharField(max_length=16, blank=True)
     contact_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
     is_verified_master = models.BooleanField(default=False)
     balance_amount = models.DecimalField(
+        'Balance Amount',
         default=0.00, max_digits=7, decimal_places=2,
         validators=[DecimalValidator, validate_amount]
     )
     investment_amount = models.DecimalField(
+        'Investment Amount',
         default=0.00, max_digits=7, decimal_places=2,
         validators=[DecimalValidator, validate_amount]
     )
@@ -60,8 +70,8 @@ class CustomUser(AbstractUser):
     def generate_otp(self):
         self.contact_secret = pyotp.random_base32()
         totp = pyotp.TOTP(self.contact_secret, interval=125).now()
-        send_otp(self.contact_number, totp)
-        ContactNumberOTP(contact_number=self.contact_number, otp=totp).save()
+        send_otp(self.username, totp)
+        ContactNumberOTP(username=self.username, otp=totp).save()
         return True
 
     def apply_for_master(self):
@@ -74,13 +84,13 @@ class CustomUser(AbstractUser):
             # TODO-NORMAL: Raise request for admin.
 
     def __str__(self):
-        return self.contact_number
+        return self.username
 
 
 class ContactNumberOTP(models.Model):
-    contact_number = models.CharField(
+    username = models.CharField(
         max_length=17, blank=False, unique=True,
-        validators=[validate_conatct_number], editable=False
+        validators=[validate_username], editable=False
     )
     otp = models.CharField(
         max_length=6, blank=False,
@@ -109,12 +119,12 @@ class BalanceTransaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.transaction_user.contact_number + ':' + self.transaction_type + ':' + str(self.transaction_amount)
+        return self.transaction_user.username + ':' + self.transaction_type + ':' + str(self.transaction_amount)
 
 
 class BillingAddress(models.Model):
     COUNTRY = (
-        ('IN', 'India')
+        ('IN', 'India'),
     )
 
     user = models.OneToOneField(
@@ -122,33 +132,33 @@ class BillingAddress(models.Model):
     )
 
     name = models.CharField(
-        "Full name",
-        max_length=1024,
+        "Full Name", max_length=64, validators=[validate_name],
+        help_text="Name of Person for the Address"
     )
 
     address1 = models.CharField(
-        "Address line 1",
-        max_length=1024,
+        "Address Line 1", max_length=128,
+        help_text="Line 1 of the Address"
     )
 
     address2 = models.CharField(
-        "Address line 2",
-        max_length=1024,
+        "Address Line 2", max_length=128,
+        help_text="Line 2 of the Address"
     )
 
     zip_code = models.CharField(
-        "ZIP / Postal code",
-        max_length=12,
+        "ZIP / Postal code", max_length=12,
+        help_text="ZIP / Postal code for the Address"
     )
 
     city = models.CharField(
-        "City",
-        max_length=1024,
+        "City", max_length=128,
+        help_text="City for the Address"
     )
 
-    city = models.CharField(
-        "City",
-        max_length=1024,
+    state = models.CharField(
+        "State", max_length=128,
+        help_text="State for the Address"
     )
 
     country = models.CharField(

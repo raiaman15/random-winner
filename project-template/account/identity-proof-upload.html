@@ -70,7 +70,8 @@
                             <form id="identity_form" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Submit & Proceed" onclick="return ValidateFile()">
+                                <input type="submit" class="btn btn-secondary" value="Upload ID Proof"
+                                    onclick="return ValidateFile()">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
@@ -81,6 +82,11 @@
                                 <p>{{ message }}</p>
                                 {% endfor %}
                             </div><!-- /.col -->
+                        </div>
+                        {% elif user.identity_verified %}
+                        <div class="card-footer text-center text-bold">
+                            Your Identity verification was successful!<br />
+                            Click <a href="{% url 'status' %}">here</a> to go to Dashboard.
                         </div>
                         {% elif user.identity_proof and not user.identity_reject_reason %}
                         <div class="card-footer text-center text-bold">
@@ -206,7 +212,11 @@
 
                             <!-- timeline time label -->
                             <div class="time-label text-left">
+                                {% if user.identity_verified and user.first_name or user.last_name %}
+                                <span class="bg-success"><i class="fas fa-check"></i> ONBOARDING COMPLETED</span>
+                                {% else %}
                                 <span class="bg-warning"><i class="fas fa-check"></i> ONBOARDING COMPLETES</span>
+                                {% endif %}
                             </div>
                             <!-- /.timeline-label -->
                         </div>

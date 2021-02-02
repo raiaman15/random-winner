@@ -4,21 +4,25 @@ from config.validators import validate_investment, validate_name, validate_numbe
 
 
 class Pool(models.Model):
-    # Self Generate & Validate
+    # Self Generate & Save - Override Save
     codename = models.CharField(
+        'Pool Codename',
         null=False, blank=False, unique=True, editable=False, max_length=250,
         help_text='Codename for the Pool'
     )
     name = models.CharField(
+        'Pool Name',
         null=False, blank=False, unique=False, editable=False, max_length=250,
         validators=[validate_name], help_text='Name for the Pool'
     )
     size = models.IntegerField(
+        'Pool Size',
         default=20, null=False, blank=False,
         validators=[
             validate_number], help_text='Pool size, i.e. maximum member count for the Pool'
     )
     investment = models.DecimalField(
+        'Pool Investment Amount',
         default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False, editable=False,
     )
     master = models.ForeignKey(
@@ -55,6 +59,9 @@ class Pool(models.Model):
         if self.get_member_remaining > 0:
             if not self.verify_member(user):
                 self.members.add(user)
+
+    def get_absolute_url(self):
+        return 
 
     def __str__(self):
         return self.name + ':' + self.master.email

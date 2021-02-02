@@ -15,7 +15,7 @@ def validate_name(value):
         )
 
 
-def validate_conatct_number(value):
+def validate_username(value):
     """ Validates phone number - 10 digit Indian Phone Number """
     Pattern = re.compile("(0/91)?[5-9][0-9]{9}")
     if not Pattern.match(value):
@@ -151,5 +151,5 @@ def validate_pan_number(value):
 #######################################
 
 
-# We are treating the contact_number field of CustomUser as username for allauth
-custom_username_validator = [validate_conatct_number]
+# We are treating the username field of CustomUser as username for allauth
+custom_username_validator = [validate_username]

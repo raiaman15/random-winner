@@ -35,7 +35,7 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('dashboard')
 
         # If user signed up with contact number
-        if user.contact_number:
+        if user.username:
             if not user.contact_verified:
                 return redirect('contact_sms_confirm')
             elif user.identity_reject_reason or not user.identity_proof:
@@ -63,9 +63,9 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
             # self.message = "You have already verified your contact number!"
             messages.success(
                 request, 'You have already verified your contact number!')
-        elif ContactNumberOTP.objects.filter(contact_number=user.contact_number).exists():
+        elif ContactNumberOTP.objects.filter(username=user.username).exists():
             attempt = ContactNumberOTP.objects.get(
-                contact_number=user.contact_number)
+                username=user.username)
             now = pytz.timezone("Asia/Kolkata").localize(datetime.now())
             print((now-attempt.created_at).total_seconds()//60)
             if (now-attempt.created_at).total_seconds()//60 < 5:
@@ -74,7 +74,7 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
                     request, 'You requested OTP within past 5 minutes. Please try again later!')
             else:
                 ContactNumberOTP.objects.get(
-                    contact_number=user.contact_number).delete()
+                    username=user.username).delete()
                 user.generate_otp()
         else:
             user.generate_otp()
@@ -93,14 +93,14 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
         if request.user.contact_verified:
             return redirect('contact')
 
-        if ContactNumberOTP.objects.filter(contact_number=self.request.user.contact_number).exists():
+        if ContactNumberOTP.objects.filter(username=self.request.user.username).exists():
 
             user_otp = 0
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
                     user_otp = int(request.POST.get("otp_confirm"))
             truth = ContactNumberOTP.objects.get(
-                contact_number=self.request.user.contact_number)
+                username=self.request.user.username)
             if int(user_otp) == int(truth.otp):
                 request.user.contact_verified = True
                 request.user.save()
@@ -181,6 +181,12 @@ class UserProfileDetailUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
+
+    def post(self, request, *args, **kwargs):
+        messages.success(
+            self.request, 'Details Updated Successfully.')
+
+        return super(UserProfileDetailUpdateView, self).post(request, *args, **kwargs)
 
 
 class UserProfilePictureUploadView(LoginRequiredMixin, UpdateView):

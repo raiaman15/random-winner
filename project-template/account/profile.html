@@ -70,7 +70,8 @@
                             <form id="identity_form" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Submit & Proceed" onclick="return ValidateFile()">
+                                <input type="submit" class="btn btn-secondary" value="Update Profile Picture"
+                                    onclick="return ValidateFile()">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
@@ -86,7 +87,7 @@
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-12 text-center">
                                 <p>
-                                    Please upload your valid Photo (with face).
+                                    Click <a href="{% url 'status' %}">here</a> to go back to Dashboard.
                                 </p>
                             </div><!-- /.col -->
                         </div>
@@ -238,9 +239,9 @@
         $("#modalCrop").on("shown.bs.modal", function () {
             $image.cropper({
                 viewMode: 1,
-                aspectRatio: 33 / 21,
-                minCropBoxWidth: 330,
-                minCropBoxHeight: 210,
+                aspectRatio: 1,
+                minCropBoxWidth: 200,
+                minCropBoxHeight: 200,
                 ready: function () {
                     $image.cropper("setCanvasData", canvasData);
                     $image.cropper("setCropBoxData", cropBoxData);

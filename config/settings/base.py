@@ -182,7 +182,6 @@ ACCOUNT_FORMS = {}
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 ACCOUNT_SESSION_REMEMBER = None
-ACCOUNT_USER_MODEL_USERNAME_FIELD = "contact_number"
 ACCOUNT_USERNAME_MIN_LENGTH = 10
 ACCOUNT_USERNAME_VALIDATORS = 'config.validators.custom_username_validator'
 ACCOUNT_UNIQUE_EMAIL = True
@@ -197,4 +196,4 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 def ACCOUNT_USER_DISPLAY(user):
     """ # FIX-NORMAL: ACCOUNT_USER_DISPLAY (if needed) """
-    return user.contact_number if user.contact_number else user.email
+    return user.username if user.username else user.email

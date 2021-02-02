@@ -57,15 +57,17 @@
                                 {% endif %}
                             </h5>
                         </div>
-                        <div class="widget-user-image">
-                            {% if user.picture %}
-                            <img src="{{ user.picture.url }}" class="img-circle elevation-2"
-                                style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
-                            {% else %}
-                            <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
-                                alt="User Image">
-                            {% endif %}
-                        </div>
+                        <a href="{% url 'profile_picture' %}">
+                            <div class="widget-user-image">
+                                {% if user.picture %}
+                                <img src="{{ user.picture.url }}" class="img-circle elevation-2"
+                                    style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
+                                {% else %}
+                                <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
+                                    alt="User Image">
+                                {% endif %}
+                            </div>
+                        </a>
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
@@ -141,7 +143,7 @@
                                     </tr>
                                     <tr>
                                         <td>Contact Number</td>
-                                        <td>{{user.contact_number}}</td>
+                                        <td>{{user.username}}</td>
                                     </tr>
                                     <tr>
                                         <td>Aadhaar Number</td>
@@ -271,16 +273,18 @@
                             {% if user.first_name or user.lastname %}
                             {% if user.identity_verified %}
                             {% if user.aadhaar_number or user.pan_number %}
-
-                            <a href="{% url 'apply_for_poolmaster' %}" class="btn btn-secondary">Apply</a>
+                            <a href="{% url 'apply_for_poolmaster' %}" class="btn btn-secondary">Apply for
+                                PoolMaster</a>
+                            {% else %}
+                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
+                                Details</a>
                             {% endif %}
-
                             {% else %}
                             Identity Proof Verification is pending.
-                            <a href="{% url 'identity_proof_upload' %}">Details</a>
+                            <a href="{% url 'identity_proof_upload' %}">More Info.</a>
                             {% endif %}
                             {% else %}
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Name</a>
+                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
                             {% endif %}
                             {% endif %}
                         </div>
