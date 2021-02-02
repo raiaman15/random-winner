@@ -62,8 +62,7 @@
 
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            {% if 'already verified your contact number' not in message.0 %}
+                        <div id="otp_confirm_form" class="card-body">
                             <form method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
@@ -75,16 +74,6 @@
                                 <br />
                                 <input id="otp_submit" type="submit" value="Confirm">
                             </form>
-                            {% else %}
-                            <div class="h3 text-center">
-                                Redirecting to Dashboard in 5 seconds...
-                            </div>
-                            <script>
-                                setTimeout(function () {
-                                    window.location.href = '/';
-                                }, 5000);
-                            </script>
-                            {% endif %}
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
                         {% if messages %}
@@ -92,6 +81,13 @@
                             <div class="col-sm-12">
                                 {% for message in messages %}
                                 <p>{{ message }}</p>
+                                <script>
+                                    document.getElementById("otp_confirm_form").innerHTML = "Redirecting to Dashboard in 5 seconds...";
+
+                                    setTimeout(function () {
+                                        window.location.href = '/';
+                                    }, 5000);
+                                </script>
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>

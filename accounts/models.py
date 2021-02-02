@@ -37,7 +37,7 @@ class CustomUser(AbstractUser):
     identity_verified = models.BooleanField(default=False)
     identity_reject_reason = models.CharField(
         max_length=250, blank=True,
-        help_text='Your 10 digit PAN Number (as written on your PAN card).'
+        help_text='The reason to Reject user\'s Identity Verification (by Internal Team).'
     )
     contact_number = models.CharField(
         max_length=12, blank=True,

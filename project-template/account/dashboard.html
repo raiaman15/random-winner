@@ -154,7 +154,8 @@
                                             REJECTED | <a href="{%url 'identity_proof_upload' %}">Retry</a> <br />
                                             {{ user.identity_reject_reason }}
                                             {% elif user.identity_proof %}
-                                            <span class="text-warning">VERIFICATION IN PROGRESS</span>
+                                            <span class="text-danger">VERIFICATION PENDING FROM
+                                                {{PRODUCT_NAME|upper}}</span>
                                             {% else %}
                                             <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
                                                 href="{%url 'identity_proof_upload' %}">Upload</a> <br />

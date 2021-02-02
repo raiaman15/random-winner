@@ -27,6 +27,7 @@
       </div>
     </div>
 
+    {% if user.is_superuser or user.identity_verified and user.contact_verified %}
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -114,6 +115,7 @@
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
+    {% endif %}
   </div>
   <!-- /.sidebar -->
 </aside>

@@ -27,8 +27,10 @@ class UserStatusView(LoginRequiredMixin, View):
         if (EmailAddress.objects.filter(user=user).exists() and not user.contact_verified):
             if (EmailAddress.objects.filter(user=user, verified=False).exists()):
                 return redirect('contact_confirmation_option')
-            if not user.identity_verified:
+            elif not user.identity_verified:
                 return redirect('identity_proof_upload')
+            elif not (user.first_name or user.lastname):
+                return redirect('profile_name')
             else:
                 return redirect('dashboard')
 
@@ -38,6 +40,8 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('contact_sms_confirm')
             elif not user.identity_verified:
                 return redirect('identity_proof_upload')
+            elif not (user.first_name or user.lastname):
+                return redirect('profile_name')
             else:
                 return redirect('dashboard')
 

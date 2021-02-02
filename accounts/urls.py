@@ -10,7 +10,6 @@ urlpatterns = [
     path('identity-proof-upload', accounts_views.UserIdentityProofUploadView.as_view(),
          name='identity_proof_upload'),
     path('dashboard/', accounts_views.DashboardView.as_view(), name='dashboard'),
-    # TODO-URGENT: Update Profile Name (including name fields only)
     path('profile/name', accounts_views.UserProfileNameUpdateView.as_view(),
          name='profile_name'),
     # TODO-URGENT: Update Profile Details (including all fields)
