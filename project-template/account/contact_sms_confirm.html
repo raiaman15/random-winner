@@ -80,7 +80,7 @@
                             {% endif %}
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if message %}
+                        {% if messages %}
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-6">
                                 <p class="float-sm-left">
@@ -90,7 +90,9 @@
                                 </p>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
+                                {% for message in messages %}
                                 <p class="float-sm-right">{{ message }}</p>
+                                {% endfor %}
                             </div><!-- /.col -->
                         </div>
                         {% else %}

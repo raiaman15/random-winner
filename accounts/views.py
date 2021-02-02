@@ -48,7 +48,7 @@ class UserContactConfirmOptionView(TemplateView):
 class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
     model = CustomUser
     context_object_name = 'user'
-    template_name = 'account/contact_confirm.html'
+    template_name = 'account/contact_sms_confirm.html'
     login_url = 'account_login'
     success_url = reverse_lazy('status')
 

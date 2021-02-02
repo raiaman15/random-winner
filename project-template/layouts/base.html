@@ -96,7 +96,6 @@
   </script>
   {% if messages %}
   {% for message in messages %}
-  {{ message }}
   <script>
     Toast.fire({
       icon: '{{ message.tags|lower }}',

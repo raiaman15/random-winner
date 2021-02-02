@@ -70,11 +70,26 @@
                             <form id="identity_form" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Submit & Proceed">
+                                <input type="submit" value="Submit & Proceed" onclick="return ValidateFile()">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.aadhaar_number and user.identity_proof %}
+                        {% if messages %}
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-6">
+                                <p class="float-sm-left">
+                                    <a href="{% url 'status' %}" class="btn btn-sm btn-danger">
+                                        GO BACK TO DASHBOARD
+                                    </a>
+                                </p>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                {% for message in messages %}
+                                <p class="float-sm-right">{{ message }}</p>
+                                {% endfor %}
+                            </div><!-- /.col -->
+                        </div>
+                        {% elif user.aadhaar_number and user.identity_proof %}
                         <div class="card-footer text-center text-bold">
                             Your Identity verification is in progress. It may take some time for the verification to
                             complete. Please revisit in some time to proceed further.
@@ -211,7 +226,7 @@
                         <div class="col-12 text-center">The cropped photograph must contain your face.</div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default js-zoom-out">
                                 <i class="fas fa-search-minus"></i>
@@ -242,13 +257,69 @@
 <script src="{% static 'project/plugins/jquery-cropper/jquery-cropper.min.js' %}"></script>
 
 <script>
+    /* Client Side File Validation */
+    function ValidateFile(id) {
+        //Get reference of FileUpload.
+        var fileUpload = document.getElementById(id);
+
+        //Check whether the file is valid Image.
+        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.jpg|.png|.gif)$");
+
+        //Check whether the file size is less than 2 MB
+        if (fileUpload.files[0].size < 2048000000) {
+            if (regex.test(fileUpload.value.toLowerCase())) {
+                //Check whether HTML5 is supported.
+                if (typeof (fileUpload.files) != "undefined") {
+                    //Initiate the FileReader object.
+                    var reader = new FileReader();
+                    //Read the contents of Image File.
+                    reader.readAsDataURL(fileUpload.files[0]);
+                    reader.onload = function (e) {
+                        //Initiate the JavaScript Image object.
+                        var image = new Image();
+
+                        //Set the Base64 string return from FileReader as source.
+                        image.src = e.target.result;
+
+                        //Validate the File Height and Width.
+                        image.onload = function () {
+                            var height = this.height;
+                            var width = this.width;
+                            if (height > 100 || width > 100) {
+                                alert("Height and Width must not exceed 100px.");
+                                return false;
+                            }
+                            alert("Uploaded image has valid Height and Width.");
+                            return true;
+                        };
+
+                    }
+                } else {
+                    alert("This browser does not support HTML5.");
+                    location.reload();
+                    return false;
+                }
+            } else {
+                alert("Please select a valid Image file.");
+                location.reload();
+                return false;
+            }
+        } else {
+            alert("Please select an Image file less than 2 MB in size.");
+            location.reload();
+            return false;
+        }
+    }
+
     $(function () {
         /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
         $("#id_identity_proof").change(function () {
+            ValidateFile("id_identity_proof")
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $("#image").attr("src", e.target.result);
+                    //
                     $("#modalCrop").modal("show");
                 }
                 reader.readAsDataURL(this.files[0]);
