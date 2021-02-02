@@ -82,19 +82,18 @@
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>
-                        {% elif user.identity_proof %}
+                        {% elif user.first_name or user.last_name %}
                         <div class="card-footer text-center text-bold">
-                            Your Identity verification is in progress. It may take some time for the verification to
-                            complete. Please revisit in some time to proceed further.
-                            <br />
-
+                            <div class="col-sm-12 text-center">
+                                You have updated your name.<br />
+                                Click <a href="{% url 'dashboard' %}">here</a> to go to your dashboard.
+                            </div><!-- /.col -->
                         </div>
                         {% else %}
                         <div class="row card-footer text-center pb-0">
                             <div class="col-sm-12 text-center">
                                 <p>
-                                    Please upload your valid Photo ID (preferably Aadhaar Card) for verification
-                                    purpose.
+                                    Please provide your Full Name which will be used for future transactions.
                                 </p>
                             </div><!-- /.col -->
                         </div>
@@ -111,7 +110,7 @@
                         <div class="timeline">
                             <!-- timeline time label -->
                             <div class="time-label text-left">
-                                <span class="bg-success"><i class="fas fa-clipboard-list"></i> ONBOARDING STARTS</span>
+                                <span class="bg-success"><i class="fas fa-clipboard-list"></i> ONBOARDING STARTED</span>
                             </div>
                             <!-- /.timeline-label -->
                             {% if user.contact_verified %}
@@ -160,9 +159,17 @@
                                 <div class="timeline-item">
                                     <h3 class="timeline-header text-left">
                                         <a href="{% url 'status' %}">Identity Verification</a>
-                                        <small><strong>
-                                                {% if user.identity_verified %}DONE{% else %}IN PROGRESS{% endif %}
-                                            </strong></small>
+                                        <small>
+                                            <strong>
+                                                {% if user.identity_verified %}
+                                                DONE
+                                                {% elif user.identity_proof %}
+                                                VERIFICATION PENDING FROM {{PRODUCT_NAME|upper}}
+                                                {% else %}
+                                                PENDING
+                                                {% endif %}
+                                            </strong>
+                                        </small>
                                     </h3>
                                     <div class="timeline-body text-justify">
                                         You update your Identity Proof Details here, which is verified by our team.

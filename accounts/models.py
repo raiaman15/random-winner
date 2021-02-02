@@ -3,11 +3,19 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import validate_aadhaar_number, validate_pan_number, validate_conatct_number, validate_amount, validate_otp, validate_balance_transaction_type
+from config.validators import validate_name, validate_aadhaar_number, validate_pan_number, validate_conatct_number, validate_amount, validate_otp, validate_balance_transaction_type
 from config.utils import send_otp
 
 
 class CustomUser(AbstractUser):
+    first_name = models.CharField(
+        max_length=26, validators=[validate_name], blank=True,
+        help_text='Your first name. (to be used in future transactions)'
+    )
+    last_name = models.CharField(
+        max_length=26, validators=[validate_name], blank=True,
+        help_text='Your last name. (to be used in future transactions)'
+    )
     picture = models.ImageField(
         upload_to='picture/', blank=True,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],

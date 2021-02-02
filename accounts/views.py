@@ -24,7 +24,7 @@ class UserStatusView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
         # If user signed up with email and confirmed their email address
-        if (EmailAddress.objects.filter(user=user).exists()):
+        if (EmailAddress.objects.filter(user=user).exists() and not user.contact_verified):
             if (EmailAddress.objects.filter(user=user, verified=False).exists()):
                 return redirect('contact_confirmation_option')
             if not user.identity_verified:
@@ -33,12 +33,13 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('dashboard')
 
         # If user signed up with contact number
-        if user.contact_number and not user.contact_verified:
-            return redirect('contact_sms_confirm')
-        elif not user.identity_verified:
-            return redirect('identity_proof_upload')
-        else:
-            return redirect('dashboard')
+        if user.contact_number:
+            if not user.contact_verified:
+                return redirect('contact_sms_confirm')
+            elif not user.identity_verified:
+                return redirect('identity_proof_upload')
+            else:
+                return redirect('dashboard')
 
 
 class UserContactConfirmOptionView(TemplateView):

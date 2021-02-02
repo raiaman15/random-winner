@@ -111,7 +111,7 @@
                         <div class="timeline">
                             <!-- timeline time label -->
                             <div class="time-label text-left">
-                                <span class="bg-success"><i class="fas fa-clipboard-list"></i> ONBOARDING STARTS</span>
+                                <span class="bg-success"><i class="fas fa-clipboard-list"></i> ONBOARDING STARTED</span>
                             </div>
                             <!-- /.timeline-label -->
                             {% if user.contact_verified %}
@@ -161,7 +161,13 @@
                                     <h3 class="timeline-header text-left">
                                         <a href="{% url 'status' %}">Identity Verification</a>
                                         <small><strong>
-                                                {% if user.identity_verified %}DONE{% else %}IN PROGRESS{% endif %}
+                                                {% if user.identity_verified %}
+                                                DONE
+                                                {% elif user.identity_proof %}
+                                                VERIFICATION PENDING FROM {{PRODUCT_NAME|upper}}
+                                                {% else %}
+                                                PENDING
+                                                {% endif %}
                                             </strong></small>
                                     </h3>
                                     <div class="timeline-body text-justify">

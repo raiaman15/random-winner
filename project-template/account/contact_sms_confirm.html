@@ -44,7 +44,7 @@
                     <div class="card bg-white elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-id-card"></i>
+                                <i class="fas fa-phone-alt"></i>
                                 Verify Contact Number
                             </h3>
 
@@ -63,9 +63,7 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            {% if message %}
-                            {{ message }}
-                            {% else %}
+                            {% if 'already verified your contact number' not in message.0 %}
                             <form method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
@@ -77,21 +75,23 @@
                                 <br />
                                 <input id="otp_submit" type="submit" value="Confirm">
                             </form>
+                            {% else %}
+                            <div class="h3 text-center">
+                                Redirecting to Dashboard in 5 seconds...
+                            </div>
+                            <script>
+                                setTimeout(function () {
+                                    window.location.href = '/';
+                                }, 5000);
+                            </script>
                             {% endif %}
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
                         {% if messages %}
                         <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-6">
-                                <p class="float-sm-left">
-                                    <a href="{% url 'status' %}" class="btn btn-sm btn-danger">
-                                        GO BACK TO DASHBOARD
-                                    </a>
-                                </p>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 {% for message in messages %}
-                                <p class="float-sm-right">{{ message }}</p>
+                                <p>{{ message }}</p>
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>
