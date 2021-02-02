@@ -106,9 +106,50 @@ def validate_aadhaar_number(value):
             params={'value': value},)
 
 
+def validate_pan_number(value):
+    """ Validates if the PAN number is a valid. """
+    # Verify using https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/in_/pan.py
+
+    _card_holder_types = {
+        'A': 'Association of Persons (AOP)',
+        'B': 'Body of Individuals (BOI)',
+        'C': 'Company',
+        'F': 'Firm',
+        'G': 'Government',
+        'H': 'HUF (Hindu Undivided Family)',
+        'L': 'Local Authority',
+        'J': 'Artificial Juridical Person',
+        'P': 'Individual',
+        'T': 'Trust (AOP)',
+        'K': 'Krish (Trust Krish)',
+    }
+
+    """Regular expression used to check syntax of PAN numbers."""
+    _pan_re = re.compile(r'^[A-Z]{5}[0-9]{4}[A-Z]$')
+
+    """Convert the number to the minimal representation. This strips the
+    number of any valid separators and removes surrounding whitespace."""
+    number = clean(value, ' -').upper().strip()
+
+    if len(number) != 10:
+        raise ValidationError(
+            _('%(value)s is not a valid PAN Number. It must be 10 digit long!'),
+            params={'value': value},)
+
+    if not _pan_re.match(number):
+        raise ValidationError(
+            _('%(value)s is not a valid PAN Number. Type the XXXXXXXXXX formatted number from your PAN Card! (without spaces)'),
+            params={'value': value})
+
+    if not _card_holder_types.get(number[3]):
+        raise ValidationError(
+            _('%(value)s is not a valid PAN Number Type. Type the XXXXXXXXXX formatted number from your PAN Card! (without spaces)'),
+            params={'value': value})
+
 #######################################
 # Custom Validators for Business Logics
 #######################################
+
 
 # We are treating the contact_number field of CustomUser as username for allauth
 custom_username_validator = [validate_conatct_number]

@@ -27,7 +27,7 @@ class UserIdentityProofUploadViewForm(forms.ModelForm):
 
         image = Image.open(user_identity.identity_proof)
         cropped_image = image.crop((x, y, w+x, h+y))
-        resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+        resized_image = cropped_image.resize((330, 210), Image.ANTIALIAS)
         resized_image.save(user_identity.identity_proof.path)
 
         return user_identity
@@ -62,7 +62,7 @@ class UserProfilePictureUploadViewForm(forms.ModelForm):
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'picture', 'aadhaar_number', 'identity_proof', 'identity_verified',
+        fields = ('email', 'username', 'picture', 'aadhaar_number', 'pan_number', 'identity_proof', 'identity_verified',
                   'contact_number', 'contact_verified', 'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
 
 

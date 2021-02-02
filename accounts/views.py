@@ -37,8 +37,6 @@ class UserStatusView(LoginRequiredMixin, View):
             return redirect('contact_sms_verify')
         elif not user.identity_verified:
             return redirect('identity_proof_upload')
-        if not user.picture:
-            return redirect('profile')
         else:
             return redirect('dashboard')
 
@@ -48,7 +46,6 @@ class UserContactConfirmOptionView(TemplateView):
 
 
 class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
-    message = ''
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/contact_confirm.html'
@@ -58,14 +55,18 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.contact_verified:
-            self.message = "You have already verified your contact number!"
+            #self.message = "You have already verified your contact number!"
+            messages.success(
+                request, 'You have already verified your contact number!')
         elif ContactNumberOTP.objects.filter(contact_number=user.contact_number).exists():
             attempt = ContactNumberOTP.objects.get(
                 contact_number=user.contact_number)
             now = pytz.timezone("Asia/Kolkata").localize(datetime.now())
             print((now-attempt.created_at).total_seconds()//60)
             if (now-attempt.created_at).total_seconds()//60 < 5:
-                self.message = "You requested OTP within past 5 minutes. Please try again later!"
+                #self.message = "You requested OTP within past 5 minutes. Please try again later!"
+                messages.warning(
+                    request, 'You requested OTP within past 5 minutes. Please try again later!')
             else:
                 ContactNumberOTP.objects.get(
                     contact_number=user.contact_number).delete()
@@ -79,9 +80,8 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
-        context = super(UserContactConfirmView,
+        context = super(UserContactSMSConfirmView,
                         self).get_context_data(**kwargs)
-        context['message'] = self.message
         return context
 
     def post(self, request):
@@ -100,12 +100,10 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
                 request.user.contact_verified = True
                 request.user.save()
                 truth.delete()
-                messages.add_message(request, messages.INFO,
-                                     'Contact Number Verified')
+                messages.success(request, 'Contact Number Verified')
             else:
-                messages.add_message(
-                    request, messages.INFO,
-                    'Incorrect OPT. Please try again in some time.')
+                messages.error(
+                    request, 'Incorrect OPT. Please try again in some time.')
                 return redirect('contact_sms_confirm')
         return redirect('status')
 
@@ -134,9 +132,8 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
         return super(UserIdentityProofUploadView, self).post(request, *args, **kwargs)
 
 
-class DashboardView(LoginRequiredMixin, UpdateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     model = CustomUser
-    fields = ['first_name', 'last_name']
     context_object_name = 'user'
     template_name = 'account/dashboard.html'
     login_url = 'account_login'

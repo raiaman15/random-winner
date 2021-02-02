@@ -6,16 +6,24 @@
 {% block head_title %}{% trans "Registration Successful" %}{% endblock %}
 
 {% block content %}
-<h5 class="login-box-msg">{% trans "Contact Confirmation" %}</h5>
+<h5 class="login-box-msg">{% trans "E-Mail Confirmation" %}</h5>
 
 <p>
     {% blocktrans %}
     We have sent you a confirmation e-mail.
-    If you haven't recieved any email, kindly retry <a href="{% url 'account_email' %}">here</a>.
+    If you haven't recieved any email,
     {% endblocktrans %}
-    <br />
+    <a href="{% url 'account_email' %}"> kindly retry here.</a>
+</p>
+<hr />
+<h5 class="login-box-msg">{% trans "SMS Confirmation" %}</h5>
+<p>
     {% blocktrans %}
-    <a href="{% url 'contact_sms_verify' %}">Proceed with SMS based OTP verification instead?</a>
+    Alternatively, you can proceed with SMS based OTP confirmation.
     {% endblocktrans %}
+    <a href="{% url 'contact_sms_confirm' %}">
+        {% blocktrans %}Proceed with SMS based OTP verification?{% endblocktrans %}
+    </a>
+
 </p>
 {% endblock %}

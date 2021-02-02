@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import validate_aadhaar_number, validate_conatct_number, validate_amount, validate_otp, validate_balance_transaction_type
+from config.validators import validate_aadhaar_number, validate_pan_number, validate_conatct_number, validate_amount, validate_otp, validate_balance_transaction_type
 from config.utils import send_otp
 
 
@@ -11,16 +11,20 @@ class CustomUser(AbstractUser):
     picture = models.ImageField(
         upload_to='picture/', blank=True,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
-        help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format. (Max 1 MB)'
+        help_text='Your recent picture (must match with picture in photo ID below) in .png or .jpg format. (Max 2 MB)'
     )
     aadhaar_number = models.CharField(
         max_length=12, validators=[validate_aadhaar_number], blank=True,
         help_text='Your 12 digit Aadhaar Number (as written on your aadhaar card).'
     )
+    pan_number = models.CharField(
+        max_length=10, validators=[validate_pan_number], blank=True,
+        help_text='Your 10 digit PAN Number (as written on your PAN card).'
+    )
     identity_proof = models.ImageField(
         upload_to='identity/', blank=True,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
-        help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 1 MB)'
+        help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 2 MB)'
     )
     identity_verified = models.BooleanField(default=False)
     contact_number = models.CharField(

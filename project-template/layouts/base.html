@@ -40,6 +40,9 @@
     }
   </style>
 
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="{% static 'project/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+
 </head>
 
 <body class="hold-transition {% block body_class %}{% endblock body_class %} sidebar-collapse dark-mode">
@@ -53,13 +56,6 @@
 
     {% include 'includes/footer.html' %}
 
-    {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
       <!-- Control sidebar content goes here -->
@@ -86,6 +82,29 @@
   <script>
     $(".textinput").css({ "background-color": "white", "color": "black", "border": "1px solid black" });
   </script>
+
+  <!-- Sweet Alerts -->
+  <!-- SweetAlert2 -->
+  <script src="{% static 'project/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+  <script>
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-mid',
+      showConfirmButton: false,
+      timer: 10000
+    });
+  </script>
+  {% if messages %}
+  {% for message in messages %}
+  {{ message }}
+  <script>
+    Toast.fire({
+      icon: '{{ message.tags|lower }}',
+      title: '{{ message }}'
+    })
+  </script>
+  {% endfor %}
+  {% endif %}
 
 </body>
 
