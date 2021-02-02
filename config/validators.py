@@ -17,7 +17,7 @@ def validate_name(value):
 
 def validate_conatct_number(value):
     """ Validates phone number - 10 digit Indian Phone Number """
-    Pattern = re.compile("(0/91)?[7-9][0-9]{9}")
+    Pattern = re.compile("(0/91)?[5-9][0-9]{9}")
     if not Pattern.match(value):
         raise ValidationError(
             _('%(value)s is not a valid contact number. It should be in similar to 91XXXXXXXXXX.'),
@@ -109,3 +109,6 @@ def validate_aadhaar_number(value):
 #######################################
 # Custom Validators for Business Logics
 #######################################
+
+# We are treating the contact_number field of CustomUser as username for allauth
+custom_username_validator = [validate_conatct_number]

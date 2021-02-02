@@ -20,12 +20,12 @@ class UserStatusView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-        if not ((user.first_name or user.last_name) and user.picture):
-            return redirect('profile')
+        if user.contact_number and not user.contact_verified:
+            return redirect('contact/verify')
         elif not user.identity_verified:
-            return redirect('identity')
-        elif not user.contact_verified:
-            return redirect('contact')
+            return redirect('identity_proof_upload')
+        if not user.picture:
+            return redirect('profile')
         else:
             return redirect('dashboard')
 
@@ -76,27 +76,17 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
                     os.remove(request.user.picture.path)
                     request.user.picture = None
                     request.user.save()
-        if request.POST.get('first_name'):
-            if validate_name(request.POST.get('first_name')):
-                request.user.first_name = request.POST.get('first_name')
-                request.user.save()
-
-        if request.POST.get('last_name'):
-            if validate_name(request.POST.get('last_name')):
-                request.user.first_name = request.POST.get('last_name')
-                request.user.save()
 
         return super(UserProfileView, self).post(request, *args, **kwargs)
 
 
-class UserIdentityView(LoginRequiredMixin, UpdateView):
+class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = UserIdentityForm
-    # fields = ['aadhaar_number', 'identity_proof']
     context_object_name = 'user'
-    template_name = 'account/identity.html'
+    template_name = 'account/identity-proof-upload.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('identity')
+    success_url = reverse_lazy('identity_proof_upload')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
@@ -111,17 +101,12 @@ class UserIdentityView(LoginRequiredMixin, UpdateView):
                     os.remove(request.user.identity_proof.path)
                     request.user.identity_proof = None
                     request.user.save()
-        if request.POST.get('aadhaar_number'):
-            if validate_aadhaar_number(request.POST.get('aadhaar_number')):
-                request.user.aadhaar_number = request.POST.get(
-                    'aadhaar_number')
-                request.user.save()
         return super(UserIdentityView, self).post(request, *args, **kwargs)
 
 
 class UserContactView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['contact_number']
+    fields = ['first_name', 'last_name', 'contact_number']
     context_object_name = 'user'
     template_name = 'account/contact.html'
     login_url = 'account_login'
@@ -137,7 +122,7 @@ class UserContactConfirmView(LoginRequiredMixin, TemplateView):
     context_object_name = 'user'
     template_name = 'account/contact_confirm.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('contact_confirm')
+    success_url = reverse_lazy('status')
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
@@ -186,7 +171,7 @@ class UserContactConfirmView(LoginRequiredMixin, TemplateView):
                 request.user.save()
                 truth.delete()
 
-        return redirect('contact')
+        return redirect('status')
 
 
 class SearchResultsListView(ListView):

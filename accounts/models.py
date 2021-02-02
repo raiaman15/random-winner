@@ -44,9 +44,8 @@ class CustomUser(AbstractUser):
     def generate_otp(self):
         self.contact_secret = pyotp.random_base32()
         totp = pyotp.TOTP(self.contact_secret, interval=125).now()
-        send_otp(self.contact_number, self.first_name, self.last_name, totp)
-        ContactNumberOTP(
-            contact_number=self.contact_number, otp=totp).save()
+        send_otp(self.contact_number, totp)
+        ContactNumberOTP(contact_number=self.contact_number, otp=totp).save()
         return True
 
     def apply_for_master(self):
@@ -59,7 +58,7 @@ class CustomUser(AbstractUser):
             # TODO-NORMAL: Raise request for admin.
 
     def __str__(self):
-        return self.email
+        return self.contact_number
 
 
 class ContactNumberOTP(models.Model):
@@ -90,8 +89,8 @@ class BalanceTransaction(models.Model):
     transaction_user = models.ForeignKey(
         CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transactions', blank=False
     )
-    
+
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.transaction_user.email + ':' + self.transaction_type + ':' + str(self.transaction_amount)
+        return self.transaction_user.contact_number + ':' + self.transaction_type + ':' + str(self.transaction_amount)

@@ -29,8 +29,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ('first_name', 'last_name', 'picture',
-                  'x', 'y', 'width', 'height', )
+        fields = ('picture', 'x', 'y', 'width', 'height')
 
     def save(self):
         user_profile = super(UserProfileForm, self).save()
@@ -56,8 +55,7 @@ class UserIdentityForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ('aadhaar_number', 'identity_proof',
-                  'x', 'y', 'width', 'height', )
+        fields = ('identity_proof', 'x', 'y', 'width', 'height', )
 
     def save(self):
         user_identity = super(UserIdentityForm, self).save()

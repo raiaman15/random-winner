@@ -27,7 +27,7 @@ def sendSMS(apikey, numbers, sender, message):
     return fr
 
 
-def send_otp(number, first_name, last_name, otp):
+def send_otp(number, otp, first_name='', last_name=''):
     """
     response = send_otp('7007488735', 'Aman', 'Rai', 132435)
 
@@ -39,13 +39,16 @@ def send_otp(number, first_name, last_name, otp):
     3. Newline character is defined by '%n' and takes 1 character length
     """
 
-    name_long = f'{first_name.title()} {last_name.title()}'
-    name_short = f'{first_name.title()} {last_name[0].upper()}.'
+    full_name = ''
 
-    name = name_long if len(name_long) <= 26 else name_short[:26]
+    if len(first_name) or len(last_name):
+        name_long = f'{first_name.title()} {last_name.title()}'
+        name_short = f'{first_name.title()} {last_name[0].upper()}.'
+
+        full_name = name_long if len(name_long) <= 26 else name_short[:26]
 
     lines = []
-    lines.append(f'Welcome {name},')
+    lines.append(f'Welcome {full_name},')
     lines.append(f'OTP is {otp}')
     lines.append(
         f'Hope you enjoy our platform and praise our effort in making affordable solution for Educational Institution!'

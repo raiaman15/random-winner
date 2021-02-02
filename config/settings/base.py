@@ -157,6 +157,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # django-allauth config
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
 SITE_ID = 1
 LOGIN_REDIRECT_URL = 'status'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'product_page'
@@ -165,29 +166,35 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-ACCOUNT_SESSION_REMEMBER = None
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
-ACCOUNT_EMAIL_SUBJECT_PREFIX = env.str("PRODUCT_NAME")
-SOCIALACCOUNT_AUTO_SIGNUP = False
-SOCIALACCOUNT_EMAIL_VERIFICATION = True
-SOCIALACCOUNT_EMAIL_REQUIRED = True
 # Threshold sending e-mail (1 mail in 5 minutes)
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = False
 ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 300
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = env.str("PRODUCT_NAME")
 # Threshold multiple e-mail limit (2 email accounts)
 ACCOUNT_MAX_EMAIL_ADDRESSES = 2
+# Override Default Forms
+ACCOUNT_FORMS = {}
+# or ACCOUNT_SIGNUP_FORM_CLASS = ‘myapp.forms.SignupForm’ | def signup(self, request, user)
 # Threshold login attempts (5 times in 5 minutes)
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
+ACCOUNT_SESSION_REMEMBER = None
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "contact_number"
+ACCOUNT_USERNAME_MIN_LENGTH = 10
+ACCOUNT_USERNAME_VALIDATORS = 'config.validators.custom_username_validator'
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+# Social SignUp/SignIn
+SOCIALACCOUNT_AUTO_SIGNUP = False
+SOCIALACCOUNT_EMAIL_VERIFICATION = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True
 # Account log in upon email confirmation
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-# FIX-NORMAL: ACCOUNT_USER_DISPLAY (if needed)
-def ACCOUNT_USER_DISPLAY(user): return user.email
+
+
+def ACCOUNT_USER_DISPLAY(user):
+    """ # FIX-NORMAL: ACCOUNT_USER_DISPLAY (if needed) """
+    return user.username if user.username else user.email
