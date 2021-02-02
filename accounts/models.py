@@ -27,6 +27,10 @@ class CustomUser(AbstractUser):
         help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 2 MB)'
     )
     identity_verified = models.BooleanField(default=False)
+    identity_reject_reason = models.CharField(
+        max_length=250, blank=True,
+        help_text='Your 10 digit PAN Number (as written on your PAN card).'
+    )
     contact_number = models.CharField(
         max_length=12, blank=True,
         validators=[validate_conatct_number],

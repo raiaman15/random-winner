@@ -285,12 +285,14 @@
                         image.onload = function () {
                             var height = this.height;
                             var width = this.width;
-                            if (height > 100 || width > 100) {
-                                alert("Height and Width must not exceed 100px.");
+                            if (height > 100 && width > 100) {
+                                // Preventing Direct Submit!
+                                return false;
+                            } else {
+                                alert("The image is not clear (too small). Please upload a higher resolution image!")
+                                location.reload()
                                 return false;
                             }
-                            alert("Uploaded image has valid Height and Width.");
-                            return true;
                         };
 
                     }

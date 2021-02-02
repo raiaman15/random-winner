@@ -197,4 +197,4 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 def ACCOUNT_USER_DISPLAY(user):
     """ # FIX-NORMAL: ACCOUNT_USER_DISPLAY (if needed) """
-    return user.username if user.username else user.email
+    return user.contact_number if user.contact_number else user.email

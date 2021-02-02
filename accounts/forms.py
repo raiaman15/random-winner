@@ -1,6 +1,7 @@
 from PIL import Image
 from django import forms
 from django.core.files import File
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
@@ -27,7 +28,7 @@ class UserIdentityProofUploadViewForm(forms.ModelForm):
 
         image = Image.open(user_identity.identity_proof)
         cropped_image = image.crop((x, y, w+x, h+y))
-        resized_image = cropped_image.resize((330, 210), Image.ANTIALIAS)
+        resized_image = cropped_image.resize((660, 420), Image.ANTIALIAS)
         resized_image.save(user_identity.identity_proof.path)
 
         return user_identity

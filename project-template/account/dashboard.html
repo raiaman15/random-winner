@@ -4,7 +4,7 @@
 {% load humanize %}
 {% load crispy_forms_tags %}
 
-{% block title %} User Detail {% endblock %}
+{% block title %} My Dashboard {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -21,12 +21,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">User Detail</h1>
+                    <h1 class="m-0">My Dashboard</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">User List</li>
+                        <li class="breadcrumb-item active">My Dashboard</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -148,10 +148,16 @@
                                     <tr>
                                         <td>Identity Proof</td>
                                         <td>
-                                            {% if user.identity_proof %}
-                                            {{user.identity_proof.url}}
+                                            {% if user.identity_proof and user.identity_verified %}
+                                            <img src="{{ user.identity_proof.url }}" alt="{{user.identity_proof.url}}">
+                                            {% elif user.identity_proof and user.identity_reject_reason %}
+                                            REJECTED | <a href="{%url 'identity_proof_upload' %}">Retry</a> <br />
+                                            {{ user.identity_reject_reason }}
+                                            {% elif user.identity_proof %}
+                                            <span class="text-warning">VERIFICATION IN PROGRESS</span>
                                             {% else %}
-                                            <span class="text-danger">NOT UPLOADED</span>
+                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
+                                                href="{%url 'identity_proof_upload' %}">Upload</a> <br />
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -163,10 +169,6 @@
                                             <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
                                             <i class="fas fa-times-circle text-danger"></i>
-                                            |
-                                            <a href="https://resident.uidai.gov.in/verify" target="_blank">
-                                                Manual Verification
-                                            </a>
                                             {% endif %}
                                         </td>
                                     </tr>

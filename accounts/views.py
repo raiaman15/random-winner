@@ -34,7 +34,7 @@ class UserStatusView(LoginRequiredMixin, View):
 
         # If user signed up with contact number
         if user.contact_number and not user.contact_verified:
-            return redirect('contact_sms_verify')
+            return redirect('contact_sms_confirm')
         elif not user.identity_verified:
             return redirect('identity_proof_upload')
         else:
@@ -114,7 +114,6 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     context_object_name = 'user'
     template_name = 'account/identity-proof-upload.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('identity_proof_upload')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
@@ -131,12 +130,25 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
                     request.user.save()
         return super(UserIdentityProofUploadView, self).post(request, *args, **kwargs)
 
+    def get_success_url(self):
+        messages.success(
+            self.request, 'Identity Proof Uploaded Successfully! Our Team will verify it soon.')
+        return reverse_lazy('identity_proof_upload')
+
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/dashboard.html'
     login_url = 'account_login'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user.identity_verified:
+            messages.error(
+                self.request, 'Identity Proof Not Verified! You won\'t be able to perform any operation until verification.')
+
+        return super(DashboardView, self).get(request, *args, **kwargs)
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)

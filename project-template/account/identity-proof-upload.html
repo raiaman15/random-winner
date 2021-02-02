@@ -89,7 +89,7 @@
                                 {% endfor %}
                             </div><!-- /.col -->
                         </div>
-                        {% elif user.aadhaar_number and user.identity_proof %}
+                        {% elif user.identity_proof %}
                         <div class="card-footer text-center text-bold">
                             Your Identity verification is in progress. It may take some time for the verification to
                             complete. Please revisit in some time to proceed further.
@@ -126,12 +126,15 @@
                             <div>
                                 <i class="fas fa-phone-alt bg-success"></i>
                                 <div class="timeline-item">
+                                    <span class="time"><i class="fas fa-clock"></i>
+                                        {{user.date_joined|naturaltime}}
+                                    </span>
                                     <h3 class="timeline-header text-left">
-                                        <a href="#">Contact Verification</a>
+                                        <a href="{% url 'status' %}">Contact Verification</a>
                                         <small><strong>DONE</strong></small>
                                     </h3>
                                     <div class="timeline-body text-justify">
-                                        You update your Contact Number and verify the same using OTP. This is necessary
+                                        Your Contact Number was verified using OTP. This was necessary
                                         for all high priority communications and updates.
                                     </div>
                                 </div>
@@ -146,12 +149,12 @@
                                         {{user.date_joined|naturaltime}}
                                     </span>
                                     <h3 class="timeline-header text-left">
-                                        <a href="#">Email Verified Profile Creation</a>
+                                        <a href="{% url 'status' %}">Email Verified Profile Creation</a>
                                         <small><strong>DONE</strong></small>
                                     </h3>
                                     <div class="timeline-body text-justify">
-                                        This email is primarily used for all further communications and invoices.
-                                        You have registered with {{user.email}} as your email ID.
+                                        You verified your email address: {{user.email}} using email link.
+                                        This was necessary for all high priority communications and updates.
                                     </div>
                                 </div>
                             </div>
@@ -159,11 +162,14 @@
                             {% endif %}
                             <!-- timeline item -->
                             <div>
-                                <i class="fas fa-id-card bg-warning"></i>
+                                <i
+                                    class="fas fa-id-card {% if user.identity_verified %}bg-green{% else %}bg-warning{% endif %}"></i>
                                 <div class="timeline-item">
                                     <h3 class="timeline-header text-left">
-                                        <a href="#">Identity Verification</a>
-                                        <small><strong>IN PROGRESS</strong></small>
+                                        <a href="{% url 'status' %}">Identity Verification</a>
+                                        <small><strong>
+                                                {% if user.identity_verified %}DONE{% else %}IN PROGRESS{% endif %}
+                                            </strong></small>
                                     </h3>
                                     <div class="timeline-body text-justify">
                                         You update your Identity Proof Details here, which is verified by our team.
@@ -175,11 +181,18 @@
                             <!-- END timeline item -->
                             <!-- timeline item -->
                             <div>
-                                <i class="fas fa-user bg-success"></i>
+                                <i
+                                    class="fas fa-user {% if user.first_name or user.last_name %}bg-green{% else %}bg-warning{% endif %}"></i>
                                 <div class="timeline-item">
                                     <h3 class="timeline-header text-left">
-                                        <a href="#">Profile Completion (Optional)</a>
-                                        <small><strong>PENDING</strong></small>
+                                        [OPTIONAL] <a href="{% url 'status' %}">Profile Completion</a>
+                                        <small><strong>
+                                                {% if user.first_name or user.last_name %}
+                                                DONE
+                                                {% else %}
+                                                PENDING
+                                                {% endif %}
+                                            </strong></small>
                                     </h3>
                                     <div class="timeline-body text-justify">
                                         You update your name and photograph. These details would be used throughout the
@@ -285,12 +298,14 @@
                         image.onload = function () {
                             var height = this.height;
                             var width = this.width;
-                            if (height > 100 || width > 100) {
-                                alert("Height and Width must not exceed 100px.");
+                            if (height > 330 && width > 210) {
+                                // Preventing Direct Submit!
+                                return false;
+                            } else {
+                                alert("The image is not clear (too small). Please upload a higher resolution image!")
+                                location.reload()
                                 return false;
                             }
-                            alert("Uploaded image has valid Height and Width.");
-                            return true;
                         };
 
                     }
