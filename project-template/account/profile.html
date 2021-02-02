@@ -4,7 +4,7 @@
 {% load humanize %}
 {% load crispy_forms_tags %}
 
-{% block title %} Profile Completion {% endblock %}
+{% block title %} Update Name {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -24,12 +24,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Profile Completion</h1>
+                    <h1 class="m-0">Update Name</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Profile Completion</li>
+                        <li class="breadcrumb-item active">Update Name</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -48,8 +48,8 @@
                     <div class="card bg-white elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-user"></i>
-                                Complete Your Profile
+                                <i class="fas fa-id-card"></i>
+                                Update Your Name
                             </h3>
 
                             <div class="card-tools">
@@ -67,30 +67,28 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            <form id="profile_form" method="post" enctype="multipart/form-data">
+                            <form method="post">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Submit & Proceed" onclick="return ValidateFile()">
+                                <input type="submit" value="Update">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if user.picture and user.first_name or user.lastname %}
+                        {% if messages %}
                         <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-6">
-                                <p class="float-sm-left">You have successfully updated your profile.</p>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
-                                <p class="float-sm-right">
-                                    <a href="{% url 'identity' %}" class="btn btn-sm btn-success">
-                                        PROCEED TO IDENTITY VERIFICATION
-                                    </a>
-                                </p>
+                            <div class="col-sm-12 text-center">
+                                {% for message in messages %}
+                                <p>{{ message }}</p>
+                                {% endfor %}
                             </div><!-- /.col -->
                         </div>
                         {% else %}
-                        <div class="card-footer text-center">
-                            Your profile is incomplete; kindly fill all the fields here. Your actual photograph must be
-                            uploaded here. It will be compared with the Identity Proof document later.
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Please upload your Photograph (including your face).
+                                </p>
+                            </div><!-- /.col -->
                         </div>
                         {% endif %}
                         <!-- /.Help Text -->
@@ -98,105 +96,9 @@
                     <!-- /.card -->
                 </section>
                 <!-- /.Left col -->
-                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
+                <!-- Right col -->
                 <section class="col-lg-6 connectedSortable text-center">
                     <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
-                    <div class="col-md-12">
-                        <div class="timeline">
-                            <!-- timeline time label -->
-                            <div class="time-label text-left">
-                                <span class="bg-red"><i class="fas fa-clipboard-list"></i> ONBOARDING PROCESS</span>
-                            </div>
-                            <!-- /.timeline-label -->
-                            <!-- timeline item -->
-                            <div>
-                                <i class="fas fa-envelope bg-success"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i>
-                                        {{user.date_joined|naturaltime}}
-                                    </span>
-                                    <h3 class="timeline-header text-left">
-                                        <a href="#">Email Verified Profile Creation</a>
-                                        <small><strong>DONE</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        This email is primarily used for all further communications and invoices.
-                                        You have registered with {{user.email}} as your email ID.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-                            <!-- timeline item -->
-                            <div>
-                                {% if user.picture and user.first_name or user.lastname %}
-                                <i class="fas fa-user bg-success"></i>
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header text-left">
-                                        <a href="#">Profile Completion</a>
-                                        <small><strong>DONE</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You update your name and photograph. These details would be used throughout the
-                                        website.
-                                        You won't be allowed to change these settings, once your identity is verified.
-                                        In case of any discrepency with the Identification Proof Documents, your profile
-                                        verification would fail!
-                                    </div>
-                                </div>
-                                {% else %}
-                                <i class="fas fa-user bg-warning"></i>
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header text-left">
-                                        <a href="#">Profile Completion</a>
-                                        <small><strong>IN PROGRESS</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You update your name and photograph. These details would be used throughout the
-                                        website.
-                                        You won't be allowed to change these settings, once your identity is verified.
-                                        In case of any discrepency with the Identification Proof Documents, your profile
-                                        verification would fail!
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <!-- END timeline item -->
-                            <!-- timeline item -->
-                            <div>
-                                <i class="fas fa-id-card bg-warning"></i>
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header text-left">
-                                        <a href="#">Identity Verification</a>
-                                        <small><strong>PENDING</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You update your Identity Proof Details here, which is verified by our team.
-                                        Identity verification helps us in ensuring a legitimate user base for future
-                                        financial transactions.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-                            <!-- timeline item -->
-                            <div>
-                                <i class="fas fa-phone-alt bg-warning"></i>
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header text-left">
-                                        <a href="#">Contact Verification</a>
-                                        <small><strong>PENDING</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You update your Contact Number and verify the same using OTP. This is necessary
-                                        for all high priority communications and updates.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-                            <div>
-                                <i class="fas fa-check bg-success"></i>
-                            </div>
-                        </div>
-                    </div>
                 </section>
                 <!-- right col -->
             </div>
@@ -204,167 +106,9 @@
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-
-    <!-- Modal Crop -->
-    <div class="modal fade" id="modalCrop" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content card-outline card-danger">
-                <div class="modal-header">
-                    <h4 class="modal-title">Crop Picture</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-2"></div>
-                        <div class="col-lg-8 col-md-8 col-sm-8 text-center">
-                            <img src="" id="image" style="max-width: 100%;">
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center">The cropped photograph must contain your face.</div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default js-zoom-out">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-default js-zoom-in">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button type="button" class="btn btn-default js-crop-and-upload">Crop & Upload</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!--/.Modal Crop-->
-
-    </div>
 </div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}
-<!-- Cropper.js -->
-<script src="{% static 'project/plugins/cropper/cropper.min.js' %}"></script>
-<!-- Cropper-Jquery Wrapper -->
-<script src="{% static 'project/plugins/jquery-cropper/jquery-cropper.min.js' %}"></script>
-
-<script>
-    /* Client Side File Validation */
-    function ValidateFile(id) {
-        //Get reference of FileUpload.
-        var fileUpload = document.getElementById(id);
-
-        //Check whether the file is valid Image.
-        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.jpg|.png|.gif)$");
-
-        //Check whether the file size is less than 2 MB
-        if (fileUpload.files[0].size < 2048000000) {
-            if (regex.test(fileUpload.value.toLowerCase())) {
-                //Check whether HTML5 is supported.
-                if (typeof (fileUpload.files) != "undefined") {
-                    //Initiate the FileReader object.
-                    var reader = new FileReader();
-                    //Read the contents of Image File.
-                    reader.readAsDataURL(fileUpload.files[0]);
-                    reader.onload = function (e) {
-                        //Initiate the JavaScript Image object.
-                        var image = new Image();
-
-                        //Set the Base64 string return from FileReader as source.
-                        image.src = e.target.result;
-
-                        //Validate the File Height and Width.
-                        image.onload = function () {
-                            var height = this.height;
-                            var width = this.width;
-                            if (height > 100 && width > 100) {
-                                // Preventing Direct Submit!
-                                return false;
-                            } else {
-                                alert("The image is not clear (too small). Please upload a higher resolution image!")
-                                location.reload()
-                                return false;
-                            }
-                        };
-
-                    }
-                } else {
-                    alert("This browser does not support HTML5.");
-                    location.reload();
-                    return false;
-                }
-            } else {
-                alert("Please select a valid Image file.");
-                location.reload();
-                return false;
-            }
-        } else {
-            alert("Please select an Image file less than 2 MB in size.");
-            location.reload();
-            return false;
-        }
-    }
-
-    $(function () {
-        /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
-        $("#id_picture").change(function () {
-            ValidateFile("id_picture")
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $("#image").attr("src", e.target.result);
-                    $("#modalCrop").modal("show");
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        /* SCRIPTS TO HANDLE THE CROPPER BOX */
-        var $image = $("#image");
-        var cropBoxData;
-        var canvasData;
-        $("#modalCrop").on("shown.bs.modal", function () {
-            $image.cropper({
-                viewMode: 1,
-                aspectRatio: 1 / 1,
-                minCropBoxWidth: 200,
-                minCropBoxHeight: 200,
-                ready: function () {
-                    $image.cropper("setCanvasData", canvasData);
-                    $image.cropper("setCropBoxData", cropBoxData);
-                }
-            });
-        }).on("hidden.bs.modal", function () {
-            cropBoxData = $image.cropper("getCropBoxData");
-            canvasData = $image.cropper("getCanvasData");
-            $image.cropper("destroy");
-        });
-
-        $(".js-zoom-in").click(function () {
-            $image.cropper("zoom", 0.1);
-        });
-
-        $(".js-zoom-out").click(function () {
-            $image.cropper("zoom", -0.1);
-        });
-
-        /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
-        $(".js-crop-and-upload").click(function () {
-            var cropData = $image.cropper("getData");
-            $("#id_x").val(cropData["x"]);
-            $("#id_y").val(cropData["y"]);
-            $("#id_height").val(cropData["height"]);
-            $("#id_width").val(cropData["width"]);
-            $("#profile_form").submit();
-        });
-    });
-</script>
-{% endblock javascripts %}
+{% block javascripts %}{% endblock javascripts %}

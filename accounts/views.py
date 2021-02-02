@@ -133,7 +133,7 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         messages.success(
             self.request, 'Identity Proof Uploaded Successfully! Our Team will verify it soon.')
-        return reverse_lazy('identity_proof_upload')
+        return reverse_lazy('profile_name')
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -156,9 +156,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
 class UserProfileNameUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    fields = ['first_name', 'last_name', 'aadhaar_number']
+    fields = ['first_name', 'last_name']
     context_object_name = 'user'
-    template_name = 'account/dashboard.html'
+    template_name = 'account/profile-name.html'
     login_url = 'account_login'
     success_url = reverse_lazy('profile_name')
 
