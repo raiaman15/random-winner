@@ -1,0 +1,21 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% trans "Registration Successful" %}{% endblock %}
+
+{% block content %}
+<h5 class="login-box-msg">{% trans "Contact Confirmation" %}</h5>
+
+<p>
+    {% blocktrans %}
+    We have sent you a confirmation e-mail.
+    If you haven't recieved any email, kindly retry <a href="{% url 'account_email' %}">here</a>.
+    {% endblocktrans %}
+    <br />
+    {% blocktrans %}
+    <a href="{% url 'contact_sms_verify' %}">Proceed with SMS based OTP verification instead?</a>
+    {% endblocktrans %}
+</p>
+{% endblock %}

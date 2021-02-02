@@ -7,21 +7,33 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import ContactNumberOTP, BalanceTransaction
 
 
-class CustomUserAdminForm(forms.ModelForm):
+class UserIdentityProofUploadViewForm(forms.ModelForm):
+    x = forms.FloatField(widget=forms.HiddenInput())
+    y = forms.FloatField(widget=forms.HiddenInput())
+    width = forms.FloatField(widget=forms.HiddenInput())
+    height = forms.FloatField(widget=forms.HiddenInput())
+
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'picture', 'aadhaar_number', 'identity_proof', 'identity_verified',
-                  'contact_number', 'contact_verified', 'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
+        fields = ('identity_proof', 'x', 'y', 'width', 'height', )
+
+    def save(self):
+        user_identity = super(UserIdentityProofUploadViewForm, self).save()
+
+        x = self.cleaned_data.get('x')
+        y = self.cleaned_data.get('y')
+        w = self.cleaned_data.get('width')
+        h = self.cleaned_data.get('height')
+
+        image = Image.open(user_identity.identity_proof)
+        cropped_image = image.crop((x, y, w+x, h+y))
+        resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+        resized_image.save(user_identity.identity_proof.path)
+
+        return user_identity
 
 
-class BalanceTransactionAdmin(forms.ModelForm):
-    class Meta:
-        model = BalanceTransaction
-        fields = ('transaction_type', 'transaction_amount',
-                  'transaction_user')
-
-
-class UserProfileForm(forms.ModelForm):
+class UserProfilePictureUploadViewForm(forms.ModelForm):
     x = forms.FloatField(widget=forms.HiddenInput())
     y = forms.FloatField(widget=forms.HiddenInput())
     width = forms.FloatField(widget=forms.HiddenInput())
@@ -32,7 +44,7 @@ class UserProfileForm(forms.ModelForm):
         fields = ('picture', 'x', 'y', 'width', 'height')
 
     def save(self):
-        user_profile = super(UserProfileForm, self).save()
+        user_profile = super(UserProfilePictureUploadViewForm, self).save()
 
         x = self.cleaned_data.get('x')
         y = self.cleaned_data.get('y')
@@ -47,27 +59,15 @@ class UserProfileForm(forms.ModelForm):
         return user_profile
 
 
-class UserIdentityForm(forms.ModelForm):
-    x = forms.FloatField(widget=forms.HiddenInput())
-    y = forms.FloatField(widget=forms.HiddenInput())
-    width = forms.FloatField(widget=forms.HiddenInput())
-    height = forms.FloatField(widget=forms.HiddenInput())
-
+class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('identity_proof', 'x', 'y', 'width', 'height', )
+        fields = ('email', 'username', 'picture', 'aadhaar_number', 'identity_proof', 'identity_verified',
+                  'contact_number', 'contact_verified', 'is_willing_master', 'is_verified_master', 'balance_amount', 'investment_amount')
 
-    def save(self):
-        user_identity = super(UserIdentityForm, self).save()
 
-        x = self.cleaned_data.get('x')
-        y = self.cleaned_data.get('y')
-        w = self.cleaned_data.get('width')
-        h = self.cleaned_data.get('height')
-
-        image = Image.open(user_identity.identity_proof)
-        cropped_image = image.crop((x, y, w+x, h+y))
-        resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
-        resized_image.save(user_identity.identity_proof.path)
-
-        return user_identity
+class BalanceTransactionAdmin(forms.ModelForm):
+    class Meta:
+        model = BalanceTransaction
+        fields = ('transaction_type', 'transaction_amount',
+                  'transaction_user')
