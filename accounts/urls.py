@@ -7,7 +7,7 @@ urlpatterns = [
          name='contact_confirmation_option'),
     path('contact/sms/confirm', accounts_views.UserContactSMSConfirmView.as_view(),
          name='contact_sms_confirm'),
-    path('identity-proof-upload', accounts_views.UserIdentityProofUploadView.as_view(),
+    path('identity-proof/upload', accounts_views.UserIdentityProofUploadView.as_view(),
          name='identity_proof_upload'),
     path('dashboard/', accounts_views.DashboardView.as_view(), name='dashboard'),
     path('profile/name', accounts_views.UserProfileNameUpdateView.as_view(),

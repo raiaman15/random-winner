@@ -116,7 +116,7 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = UserIdentityProofUploadViewForm
     context_object_name = 'user'
-    template_name = 'account/identity-proof-upload.html'
+    template_name = 'account/identity_proof_upload.html'
     login_url = 'account_login'
 
     def get_object(self):
@@ -162,7 +162,7 @@ class UserProfileNameUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name']
     context_object_name = 'user'
-    template_name = 'account/profile-name.html'
+    template_name = 'account/profile_name.html'
     login_url = 'account_login'
     success_url = reverse_lazy('profile_name')
 
@@ -174,7 +174,7 @@ class UserProfileDetailUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'aadhaar_number', 'pan_number']
     context_object_name = 'user'
-    template_name = 'account/profile-detail.html'
+    template_name = 'account/profile_detail.html'
     login_url = 'account_login'
     success_url = reverse_lazy('profile_detail')
 
@@ -217,7 +217,7 @@ class UserPoolMasterApplicationView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['is_willing_master']
     context_object_name = 'user'
-    template_name = 'account/poolmaster-apply.html'
+    template_name = 'account/poolmaster_apply.html'
     login_url = 'account_login'
     success_url = reverse_lazy('status')
 
@@ -256,6 +256,9 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         if not request.user.has_perm('user_permission.user_edit'):
             raise PermissionDenied
         return super(UserDetailView, self).dispatch(request, *args, **kwargs)
+
+
+class UserVerifyProfileView(LoginRequiredMixin, TemplateView):
 
 
 class SearchResultsListView(ListView):
