@@ -33,7 +33,7 @@ class PoolDetailView(LoginRequiredMixin, DetailView):
     group_required = [u"member", u"master", u"admins"]
 
 
-class SearchResultsListView(LoginRequiredMixin, ListView):
+class ProfileSearchView(LoginRequiredMixin, ListView):
     model = Pool
     context_object_name = 'pool_list'
     template_name = 'pools/pool_list.html'

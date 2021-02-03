@@ -12,7 +12,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
 from allauth.account.admin import EmailAddress
 from .models import CustomUser, ContactNumberOTP
-from .forms import UserIdentityProofUploadViewForm, UserProfilePictureUploadViewForm
+from .forms import ProfileIdentityProofUploadViewForm, ProfilePictureViewForm
 
 
 class UserStatusView(LoginRequiredMixin, View):
@@ -42,11 +42,11 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('dashboard')
 
 
-class UserContactConfirmOptionView(TemplateView):
+class ProfileVerificationOptionView(TemplateView):
     template_name = 'account/profile_verification_option.html'
 
 
-class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
+class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/profile_verification_sms.html'
@@ -59,26 +59,23 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
             messages.success(
                 request, 'You have already verified your contact number!')
         elif ContactNumberOTP.objects.filter(username=user.username).exists():
-            attempt = ContactNumberOTP.objects.get(
-                username=user.username).created_at
+            attempt = ContactNumberOTP.objects.get(username=user.username).created_at
             now = pytz.timezone("Asia/Kolkata").localize(datetime.now())
             if (now-attempt).total_seconds()//60 < 5:
-                messages.warning(
-                    request, 'You requested OTP within past 5 minutes. Please type the same OTP or try again in 5 minutes for new OTP!')
+                messages.warning(request, 'You requested OTP within past 5 minutes. Please type the same OTP or try again in 5 minutes for new OTP!')
             else:
-                ContactNumberOTP.objects.get(
-                    username=user.username).delete()
+                ContactNumberOTP.objects.get(username=user.username).delete()
                 user.generate_otp()
         else:
             user.generate_otp()
 
-        return super(UserContactSMSConfirmView, self).get(request, *args, **kwargs)
+        return super(ProfileVerificationSMSView, self).get(request, *args, **kwargs)
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
-        context = super(UserContactSMSConfirmView,
+        context = super(ProfileVerificationSMSView,
                         self).get_context_data(**kwargs)
         return context
 
@@ -91,23 +88,21 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
                     user_otp = int(request.POST.get("otp_confirm"))
-            truth = ContactNumberOTP.objects.get(
-                username=self.request.user.username)
+            truth = ContactNumberOTP.objects.get(username=self.request.user.username)
             if int(user_otp) == int(truth.otp):
                 request.user.contact_verified = True
                 request.user.save()
                 truth.delete()
                 messages.success(request, 'Contact Number Verified')
             else:
-                messages.error(
-                    request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
+                messages.error(request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
                 return redirect('profile_verification_sms')
         return redirect('status')
 
 
-class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
+class ProfileIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    form_class = UserIdentityProofUploadViewForm
+    form_class = ProfileIdentityProofUploadViewForm
     context_object_name = 'user'
     template_name = 'account/profile_identity_proof_upload.html'
     login_url = 'account_login'
@@ -124,7 +119,7 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
                     os.remove(request.user.identity_proof.path)
                     request.user.identity_proof = None
                     request.user.save()
-        return super(UserIdentityProofUploadView, self).post(request, *args, **kwargs)
+        return super(ProfileIdentityProofUploadView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.success(
@@ -132,7 +127,7 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('profile_name')
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class ProfileDashboardView(LoginRequiredMixin, TemplateView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/dashboard.html'
@@ -144,13 +139,13 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             messages.error(
                 self.request, 'Identity Proof Not Verified! You won\'t be able to perform any operation until verification.')
 
-        return super(DashboardView, self).get(request, *args, **kwargs)
+        return super(ProfileDashboardView, self).get(request, *args, **kwargs)
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
-class UserProfileNameUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileNameView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name']
     context_object_name = 'user'
@@ -162,7 +157,7 @@ class UserProfileNameUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
-class UserProfileDetailUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileDetailView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'aadhaar_number', 'pan_number']
     context_object_name = 'user'
@@ -177,12 +172,12 @@ class UserProfileDetailUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(
             self.request, 'Details Updated Successfully.')
 
-        return super(UserProfileDetailUpdateView, self).post(request, *args, **kwargs)
+        return super(ProfileDetailView, self).post(request, *args, **kwargs)
 
 
-class UserProfilePictureUploadView(LoginRequiredMixin, UpdateView):
+class ProfilePictureView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    form_class = UserProfilePictureUploadViewForm
+    form_class = ProfilePictureViewForm
     context_object_name = 'user'
     template_name = 'account/profile.html'
     login_url = 'account_login'
@@ -201,10 +196,10 @@ class UserProfilePictureUploadView(LoginRequiredMixin, UpdateView):
                     request.user.picture = None
                     request.user.save()
 
-        return super(UserProfilePictureUploadView, self).post(request, *args, **kwargs)
+        return super(ProfilePictureView, self).post(request, *args, **kwargs)
 
 
-class UserPoolMasterApplicationView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['is_willing_master']
     context_object_name = 'user'
@@ -221,10 +216,10 @@ class UserPoolMasterApplicationView(LoginRequiredMixin, GroupRequiredMixin, Upda
             messages.success(
                 self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
 
-        return super(UserPoolMasterApplicationView, self).post(request, *args, **kwargs)
+        return super(ProfileApplyPoolmasterView, self).post(request, *args, **kwargs)
 
 
-class UserListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+class ProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'profile_list'
     template_name = 'account/profile_list.html'
@@ -235,10 +230,10 @@ class UserListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):
             raise PermissionDenied
-        return super(UserListView, self).dispatch(request, *args, **kwargs)
+        return super(ProfileListView, self).dispatch(request, *args, **kwargs)
 
 
-class UserDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+class ProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/profile_detail.html'
@@ -248,7 +243,7 @@ class UserDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):
             raise PermissionDenied
-        return super(UserDetailView, self).dispatch(request, *args, **kwargs)
+        return super(ProfileDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class UserVerifyProfileView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
@@ -262,7 +257,7 @@ class UserVerifyProfileView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
         return super(UserVerifyProfileView, self).form_valid(form)
 
 
-class SearchResultsListView(ListView, GroupRequiredMixin):
+class ProfileSearchView(ListView, GroupRequiredMixin):
     model = CustomUser
     context_object_name = 'profile_list'
     template_name = 'account/profile_list.html'

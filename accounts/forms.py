@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import ContactNumberOTP, BalanceTransaction
 
 
-class UserIdentityProofUploadViewForm(forms.ModelForm):
+class ProfileIdentityProofUploadViewForm(forms.ModelForm):
     x = forms.FloatField(widget=forms.HiddenInput())
     y = forms.FloatField(widget=forms.HiddenInput())
     width = forms.FloatField(widget=forms.HiddenInput())
@@ -19,7 +19,7 @@ class UserIdentityProofUploadViewForm(forms.ModelForm):
         fields = ('identity_proof', 'x', 'y', 'width', 'height', )
 
     def save(self):
-        user_identity = super(UserIdentityProofUploadViewForm, self).save()
+        user_identity = super(ProfileIdentityProofUploadViewForm, self).save()
 
         x = self.cleaned_data.get('x')
         y = self.cleaned_data.get('y')
@@ -34,7 +34,7 @@ class UserIdentityProofUploadViewForm(forms.ModelForm):
         return user_identity
 
 
-class UserProfilePictureUploadViewForm(forms.ModelForm):
+class ProfilePictureViewForm(forms.ModelForm):
     x = forms.FloatField(widget=forms.HiddenInput())
     y = forms.FloatField(widget=forms.HiddenInput())
     width = forms.FloatField(widget=forms.HiddenInput())
@@ -45,7 +45,7 @@ class UserProfilePictureUploadViewForm(forms.ModelForm):
         fields = ('picture', 'x', 'y', 'width', 'height')
 
     def save(self):
-        user_profile = super(UserProfilePictureUploadViewForm, self).save()
+        user_profile = super(ProfilePictureViewForm, self).save()
 
         x = self.cleaned_data.get('x')
         y = self.cleaned_data.get('y')
