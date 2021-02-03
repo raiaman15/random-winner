@@ -230,13 +230,44 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
 # u.save()
 ##############################################################################
 class AccountResetPasswordWithOTPView(FormView):
+    username = None
     template_name = 'account/password_reset_with_otp.html'
     form_class = AccountResetPasswordWithOTPViewForm
-    success_url = reverse_lazy('password_reset_with_otp_confirm')
 
     def post(self, request, *args, **kwargs):
         validate_username(request.POST.get("username"))
-        username = int(request.POST.get("username"))
+        self.username = int(request.POST.get("username"))
+        if ContactNumberOTP.objects.filter(username=self.username).exists():
+            td = timezone.now() - timedelta(minutes=5)
+            attempts = ContactNumberOTP.objects.filter(
+                username=self.username, created__gte=td)
+            if len(attempts) > 2:
+                messages.warning(
+                    request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
+            else:
+                CustomUser.objects.get(username=self.username).generate_otp()
+        else:
+            CustomUser.objects.get(username=self.username).generate_otp()
+        return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('account_reset_password_with_otp_confirm', kwargs={'username': self.username})
+
+
+class AccountResetPasswordWithOTPConfirmView(FormView):
+    template_name = 'account/password_reset_with_otp_confirm.html'
+    form_class = AccountResetPasswordWithOTPViewForm
+    context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+        context = super(AccountResetPasswordWithOTPConfirmView,
+                        self).get_context_data(**kwargs)
+        context['username'] = self.kwargs['username']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        validate_username(request.POST.get("otp"))
+        username = int(request.POST.get("otp"))
         if ContactNumberOTP.objects.filter(username=username).exists():
             td = timezone.now() - timedelta(minutes=5)
             attempts = ContactNumberOTP.objects.filter(
@@ -250,6 +281,8 @@ class AccountResetPasswordWithOTPView(FormView):
             CustomUser.objects.get(username=username).generate_otp()
         return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
 
+    def get_success_url():
+        pass
 
 ##############################################################################
 # Manager Specific Views
