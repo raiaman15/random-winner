@@ -284,7 +284,7 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
                 user_otp = int(request.POST.get("otp"))
         truth = ContactNumberOTP.objects.filter(username=self.username).last()
         if int(user_otp) == int(truth.otp):
-            # ContactNumberOTP.objects.filter(username=self.username).delete()
+            ContactNumberOTP.objects.filter(username=self.username).delete()
             request.session.flush()
             user = CustomUser.objects.get(username=self.username)
             user.set_password(f'{self.username}{user_otp}')
