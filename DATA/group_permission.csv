@@ -1,0 +1,20 @@
+group,model,permission
+manager,user,7
+manager,contact number otp,1
+manager,billing address,1
+manager,balance transaction,5
+manager,pool,7
+manager,pool member,7
+manager,investment transaction,5
+master,user,1
+master,billing address,7
+master,balance transaction,3
+master,pool,7
+master,pool member,3
+master,investment transaction,3
+member,user,1
+member,billing address,7
+member,balance transaction,3
+member,pool,1
+member,pool member,3
+member,investment transaction,3

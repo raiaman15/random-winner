@@ -14,7 +14,7 @@ python manage.py makemigrations --noinput
 echo "MIGRATING DATABASE"
 python manage.py migrate --noinput
 echo "SEEDING DATABASE | REFRESH"
-# python manage.py some_seed
+python manage.py accounts_seed
 echo "RUNNING ALL TEST CASES"
 python manage.py test
 echo "CREATING TEST SUPERUSER"

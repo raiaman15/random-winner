@@ -1,0 +1,230 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %} Verify Identity {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<!-- Cropper.js -->
+<link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Verify Identity</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Verify Identity</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-6 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-white elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card"></i>
+                                Verify User's Identity
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool btn-fullscreen" title="Maximize">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Close">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            {% if selected_user.identity_proof %}
+                            Provided ID Proof:<br />
+                            <img src="{% static selected_user.identity_proof %}"
+                                alt="{% static selected_user.identity_proof %}">
+                            {% endif %}
+                            <form method=" post">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <input type="submit" value="Update">
+                            </form>
+                        </div><!-- /.card-body -->
+                        <!-- Help Text -->
+                        {% if messages %}
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                {% for message in messages %}
+                                <p>{{ message }}</p>
+                                {% endfor %}
+                            </div><!-- /.col -->
+                        </div>
+                        {% elif user.first_name or user.last_name %}
+                        <div class="card-footer text-center text-bold">
+                            <div class="col-sm-12 text-center">
+                                You have updated your name.<br />
+                                Click <a href="{% url 'dashboard' %}">here</a> to go to your dashboard.
+                            </div><!-- /.col -->
+                        </div>
+                        {% else %}
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Please provide your Full Name which will be used for future transactions.
+                                </p>
+                            </div><!-- /.col -->
+                        </div>
+                        {% endif %}
+                        <!-- /.Help Text -->
+                    </div>
+                    <!-- /.card -->
+                </section>
+                <!-- /.Left col -->
+                <!-- Right col -->
+                <section class="col-lg-6 connectedSortable text-center">
+                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
+                    <div class="col-md-12">
+                        <div class="timeline">
+                            <!-- timeline time label -->
+                            <div class="time-label text-left">
+                                <span class="bg-success"><i class="fas fa-clipboard-list"></i> ONBOARDING STARTED</span>
+                            </div>
+                            <!-- /.timeline-label -->
+                            {% if user.contact_verified %}
+                            <!-- timeline item -->
+                            <div>
+                                <i class="fas fa-phone-alt bg-success"></i>
+                                <div class="timeline-item">
+                                    <span class="time"><i class="fas fa-clock"></i>
+                                        {{user.date_joined|naturaltime}}
+                                    </span>
+                                    <h3 class="timeline-header text-left">
+                                        <a href="{% url 'status' %}">Contact Verification</a>
+                                        <small><strong>DONE</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        Your Contact Number was verified using OTP. This was necessary
+                                        for all high priority communications and updates.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            {% else %}
+                            <!-- timeline item -->
+                            <div>
+                                <i class="fas fa-envelope bg-success"></i>
+                                <div class="timeline-item">
+                                    <span class="time"><i class="fas fa-clock"></i>
+                                        {{user.date_joined|naturaltime}}
+                                    </span>
+                                    <h3 class="timeline-header text-left">
+                                        <a href="{% url 'status' %}">Email Verified Profile Creation</a>
+                                        <small><strong>DONE</strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You verified your email address: {{user.email}} using email link.
+                                        This was necessary for all high priority communications and updates.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            {% endif %}
+                            <!-- timeline item -->
+                            <div>
+                                <i
+                                    class="fas fa-id-card {% if user.identity_verified %}bg-green{% else %}bg-warning{% endif %}"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header text-left">
+                                        <a href="{% url 'status' %}">Identity Verification</a>
+                                        <small>
+                                            <strong>
+                                                {% if user.identity_verified %}
+                                                DONE
+                                                {% elif user.identity_proof %}
+                                                VERIFICATION PENDING FROM {{PRODUCT_NAME|upper}}
+                                                {% else %}
+                                                PENDING
+                                                {% endif %}
+                                            </strong>
+                                        </small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You update your Identity Proof Details here, which is verified by our team.
+                                        Identity verification helps us in ensuring a legitimate user base for future
+                                        financial transactions.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END timeline item -->
+                            <!-- timeline item -->
+                            <div>
+                                <i
+                                    class="fas fa-user {% if user.first_name or user.last_name %}bg-green{% else %}bg-warning{% endif %}"></i>
+                                <div class="timeline-item">
+                                    <h3 class="timeline-header text-left">
+                                        <a href="{% url 'status' %}">Profile Completion</a>
+                                        <small><strong>
+                                                {% if user.first_name or user.last_name %}
+                                                DONE
+                                                {% else %}
+                                                IN PROGRESS
+                                                {% endif %}
+                                            </strong></small>
+                                    </h3>
+                                    <div class="timeline-body text-justify">
+                                        You update your full name which will be used for future transactions.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- timeline time label -->
+                            <div class="time-label text-left">
+                                {% if user.identity_verified and user.first_name or user.last_name %}
+                                <span class="bg-success"><i class="fas fa-check"></i> ONBOARDING COMPLETED</span>
+                                {% else %}
+                                <span class="bg-warning"><i class="fas fa-check"></i> ONBOARDING COMPLETES</span>
+                                {% endif %}
+                            </div>
+                            <!-- /.timeline-label -->
+                        </div>
+                    </div>
+                </section>
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

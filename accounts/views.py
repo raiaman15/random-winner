@@ -1,8 +1,7 @@
 import os
 import pytz
 from datetime import datetime
-from django.contrib.auth.mixins import (
-    LoginRequiredMixin, UserPassesTestMixin)
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from braces.views import GroupRequiredMixin
 from django.db.models import Q
 from django.contrib import messages
@@ -11,9 +10,7 @@ from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView
-
 from allauth.account.admin import EmailAddress
-
 from .models import CustomUser, ContactNumberOTP
 from .forms import UserIdentityProofUploadViewForm, UserProfilePictureUploadViewForm
 
@@ -59,18 +56,15 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.contact_verified:
-            # self.message = "You have already verified your contact number!"
             messages.success(
                 request, 'You have already verified your contact number!')
         elif ContactNumberOTP.objects.filter(username=user.username).exists():
             attempt = ContactNumberOTP.objects.get(
-                username=user.username)
+                username=user.username).created_at
             now = pytz.timezone("Asia/Kolkata").localize(datetime.now())
-            print((now-attempt.created_at).total_seconds()//60)
-            if (now-attempt.created_at).total_seconds()//60 < 5:
-                # self.message = "You requested OTP within past 5 minutes. Please try again later!"
+            if (now-attempt).total_seconds()//60 < 5:
                 messages.warning(
-                    request, 'You requested OTP within past 5 minutes. Please try again later!')
+                    request, 'You requested OTP within past 5 minutes. Please type the same OTP or try again in 5 minutes for new OTP!')
             else:
                 ContactNumberOTP.objects.get(
                     username=user.username).delete()
@@ -90,10 +84,9 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
 
     def post(self, request):
         if request.user.contact_verified:
-            return redirect('contact')
+            return redirect('status')
 
         if ContactNumberOTP.objects.filter(username=self.request.user.username).exists():
-
             user_otp = 0
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
@@ -107,7 +100,7 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
                 messages.success(request, 'Contact Number Verified')
             else:
                 messages.error(
-                    request, 'Incorrect OPT. Please try again in some time.')
+                    request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
                 return redirect('contact_sms_confirm')
         return redirect('status')
 
@@ -127,7 +120,6 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
             if request.FILES['identity_proof'].size > 2048000:
                 return HttpResponse('File size exceeded specified limit!')
             else:
-                # Delete old image file from system
                 if request.user.identity_proof:
                     os.remove(request.user.identity_proof.path)
                     request.user.identity_proof = None
@@ -204,7 +196,6 @@ class UserProfilePictureUploadView(LoginRequiredMixin, UpdateView):
             if request.FILES['picture'].size > 2048000:
                 return HttpResponse('File size exceeded specified limit!')
             else:
-                # Delete old image file from system
                 if request.user.picture:
                     os.remove(request.user.picture.path)
                     request.user.picture = None
@@ -213,19 +204,19 @@ class UserProfilePictureUploadView(LoginRequiredMixin, UpdateView):
         return super(UserProfilePictureUploadView, self).post(request, *args, **kwargs)
 
 
-class UserPoolMasterApplicationView(LoginRequiredMixin, UpdateView):
+class UserPoolMasterApplicationView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = CustomUser
     fields = ['is_willing_master']
     context_object_name = 'user'
     template_name = 'account/poolmaster_apply.html'
     login_url = 'account_login'
     success_url = reverse_lazy('status')
+    group_required = u"member"
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
-        user = request.user
         if request.POST.get('is_willing_master') == 'on':
             messages.success(
                 self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
@@ -233,12 +224,13 @@ class UserPoolMasterApplicationView(LoginRequiredMixin, UpdateView):
         return super(UserPoolMasterApplicationView, self).post(request, *args, **kwargs)
 
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'user_list'
     template_name = 'account/user_list.html'
     login_url = 'account_login'
     paginate_by = 1
+    group_required = u"manager"
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):
@@ -246,11 +238,12 @@ class UserListView(LoginRequiredMixin, ListView):
         return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
+class UserDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/user_detail.html'
     login_url = 'account_login'
+    group_required = u"manager"
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):
@@ -258,14 +251,23 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         return super(UserDetailView, self).dispatch(request, *args, **kwargs)
 
 
-class UserVerifyProfileView(LoginRequiredMixin, TemplateView):
+class UserVerifyProfileView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    model = CustomUser
+    template_name = 'account/profile_verify_identity.html'
+    fields = ['identity_verified', 'identity_reject_reason']
+    group_required = u"manager"
+
+    def form_valid(self, form):
+        form.instance.master = self.request.user
+        return super(UserVerifyProfileView, self).form_valid(form)
 
 
-class SearchResultsListView(ListView):
+class SearchResultsListView(ListView, GroupRequiredMixin):
     model = CustomUser
     context_object_name = 'user_list'
     template_name = 'account/user_list.html'
     paginate_by = 25
+    group_required = u"manager"
 
     def get_queryset(self):
         query = self.request.GET.get('q')
