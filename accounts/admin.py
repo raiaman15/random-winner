@@ -23,7 +23,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(ContactNumberOTP)
 class ContactNumberOTPAdmin(admin.ModelAdmin):
-    list_display = ('username', 'otp', 'created_at')
+    list_display = ('username', 'otp', 'created')
 
     class Meta:
         ordering = ('username')
@@ -32,7 +32,7 @@ class ContactNumberOTPAdmin(admin.ModelAdmin):
 @admin.register(BalanceTransaction)
 class BalanceTransactionAdmin(admin.ModelAdmin):
     list_display = ('transaction_type', 'transaction_amount',
-                    'transaction_user', 'created_at')
+                    'transaction_user', 'created')
 
     class Meta:
         ordering = ()

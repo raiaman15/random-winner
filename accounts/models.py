@@ -73,7 +73,6 @@ class CustomUser(AbstractUser):
         totp = pyotp.TOTP(self.contact_secret, interval=125).now()
         send_otp(self.username, totp)
         ContactNumberOTP(username=self.username, otp=totp).save()
-        return True
 
     def apply_for_master(self):
         if self.identity_verified and self.contact_verified:
@@ -93,14 +92,14 @@ class CustomUser(AbstractUser):
 
 class ContactNumberOTP(models.Model):
     username = models.CharField(
-        max_length=17, blank=False, unique=True,
+        max_length=17, blank=False,
         validators=[validate_username], editable=False
     )
     otp = models.CharField(
         max_length=6, blank=False,
         validators=[validate_otp], editable=False
     )
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
 
 
 class BalanceTransaction(models.Model):
@@ -120,7 +119,7 @@ class BalanceTransaction(models.Model):
         CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transactions', blank=False
     )
 
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
         return self.transaction_user.username + ':' + self.transaction_type + ':' + str(self.transaction_amount)

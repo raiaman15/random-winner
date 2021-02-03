@@ -60,6 +60,10 @@ class ProfilePictureViewForm(forms.ModelForm):
         return user_profile
 
 
+class AccountResetPasswordWithOTPViewForm(forms.Form):
+    username = forms.CharField()
+
+
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
