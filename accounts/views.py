@@ -244,10 +244,12 @@ class AccountResetPasswordWithOTPView(FormView):
                     request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
             else:
                 request.session['username'] = self.username
+                request.session['password_reset_attempt'] = 0
                 CustomUser.objects.get(username=self.username).generate_otp()
                 messages.success(
                     request, f'Please verify the OTP sent to your registered contact number {self.username}.')
         else:
+            request.session['password_reset_attempt'] = 0
             request.session['username'] = self.username
             CustomUser.objects.get(username=self.username).generate_otp()
             messages.success(
@@ -262,32 +264,39 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
     username = None
     template_name = 'account/password_reset_with_otp_confirm.html'
     form_class = AccountResetPasswordWithOTPConfirmViewForm
-    context_object_name = 'anonymous'
+    success_url = reverse_lazy('status')
 
     def get(self, request, *args, **kwargs):
+        attempt = int(request.session['password_reset_attempt'])+1
+        request.session['password_reset_attempt'] = attempt+1
+        if attempt > 2:
+            messages.error(
+                request, 'Too many attempts. Please try again later!')
+            return redirect('status')
         self.username = request.session['username']
         return super(AccountResetPasswordWithOTPConfirmView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.username = request.session['username']
         user_otp = None
-        if isinstance(request.POST.get("otp_confirm"), str):
-            if len(request.POST.get("otp_confirm")) == 6:
-                user_otp = int(request.POST.get("otp_confirm"))
-        truth = ContactNumberOTP.objects.filter(username=username).last()
+        if isinstance(request.POST.get("otp"), str):
+            if len(request.POST.get("otp")) == 6:
+                user_otp = int(request.POST.get("otp"))
+        truth = ContactNumberOTP.objects.filter(username=self.username).last()
         if int(user_otp) == int(truth.otp):
-            request.user.contact_verified = True
-            request.user.save()
-            messages.success(request, 'Contact Number Verified')
-            ContactNumberOTP.objects.filter(
-                username=username).delete()
+            # ContactNumberOTP.objects.filter(username=self.username).delete()
+            request.session.flush()
+            user = CustomUser.objects.get(username=self.username)
+            user.set_password(f'{self.username}{user_otp}')
+            user.save()
+            messages.success(
+                request, f'Password Changed. New password is {self.username}XXXXXX where XXXXXX is the OTP you just confirmed.')
+
         else:
             messages.error(
                 request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
             return redirect('profile_verification_sms')
-        return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
-
-    def get_success_url():
-        pass
+        return super(AccountResetPasswordWithOTPConfirmView, self).post(request, *args, **kwargs)
 
 ##############################################################################
 # Manager Specific Views
