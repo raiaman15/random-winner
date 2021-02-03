@@ -215,6 +215,9 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
+                                <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
+                                    CREATE NEW POOL
+                                </a>
                             </div>
                             <!-- /.card-tools -->
                         </div>
@@ -337,8 +340,19 @@
                     </div>
                     {% else %}
                     <div class="card bg-warning">
+                        <div class="card-header">
+                            <h3 class="card-title"><strong>Wanna become Member of Pools?</strong></h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
                         <div class="card-body" style="display: block;">
-                            <h4>You must update your First Name & Last Name before joining pool. </h4>
+                            <p class="h5">You must update your First Name & Last Name first for future transactions.
+                            </p>
                             <a href="{% url 'profile_name' %}" class="btn btn-secondary">UPDATE NAME</a>
                         </div>
                         <!-- /.card-body -->

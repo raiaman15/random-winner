@@ -7,10 +7,15 @@ from django.views.generic import ListView, DetailView, CreateView
 from .models import Pool, InvestmentTransaction
 
 
-class PoolCreateView(CreateView):
+class PoolCreateView(LoginRequiredMixin, CreateView):
     model = Pool
+    template_name = 'pools/pool_create.html'
     fields = ['name', 'size', 'investment']
-    
+
+    def form_valid(self, form):
+        form.instance.master = self.request.user
+        return super(PoolCreateView, self).form_valid(form)
+
 
 class PoolListView(LoginRequiredMixin, ListView):
     model = Pool

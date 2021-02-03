@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from config.validators import validate_investment, validate_name, validate_number, validate_investment_transaction_type, validate_amount
 
@@ -7,12 +8,12 @@ class Pool(models.Model):
     # Self Generate & Save - Override Save
     codename = models.CharField(
         'Pool Codename',
-        null=False, blank=False, unique=True, editable=False, max_length=250,
+        null=False, blank=False, unique=True, max_length=250,
         help_text='Codename for the Pool'
     )
     name = models.CharField(
         'Pool Name',
-        null=False, blank=False, unique=False, editable=False, max_length=250,
+        null=False, blank=False, unique=False, max_length=250,
         validators=[validate_name], help_text='Name for the Pool'
     )
     size = models.IntegerField(
@@ -23,10 +24,10 @@ class Pool(models.Model):
     )
     investment = models.DecimalField(
         'Pool Investment Amount',
-        default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False, editable=False,
+        default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False,
     )
     master = models.ForeignKey(
-        get_user_model(), on_delete=models.PROTECT, related_name='master_of_pools', blank=False, editable=False,
+        get_user_model(), on_delete=models.PROTECT, related_name='master_of_pools', blank=False,
     )
     members = models.ManyToManyField(
         get_user_model(), through="PoolMember", related_name='member_of_pools', blank=True
@@ -61,7 +62,7 @@ class Pool(models.Model):
                 self.members.add(user)
 
     def get_absolute_url(self):
-        return 
+        return reverse('pool_detail', args=[str(self.id)])
 
     def __str__(self):
         return self.name + ':' + self.master.email
