@@ -22,9 +22,9 @@ class UserStatusView(LoginRequiredMixin, View):
         # If user signed up with email and confirmed their email address
         if (EmailAddress.objects.filter(user=user).exists() and not user.contact_verified):
             if (EmailAddress.objects.filter(user=user, verified=False).exists()):
-                return redirect('contact_confirmation_option')
+                return redirect('profile_verification_option')
             elif user.identity_reject_reason or not user.identity_proof:
-                return redirect('identity_proof_upload')
+                return redirect('profile_identity_proof_upload')
             elif not (user.first_name or user.lastname):
                 return redirect('profile_name')
             else:
@@ -33,9 +33,9 @@ class UserStatusView(LoginRequiredMixin, View):
         # If user signed up with contact number (username in DB)
         if user.username:
             if not user.contact_verified:
-                return redirect('contact_sms_confirm')
+                return redirect('profile_verification_sms')
             elif user.identity_reject_reason or not user.identity_proof:
-                return redirect('identity_proof_upload')
+                return redirect('profile_identity_proof_upload')
             elif not (user.first_name or user.lastname):
                 return redirect('profile_name')
             else:
@@ -43,13 +43,13 @@ class UserStatusView(LoginRequiredMixin, View):
 
 
 class UserContactConfirmOptionView(TemplateView):
-    template_name = 'account/contact_confirmation_option.html'
+    template_name = 'account/profile_verification_option.html'
 
 
 class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
     model = CustomUser
     context_object_name = 'user'
-    template_name = 'account/contact_sms_confirm.html'
+    template_name = 'account/profile_verification_sms.html'
     login_url = 'account_login'
     success_url = reverse_lazy('status')
 
@@ -101,7 +101,7 @@ class UserContactSMSConfirmView(LoginRequiredMixin, TemplateView):
             else:
                 messages.error(
                     request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
-                return redirect('contact_sms_confirm')
+                return redirect('profile_verification_sms')
         return redirect('status')
 
 
@@ -109,7 +109,7 @@ class UserIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = UserIdentityProofUploadViewForm
     context_object_name = 'user'
-    template_name = 'account/identity_proof_upload.html'
+    template_name = 'account/profile_identity_proof_upload.html'
     login_url = 'account_login'
 
     def get_object(self):
@@ -226,10 +226,10 @@ class UserPoolMasterApplicationView(LoginRequiredMixin, GroupRequiredMixin, Upda
 
 class UserListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
-    context_object_name = 'user_list'
-    template_name = 'account/user_list.html'
+    context_object_name = 'profile_list'
+    template_name = 'account/profile_list.html'
     login_url = 'account_login'
-    paginate_by = 1
+    paginate_by = 200
     group_required = u"manager"
 
     def dispatch(self, request, *args, **kwargs):
@@ -241,7 +241,7 @@ class UserListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 class UserDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
     context_object_name = 'user'
-    template_name = 'account/user_detail.html'
+    template_name = 'account/profile_detail.html'
     login_url = 'account_login'
     group_required = u"manager"
 
@@ -264,9 +264,9 @@ class UserVerifyProfileView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 
 class SearchResultsListView(ListView, GroupRequiredMixin):
     model = CustomUser
-    context_object_name = 'user_list'
-    template_name = 'account/user_list.html'
-    paginate_by = 25
+    context_object_name = 'profile_list'
+    template_name = 'account/profile_list.html'
+    paginate_by = 200
     group_required = u"manager"
 
     def get_queryset(self):

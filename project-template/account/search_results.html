@@ -3,7 +3,7 @@
 {% block title %}Users{% endblock title %}
 
 {% block content %}
-{% for user in user_list %}
+{% for user in profile_list %}
 <div>
     <h2><a href="{{ user.get_absolute_url }}">{{ user.email }}</a></h2>
 </div>

@@ -50,7 +50,7 @@
 
                             <div class="card-tools">
                                 <!-- SEARCH FORM -->
-                                <form action="{% url 'user_search_results' %}" class="form-inline ml-3">
+                                <form action="{% url 'profile_search' %}" class="form-inline ml-3">
                                     <div class="input-group input-group-sm">
                                         <input class="form-control form-control-navbar bg-white border" type="search"
                                             placeholder="User Search" aria-label="User Search" name="q">
@@ -79,9 +79,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for user in user_list %}
+                                        {% for user in profile_list %}
                                         <tr>
-                                            <td><a href="{% url 'user_detail' user.id %}">{{ user.email }}</a></td>
+                                            <td><a href="{% url 'profile_detail' user.id %}">{{ user.email }}</a></td>
                                             <td>{{ user.first_name }}</td>
                                             <td>{{ user.last_name }}</td>
                                             <td>{{ user.identity_verified }}</td>

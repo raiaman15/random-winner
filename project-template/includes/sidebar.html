@@ -103,7 +103,7 @@
         {% if user.is_superuser %}
         <li class="nav-header">USERS</li>
         <li class="nav-item">
-          <a href="{% url 'user_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
+          <a href="{% url 'profile_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
               User List

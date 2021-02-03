@@ -156,7 +156,8 @@
                                                     alt="{{user.identity_proof.url}}" style="max-width: 25%;">
                                             </a>
                                             {% elif user.identity_proof and user.identity_reject_reason %}
-                                            REJECTED | <a href="{%url 'identity_proof_upload' %}">Retry</a> <br />
+                                            REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
+                                            <br />
                                             {{ user.identity_reject_reason }}
                                             {% elif user.identity_proof %}
                                             <a href="{{ user.identity_proof.url }}">
@@ -169,7 +170,7 @@
                                             </span>
                                             {% else %}
                                             <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
-                                                href="{%url 'identity_proof_upload' %}">Upload</a> <br />
+                                                href="{%url 'profile_identity_proof_upload' %}">Upload</a> <br />
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -275,7 +276,7 @@
                             {% if user.first_name or user.lastname %}
                             {% if user.identity_verified %}
                             {% if user.aadhaar_number or user.pan_number %}
-                            <a href="{% url 'apply_for_poolmaster' %}" class="btn btn-secondary">Apply for
+                            <a href="{% url 'profile_apply_postmaster' %}" class="btn btn-secondary">Apply for
                                 PoolMaster</a>
                             {% else %}
                             <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
@@ -283,7 +284,7 @@
                             {% endif %}
                             {% else %}
                             Identity Proof Verification is pending.
-                            <a href="{% url 'identity_proof_upload' %}">More Info.</a>
+                            <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
                             {% endif %}
                             {% else %}
                             <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
