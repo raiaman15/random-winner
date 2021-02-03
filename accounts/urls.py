@@ -27,7 +27,7 @@ urlpatterns = [
          name='account_reset_password_with_otp'),
     #     url(r'^contact/(?P<success>\w+)$',
     #         ContactUsView.as_view(), name="ContactUsView"),
-    path('password/reset/otp/confirm/<int:username>/', accounts_views.AccountResetPasswordWithOTPConfirmView.as_view(),
+    path('password/reset/otp/confirm/', accounts_views.AccountResetPasswordWithOTPConfirmView.as_view(),
          name='account_reset_password_with_otp_confirm'),
     # Profile Manager Specific Routes
     path('manager/profile/', accounts_views.ManagerProfileListView.as_view(),

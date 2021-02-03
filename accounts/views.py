@@ -243,17 +243,19 @@ class AccountResetPasswordWithOTPView(FormView):
                 messages.warning(
                     request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
             else:
+                request.session['username'] = self.username
                 CustomUser.objects.get(username=self.username).generate_otp()
                 messages.success(
                     request, f'Please verify the OTP sent to your registered contact number {self.username}.')
         else:
+            request.session['username'] = self.username
             CustomUser.objects.get(username=self.username).generate_otp()
             messages.success(
                 request, f'Please verify the OTP sent to your registered contact number {self.username}.')
         return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('account_reset_password_with_otp_confirm', kwargs={'username': self.username})
+        return reverse_lazy('account_reset_password_with_otp_confirm')
 
 
 class AccountResetPasswordWithOTPConfirmView(FormView):
@@ -263,10 +265,8 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
     context_object_name = 'anonymous'
 
     def get(self, request, *args, **kwargs):
-        ret = super(AccountResetPasswordWithOTPConfirmView,
-                    self).get(request, *args, **kwargs)
-        self.username = self.kwargs['username']
-        return ret
+        self.username = request.session['username']
+        return super(AccountResetPasswordWithOTPConfirmView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         user_otp = None
