@@ -34,6 +34,7 @@
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
+        {% if not user.is_superuser and user.identity_verified and user.contact_verified %}
         <li class="nav-header">MY ACCOUNT</li>
         <li class="nav-item">
           <a href="{% url 'dashboard' %}" class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">
@@ -59,33 +60,43 @@
             </p>
           </a>
         </li>
+        {% endif %}
 
         <li class="nav-header">POOLS</li>
         <li class="nav-item">
           <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools' in request.path %}active{% endif %}">
-            <i class="nav-icon fab fa-galactic-republic"></i>
+            <i class="nav-icon fas fa-globe-asia"></i>
             <p>
-              Pool List
+              Global Pool List
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/calendar.html" class="nav-link {% if 'poolmaster' in request.path %}active{% endif %}">
-            <i class="nav-icon far fa-calendar-alt"></i>
+          <a href="{% url 'pool_list' %}" class="nav-link {% if 'invites' in request.path %}active{% endif %}">
+            <i class="nav-icon far fa-envelope-open"></i>
             <p>
-              My Poolmaster Pools
+              Pool Invitations
             </p>
           </a>
         </li>
         <li class="nav-item">
           <a href="pages/gallery.html" class="nav-link {% if 'poolmember' in request.path %}active{% endif %}">
-            <i class="nav-icon far fa-image"></i>
+            <i class="nav-icon fab fa-galactic-republic"></i>
             <p>
-              My Investment Pools
+              My Membership Pools
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="pages/calendar.html" class="nav-link {% if 'poolmaster' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-hat-cowboy"></i>
+            <p>
+              My Poolmaster Pools
             </p>
           </a>
         </li>
 
+        {% if user.is_superuser %}
         <li class="nav-header">USERS</li>
         <li class="nav-item">
           <a href="{% url 'user_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
@@ -103,15 +114,7 @@
             </p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="pages/gallery.html"
-            class="nav-link  {% if 'willing-poolmasteruser' in request.path %}active{% endif %}">
-            <i class="nav-icon far fa-image"></i>
-            <p>
-              Poolmaster Invites
-            </p>
-          </a>
-        </li>
+        {% endif %}
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

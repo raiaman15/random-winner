@@ -2,9 +2,8 @@ import os
 import pytz
 from datetime import datetime
 from django.contrib.auth.mixins import (
-    LoginRequiredMixin,
-    PermissionRequiredMixin
-)
+    LoginRequiredMixin, UserPassesTestMixin)
+from braces.views import GroupRequiredMixin
 from django.db.models import Q
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -34,7 +33,7 @@ class UserStatusView(LoginRequiredMixin, View):
             else:
                 return redirect('dashboard')
 
-        # If user signed up with contact number
+        # If user signed up with contact number (username in DB)
         if user.username:
             if not user.contact_verified:
                 return redirect('contact_sms_confirm')
@@ -227,8 +226,8 @@ class UserPoolMasterApplicationView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        if not user.identity_verified:
-            messages.error(
+        if request.POST.get('is_willing_master') == 'on':
+            messages.success(
                 self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
 
         return super(UserPoolMasterApplicationView, self).post(request, *args, **kwargs)
