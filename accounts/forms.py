@@ -64,6 +64,10 @@ class AccountResetPasswordWithOTPViewForm(forms.Form):
     username = forms.CharField()
 
 
+class AccountResetPasswordWithOTPConfirmViewForm(forms.Form):
+    otp = forms.CharField()
+
+
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()

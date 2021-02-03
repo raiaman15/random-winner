@@ -12,7 +12,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
 from .models import CustomUser, ContactNumberOTP
-from .forms import ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm
+from .forms import ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm, AccountResetPasswordWithOTPConfirmViewForm
 from config.validators import validate_username
 
 
@@ -74,17 +74,12 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
-    def get_context_data(self, **kwargs):
-        context = super(ProfileVerificationSMSView,
-                        self).get_context_data(**kwargs)
-        return context
-
     def post(self, request):
         user = request.user
         if user.contact_verified:
             return redirect('status')
         if ContactNumberOTP.objects.filter(username=self.request.user.username).exists():
-            user_otp = 0
+            user_otp = None
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
                     user_otp = int(request.POST.get("otp_confirm"))
@@ -237,6 +232,9 @@ class AccountResetPasswordWithOTPView(FormView):
     def post(self, request, *args, **kwargs):
         validate_username(request.POST.get("username"))
         self.username = int(request.POST.get("username"))
+        if not CustomUser.objects.filter(username=self.username).exists():
+            message.error(
+                request, f'There is no user registered with the provided contact number {self.username}. You can Sign Up if you are new user.')
         if ContactNumberOTP.objects.filter(username=self.username).exists():
             td = timezone.now() - timedelta(minutes=5)
             attempts = ContactNumberOTP.objects.filter(
@@ -246,8 +244,12 @@ class AccountResetPasswordWithOTPView(FormView):
                     request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
             else:
                 CustomUser.objects.get(username=self.username).generate_otp()
+                messages.success(
+                    request, f'Please verify the OTP sent to your registered contact number {self.username}.')
         else:
             CustomUser.objects.get(username=self.username).generate_otp()
+            messages.success(
+                request, f'Please verify the OTP sent to your registered contact number {self.username}.')
         return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -255,30 +257,33 @@ class AccountResetPasswordWithOTPView(FormView):
 
 
 class AccountResetPasswordWithOTPConfirmView(FormView):
+    username = None
     template_name = 'account/password_reset_with_otp_confirm.html'
-    form_class = AccountResetPasswordWithOTPViewForm
-    context_object_name = 'user'
+    form_class = AccountResetPasswordWithOTPConfirmViewForm
+    context_object_name = 'anonymous'
 
-    def get_context_data(self, **kwargs):
-        context = super(AccountResetPasswordWithOTPConfirmView,
-                        self).get_context_data(**kwargs)
-        context['username'] = self.kwargs['username']
-        return context
+    def get(self, request, *args, **kwargs):
+        ret = super(AccountResetPasswordWithOTPConfirmView,
+                    self).get(request, *args, **kwargs)
+        self.username = self.kwargs['username']
+        return ret
 
     def post(self, request, *args, **kwargs):
-        validate_username(request.POST.get("otp"))
-        username = int(request.POST.get("otp"))
-        if ContactNumberOTP.objects.filter(username=username).exists():
-            td = timezone.now() - timedelta(minutes=5)
-            attempts = ContactNumberOTP.objects.filter(
-                username=username, created__gte=td)
-            if len(attempts) > 2:
-                messages.warning(
-                    request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
-            else:
-                CustomUser.objects.get(username=username).generate_otp()
+        user_otp = None
+        if isinstance(request.POST.get("otp_confirm"), str):
+            if len(request.POST.get("otp_confirm")) == 6:
+                user_otp = int(request.POST.get("otp_confirm"))
+        truth = ContactNumberOTP.objects.filter(username=username).last()
+        if int(user_otp) == int(truth.otp):
+            request.user.contact_verified = True
+            request.user.save()
+            messages.success(request, 'Contact Number Verified')
+            ContactNumberOTP.objects.filter(
+                username=username).delete()
         else:
-            CustomUser.objects.get(username=username).generate_otp()
+            messages.error(
+                request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
+            return redirect('profile_verification_sms')
         return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
 
     def get_success_url():
