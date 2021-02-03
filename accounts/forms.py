@@ -63,12 +63,11 @@ class ProfilePictureViewForm(forms.ModelForm):
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'picture', 'aadhaar_number', 'pan_number', 'identity_proof', 'identity_verified',
-                  'username', 'contact_verified', 'is_willing_master', 'is_verified_master')
+        fields = ('username', 'email', 'first_name', 'last_name', 'aadhaar_number', 'pan_number', 'identity_proof',
+                  'picture', 'identity_verified', 'contact_verified', 'is_willing_master', 'is_verified_master')
 
 
 class BalanceTransactionAdmin(forms.ModelForm):
     class Meta:
         model = BalanceTransaction
-        fields = ('transaction_type', 'transaction_amount',
-                  'transaction_user')
+        fields = ('transaction_type', 'transaction_amount', 'transaction_user')

@@ -103,18 +103,27 @@
         {% if user.is_superuser %}
         <li class="nav-header">USERS</li>
         <li class="nav-item">
-          <a href="{% url 'profile_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
+          <a href="{% url 'manager_profile_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
-              User List
+              All User List
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/calendar.html" class="nav-link {% if 'poolmasteruser' in request.path %}active{% endif %}">
+          <a href="{% url 'manager_profile_list' %}" class="nav-link {% if 'users' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-users"></i>
+            <p>
+              PoolMember List
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'manager_profile_list' %}"
+            class="nav-link {% if 'poolmasteruser' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-calendar-alt"></i>
             <p>
-              All Poolmasters
+              PoolMaster List
             </p>
           </a>
         </li>

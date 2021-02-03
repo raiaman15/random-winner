@@ -59,10 +59,12 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
             messages.success(
                 request, 'You have already verified your contact number!')
         elif ContactNumberOTP.objects.filter(username=user.username).exists():
-            attempt = ContactNumberOTP.objects.get(username=user.username).created_at
+            attempt = ContactNumberOTP.objects.get(
+                username=user.username).created_at
             now = pytz.timezone("Asia/Kolkata").localize(datetime.now())
             if (now-attempt).total_seconds()//60 < 5:
-                messages.warning(request, 'You requested OTP within past 5 minutes. Please type the same OTP or try again in 5 minutes for new OTP!')
+                messages.warning(
+                    request, 'You requested OTP within past 5 minutes. Please type the same OTP or try again in 5 minutes for new OTP!')
             else:
                 ContactNumberOTP.objects.get(username=user.username).delete()
                 user.generate_otp()
@@ -88,14 +90,16 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
                     user_otp = int(request.POST.get("otp_confirm"))
-            truth = ContactNumberOTP.objects.get(username=self.request.user.username)
+            truth = ContactNumberOTP.objects.get(
+                username=self.request.user.username)
             if int(user_otp) == int(truth.otp):
                 request.user.contact_verified = True
                 request.user.save()
                 truth.delete()
                 messages.success(request, 'Contact Number Verified')
             else:
-                messages.error(request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
+                messages.error(
+                    request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
                 return redirect('profile_verification_sms')
         return redirect('status')
 
@@ -179,7 +183,7 @@ class ProfilePictureView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = ProfilePictureViewForm
     context_object_name = 'user'
-    template_name = 'account/profile.html'
+    template_name = 'account/profile_picture.html'
     login_url = 'account_login'
     success_url = reverse_lazy('profile_picture')
 
@@ -219,7 +223,22 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
         return super(ProfileApplyPoolmasterView, self).post(request, *args, **kwargs)
 
 
-class ProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+##############################################################################
+# Password Reset Using SMS - OTP (account_reset_password_with_otp)
+# from django.contrib.auth.models import User
+# u = User.objects.get(username__exact='john')
+# u.set_password('new password')
+# u.save()
+##############################################################################
+class AccountResetPasswordWithOTPView(TemplateView):
+    template_name = 'account/password_reset_with_otp.html'
+
+##############################################################################
+# Manager Specific Views
+##############################################################################
+
+
+class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'profile_list'
     template_name = 'account/profile_list.html'
@@ -230,10 +249,10 @@ class ProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):
             raise PermissionDenied
-        return super(ProfileListView, self).dispatch(request, *args, **kwargs)
+        return super(ManagerProfileListView, self).dispatch(request, *args, **kwargs)
 
 
-class ProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
     context_object_name = 'user'
     template_name = 'account/profile_detail.html'
@@ -243,10 +262,11 @@ class ProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.has_perm('user_permission.user_edit'):
             raise PermissionDenied
-        return super(ProfileDetailView, self).dispatch(request, *args, **kwargs)
+        return super(ManagerProfileDetailView, self).dispatch(request, *args, **kwargs)
 
 
-class UserVerifyProfileView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ManagerVerifyProfileIdentityView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    selected_user_id = None
     model = CustomUser
     template_name = 'account/profile_verify_identity.html'
     fields = ['identity_verified', 'identity_reject_reason']
@@ -254,10 +274,10 @@ class UserVerifyProfileView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.master = self.request.user
-        return super(UserVerifyProfileView, self).form_valid(form)
+        return super(ManagerVerifyProfileIdentityView, self).form_valid(form)
 
 
-class ProfileSearchView(ListView, GroupRequiredMixin):
+class ManagerProfileSearchView(ListView, GroupRequiredMixin):
     model = CustomUser
     context_object_name = 'profile_list'
     template_name = 'account/profile_list.html'

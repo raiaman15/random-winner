@@ -22,10 +22,14 @@ urlpatterns = [
          name='profile_detail'),
     path('profile/picture', accounts_views.ProfilePictureView.as_view(),
          name='profile_picture'),
+    # Account Password Reset with OTP
+    path('password/reset/otp', accounts_views.AccountResetPasswordWithOTPView.as_view(),
+         name='account_reset_password_with_otp'),
     # Profile Manager Specific Routes
-    path('profile/', accounts_views.ProfileListView.as_view(), name='profile_list'),
-    path('profile/<int:pk>', accounts_views.ProfileDetailView.as_view(),
-         name='profile_detail'),
-    path('profile/search', accounts_views.ProfileSearchView.as_view(),
-         name='profile_search'),
+    path('manager/profile/', accounts_views.ManagerProfileListView.as_view(),
+         name='manager_profile_list'),
+    path('manager/profile/<int:pk>', accounts_views.ManagerProfileDetailView.as_view(),
+         name='manager_profile_detail'),
+    path('manager/profile/search', accounts_views.ManagerProfileSearchView.as_view(),
+         name='manager_profile_search'),
 ]
