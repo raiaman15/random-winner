@@ -48,7 +48,9 @@
                             <h3 class="widget-user-username font-weight-bold">{{user.first_name}} {{user.last_name}}
                             </h3>
                             <h5 class="widget-user-desc">
-                                {% if user.is_verified_master %}
+                                {% if user.is_superuser %}
+                                MANAGER - <i class="fas fa-check-circle text-primary"></i>
+                                {% elif user.is_verified_master %}
                                 MASTER - <i class="fas fa-check-circle text-primary"></i>
                                 {% elif user.identity_verified and user.contact_verified %}
                                 MEMBER - <i class="fas fa-check-circle text-primary"></i>

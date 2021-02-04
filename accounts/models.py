@@ -42,7 +42,7 @@ class CustomUser(AbstractUser):
         help_text='Your 10 digit PAN Number (as written on your PAN card).'
     )
     identity_proof = models.ImageField(
-        'Photograph of Identity Proof',
+        'Identity Proof Photograph',
         upload_to='identity/', blank=True,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])],
         help_text='Your photo ID proof (preferably Aadhaar Card) in .png or .jpg format. (Max 2 MB)'
@@ -84,7 +84,7 @@ class CustomUser(AbstractUser):
             # TODO-NORMAL: Raise request for admin.
 
     def get_absolute_url(self):
-        return reverse('profile_detail', args=[str(self.id)])
+        return reverse('manager_profile_detail', args=[str(self.id)])
 
     def __str__(self):
         return self.username

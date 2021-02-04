@@ -251,8 +251,8 @@ class AccountResetPasswordWithOTPView(FormView):
                     messages.success(
                         request, f'Please verify the OTP sent to your registered contact number {self.username}.')
             else:
-                request.session['password_reset_attempt'] = 0
                 request.session['username'] = self.username
+                request.session['password_reset_attempt'] = 0
                 CustomUser.objects.get(username=self.username).generate_otp()
                 messages.success(
                     request, f'Please verify the OTP sent to your registered contact number {self.username}.')
@@ -308,40 +308,34 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
 class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'profile_list'
-    template_name = 'account/profile_list.html'
+    template_name = 'account/manager_profile_list.html'
     login_url = 'account_login'
     paginate_by = 200
     group_required = u"manager"
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.has_perm('user_permission.user_edit'):
-            raise PermissionDenied
-        return super(ManagerProfileListView, self).dispatch(request, *args, **kwargs)
 
 
 class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
     context_object_name = 'user'
-    template_name = 'account/profile_detail.html'
+    template_name = 'account/manager_profile_detail.html'
     login_url = 'account_login'
     group_required = u"manager"
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.has_perm('user_permission.user_edit'):
-            raise PermissionDenied
-        return super(ManagerProfileDetailView, self).dispatch(request, *args, **kwargs)
 
-
-class ManagerVerifyProfileIdentityView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
-    selected_user_id = None
+class ManagerProfileIdentityVerifyView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    profile = None
     model = CustomUser
-    template_name = 'account/profile_verify_identity.html'
+    template_name = 'account/manager_profile_verify_identity.html'
     fields = ['identity_verified', 'identity_reject_reason']
     group_required = u"manager"
 
+    def get(self, request, *args, **kwargs):
+        self.profile = CustomUser.objects.get(id=self.kwargs['id'])
+        return super(ManagerProfileIdentityVerifyView, self).get(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.instance.master = self.request.user
-        return super(ManagerVerifyProfileIdentityView, self).form_valid(form)
+        return super(ManagerProfileIdentityVerifyView, self).form_valid(form)
 
 
 class ManagerProfileSearchView(ListView, GroupRequiredMixin):

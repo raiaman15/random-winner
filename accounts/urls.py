@@ -32,6 +32,8 @@ urlpatterns = [
          name='manager_profile_list'),
     path('manager/profile/<int:pk>/', accounts_views.ManagerProfileDetailView.as_view(),
          name='manager_profile_detail'),
+    path('manager/profile/identity/verify/<int:pk>/', accounts_views.ManagerProfileIdentityVerifyView.as_view(),
+         name='manager_profile_identity_verify'),
     path('manager/profile/search/', accounts_views.ManagerProfileSearchView.as_view(),
          name='manager_profile_search'),
 ]
