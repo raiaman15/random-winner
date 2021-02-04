@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
+from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -346,10 +347,11 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
         return get_object_or_404(self.model, pk=self.kwargs['pk'])
 
     def form_valid(self, form, *args, **kwargs):
-        if form.cleaned_data['confirm'] == 'on':
+        print(form.cleaned_data['confirm'])
+        if (form.cleaned_data['confirm']) == True:
             user = CustomUser.objects.get(pk=self.kwargs['pk'])
-            user.groups.add('master')
-            user.save()
+            master_group = Group.objects.get(name='master')
+            master_group.user_set.add(user)
             messages.success(
                 self.request, f'{user.username} is now a PoolMaster.')
         return super(ManagerProfileApprovePoolmasterView, self).form_valid(form, *args, **kwargs)

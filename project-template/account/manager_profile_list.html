@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load humanize %}
+{% load account_extras %}
 {% load crispy_forms_tags %}
 
 {% block title %} Profile List {% endblock %}
@@ -110,7 +111,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if profile.is_verified_master %}
+                                                {% if profile|has_group:"master" %}
                                                 <i class="fas fa-check-circle text-primary"></i>
                                                 {% elif profile.is_willing_master %}
                                                 <i class="fas fa-times-circle text-danger"></i> |

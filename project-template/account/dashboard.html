@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load humanize %}
+{% load account_extras %}
 {% load crispy_forms_tags %}
 
 {% block title %} My Dashboard {% endblock %}
@@ -48,16 +49,16 @@
                             <h3 class="widget-user-username font-weight-bold">{{user.first_name}} {{user.last_name}}
                             </h3>
                             <h5 class="widget-user-desc">
-                                {% if user.is_superuser %}
-                                MANAGER - <i class="fas fa-check-circle text-primary"></i>
+                                {% if user|has_group:"manager" %}
+                                MANAGER - <i class="fas fa-check-circle text-primary"></i>|
                                 {% endif %}
-                                {% if user.is_verified_master %}
-                                | MASTER - <i class="fas fa-check-circle text-primary"></i>
+                                {% if user|has_group:"master" %}
+                                MASTER - <i class="fas fa-check-circle text-primary"></i>|
                                 {% endif %}
-                                {% if user.identity_verified and user.contact_verified %}
-                                | MEMBER - <i class="fas fa-check-circle text-primary"></i>
+                                {% if user|has_group:"member" %}
+                                MEMBER - <i class="fas fa-check-circle text-primary"></i>
                                 {% else %}
-                                , MEMBER - <i class="fas fa-times-circle text-danger"></i>
+                                MEMBER - <i class="fas fa-times-circle text-danger"></i>
                                 {% endif %}
                             </h5>
                         </div>
@@ -74,7 +75,7 @@
                         </a>
                         <div class="card-footer">
                             <div class="row">
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.balance_amount}}</h5>
                                         <span class="description-text">BALANCE AMOUNT</span>
@@ -82,7 +83,7 @@
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.member_of_pools.all.count}}</h5>
                                         <span class="description-text">MEMBER OF POOLS</span>
@@ -90,8 +91,8 @@
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                {% if user.is_verified_master %}
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                {% if user|has_group:"master" %}
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.member_of_pools.all.count}}</h5>
                                         <span class="description-text">MASTER OF POOLS</span>
@@ -100,7 +101,7 @@
                                 </div>
                                 <!-- /.col -->
                                 {% endif %}
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%}">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%}">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.investment_amount}}</h5>
                                         <span class="description-text">INVESTMENT AMOUNT</span>
@@ -208,7 +209,7 @@
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    {% if user.is_verified_master %}
+                    {% if user|has_group:"master" %}
                     <div class="card bg-warning">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -313,7 +314,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
-                            {% if user.identity_verified and user.contact_verified %}
+                            {% if user|has_group:"member" %}
                             <table class="table">
                                 <thead>
                                     <tr>

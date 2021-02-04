@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load humanize %}
+{% load account_extras %}
 {% load crispy_forms_tags %}
 
 {% block title %} {{ pool.name }} {% endblock %}
@@ -65,7 +66,7 @@
                         </a>
                         <div class="card-footer">
                             <div class="row">
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">{{pool.get_balance_amount}}</h5>
                                         <span class="description-text">POOL BALANCE</span>
@@ -73,7 +74,7 @@
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:''master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">{{pool.get_member_count}}</h5>
                                         <span class="description-text">MEMBERS IN POOLS</span>
@@ -81,8 +82,8 @@
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                {% if user.is_verified_master %}
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                {% if user|has_group:"master" %}
+                                <div class="col-sm-{% if user|has_group:'master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">
                                             {{ pool.master.first_name }} {{ pool.master.last_name }}
@@ -93,7 +94,7 @@
                                 </div>
                                 <!-- /.col -->
                                 {% endif %}
-                                <div class="col-sm-{% if user.is_verified_master %}3{%else%}4{%endif%}">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%}">
                                     <div class="description-block">
                                         <h5 class="description-header">{{ pool.investment }}</h5>
                                         <span class="description-text">POOL INVESTMENT</span>
@@ -201,7 +202,7 @@
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    {% if user.is_verified_master %}
+                    {% if user|has_group:"master" %}
                     <div class="card bg-warning">
                         <div class="card-header">
                             <h3 class="card-title">

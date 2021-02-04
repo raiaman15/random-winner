@@ -37,7 +37,7 @@ class Pool(models.Model):
     def save(self, *args, **kwargs):
         """ Save only if the Master of Pool is verified by Manager
         and if the investment amount if a multiple of a decided amount. """
-        if self.master.is_verified_master and self.investment % 10000 == 0:
+        if self.master.groups.filter(name='master').exists() and self.investment % 10000 == 0:
             super(Pool, self).save(*args, **kwargs)
 
     def get_member_count(self):
