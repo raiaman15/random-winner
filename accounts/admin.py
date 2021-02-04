@@ -12,9 +12,8 @@ CustomUser = get_user_model()
 class CustomUserAdmin(admin.ModelAdmin):
     form = CustomUserAdminForm
     list_display = ('username', 'first_name', 'last_name', 'email', 'aadhaar_number', 'identity_proof',
-                    'identity_verified', 'contact_verified', 'is_willing_master', 'is_verified_master')
-    list_filter = ('identity_verified', 'contact_verified',
-                   'is_willing_master', 'is_verified_master')
+                    'identity_verified', 'contact_verified', 'is_willing_master')
+    list_filter = ('identity_verified', 'contact_verified', 'is_willing_master')
     search_fields = ('first_name__startswith', 'last_name__startswith')
 
     class Meta:

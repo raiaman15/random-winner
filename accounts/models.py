@@ -56,7 +56,6 @@ class CustomUser(AbstractUser):
     contact_secret = models.CharField(max_length=16, blank=True)
     contact_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
-    is_verified_master = models.BooleanField(default=False)
     balance_amount = models.DecimalField(
         'Balance Amount',
         default=0.00, max_digits=7, decimal_places=2,

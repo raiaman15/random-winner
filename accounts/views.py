@@ -328,8 +328,13 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
     group_required = u"manager"
 
     def form_valid(self, form):
-        form.instance.master = self.request.user
-        # if request.POST.get('is_willing_master') == 'on':
+        form.instance.master = CustomUser.objects.get(pk=self.kwargs['pk'])
+        if bool(form.cleaned_data['identity_verified']) == True:
+            user = CustomUser.objects.get(pk=self.kwargs['pk'])
+            master_group = Group.objects.get(name='member')
+            master_group.user_set.add(user)
+            messages.success(
+                self.request, f'{user.username} is now a PoolMember.')
         return super(ManagerProfileVerifyIdentityView, self).form_valid(form)
 
 
@@ -347,8 +352,7 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
         return get_object_or_404(self.model, pk=self.kwargs['pk'])
 
     def form_valid(self, form, *args, **kwargs):
-        print(form.cleaned_data['confirm'])
-        if (form.cleaned_data['confirm']) == True:
+        if bool(form.cleaned_data['confirm']) == True:
             user = CustomUser.objects.get(pk=self.kwargs['pk'])
             master_group = Group.objects.get(name='master')
             master_group.user_set.add(user)

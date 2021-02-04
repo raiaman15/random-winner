@@ -74,7 +74,7 @@
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-sm-{% if user|has_group:''master' %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">{{pool.get_member_count}}</h5>
                                         <span class="description-text">MEMBERS IN POOLS</span>
@@ -83,7 +83,7 @@
                                 </div>
                                 <!-- /.col -->
                                 {% if user|has_group:"master" %}
-                                <div class="col-sm-{% if user|has_group:'master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">
                                             {{ pool.master.first_name }} {{ pool.master.last_name }}
