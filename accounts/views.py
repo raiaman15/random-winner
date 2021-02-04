@@ -331,6 +331,7 @@ class ManagerProfileIdentityVerifyView(LoginRequiredMixin, GroupRequiredMixin, U
 
     def form_valid(self, form):
         form.instance.master = self.request.user
+        #if request.POST.get('is_willing_master') == 'on':
         return super(ManagerProfileIdentityVerifyView, self).form_valid(form)
 
 

@@ -46,7 +46,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link {% if 'balance' in request.path %}active{% endif %}">
+          <a href="{% url 'dashboard' %}" class="nav-link {% if 'balance' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-wallet"></i>
             <p>
               Balance
@@ -54,7 +54,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/kanban.html" class="nav-link {% if 'investment' in request.path %}active{% endif %}">
+          <a href="{% url 'dashboard' %}" class="nav-link {% if 'investment' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-chart-line"></i>
             <p>
               Investment
@@ -82,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/gallery.html" class="nav-link {% if 'pools/membership' in request.path %}active{% endif %}">
+          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/membership' in request.path %}active{% endif %}">
             <i class="nav-icon fab fa-galactic-republic"></i>
             <p>
               My Membership Pools
@@ -91,7 +91,7 @@
         </li>
         {% if user|has_group:"master" %}
         <li class="nav-item">
-          <a href="pages/calendar.html" class="nav-link {% if 'pools/mastership' in request.path %}active{% endif %}">
+          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/mastership' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-hat-cowboy"></i>
             <p>
               My Mastership Pools
@@ -108,43 +108,43 @@
             class="nav-link {% if 'manager/profile/' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
-              All User List
+              All Profiles
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'manager_profile_list_poolmember' %}"
+          <a href="{% url 'manager_profile_list' %}"
             class="nav-link {% if 'manager/profile/poolmember' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
-              PoolMember List
+              PoolMembers
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'manager_profile_list_poolmaster' %}"
+          <a href="{% url 'manager_profile_list' %}"
             class="nav-link {% if 'manager/profile/poolmaster' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-users"></i>
             <p>
-              PoolMaster List
+              PoolMasters
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'manager_profile_list_willing_poolmaster' %}"
+          <a href="{% url 'manager_profile_list' %}"
             class="nav-link {% if 'manager/profile/willing/poolmaster' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-calendar-alt"></i>
             <p>
-              Willing PoolMaster List
+              Willing PoolMasters
             </p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'manager_profile_list_pending_verification' %}"
+          <a href="{% url 'manager_profile_list' %}"
             class="nav-link {% if 'poolmasteruser' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-calendar-alt"></i>
             <p>
-              Pending Verification List
+              Unverified Profiles
             </p>
           </a>
         </li>

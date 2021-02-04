@@ -4,7 +4,7 @@
 {% load humanize %}
 {% load crispy_forms_tags %}
 
-{% block title %} Manager: Profile Detail {% endblock %}
+{% block title %} Profile Detail {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -21,12 +21,14 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Manager: Profile Detail</h1>
+                    <h1 class="m-0">Profile Detail</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Manager: Profile Detail</li>
+                        <li class="breadcrumb-item"><a href="{% url 'manager_profile_list' %}">Profile List</a>
+                        </li>
+                        <li class="breadcrumb-item active">Profile Detail</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->

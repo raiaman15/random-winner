@@ -27,11 +27,12 @@ class Pool(models.Model):
         default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False,
     )
     master = models.ForeignKey(
-        get_user_model(), on_delete=models.PROTECT, related_name='master_of_pools', blank=False,
+        get_user_model(), on_delete=models.PROTECT, related_name='master_of_pool', blank=False,
     )
     members = models.ManyToManyField(
-        get_user_model(), through="PoolMember", related_name='member_of_pools', blank=True
+        get_user_model(), through="PoolMember", related_name='member_of_pool', blank=True
     )
+    created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def save(self, *args, **kwargs):
         """ Save only if the Master of Pool is verified by Manager
@@ -41,17 +42,17 @@ class Pool(models.Model):
 
     def get_member_count(self):
         """ Gets the count of members who have joined the pool """
-        return len(self.members)
+        return self.members.count()
 
     def get_member_remaining(self):
         """ Gets the count of remaining members before the pool gets full """
-        return self.size - len(self.members)
+        return self.size - self.members.count()
 
-    def verify_master(self, user):
+    def is_master(self, user):
         """ Checks if the user is master of this pool """
         return self.master == user
 
-    def verify_member(self, user):
+    def is_member(self, user):
         """ Checks if the user is member of this pool """
         return user in self.members
 
