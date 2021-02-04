@@ -183,9 +183,11 @@
                                         <td>
                                             {% if profile.identity_verified %}
                                             <i class="fas fa-check-circle text-primary"></i>
-                                            {% else %}
+                                            {% elif profile.identity_proof %}
                                             <i class="fas fa-times-circle text-danger"></i> |
                                             <a href="{% url 'manager_profile_identity_verify' profile.id %}">VERIFY</a>
+                                            {% else %}
+                                            <i class="fas fa-times-circle text-danger"></i>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -208,20 +210,13 @@
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    {% if profile.is_verified_master %}
                     <div class="card bg-warning">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fas fa-hat-cowboy"></i>
-                                My Poolmaster Pools
+                                Profile's Mastership Pools
                             </h3>
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
-                                    CREATE NEW POOL
-                                </a>
                             </div>
                             <!-- /.card-tools -->
                         </div>
@@ -255,68 +250,17 @@
                         </div>
                         <!-- /.card-body -->
                     </div>
-                    {% else %}
-                    <div class="card bg-warning collapsed-card">
-                        <div class="card-header">
-                            <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <div class="card-body" style="display: none;">
-                            {% if profile.is_willing_master %}
-                            <p class="h5">
-                                You have already applied! Someone from team {{PRODUCT_NAME}} will
-                                reach out to you shortly.
-                            </p>
-                            {% else %}
-                            <p class="h5">
-                                Your profile must be completely verified. Additionally all your details must
-                                be updated before you apply to become a PoolMaster.
-                            </p>
-                            {% if profile.first_name or profile.lastname %}
-                            {% if profile.identity_verified %}
-                            {% if profile.aadhaar_number or profile.pan_number %}
-                            <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
-                                PoolMaster</a>
-                            {% else %}
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
-                                Details</a>
-                            {% endif %}
-                            {% else %}
-                            Identity Proof Verification is pending.
-                            <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
-                            {% endif %}
-                            {% else %}
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    {% endif %}
-
-                    {% if profile.first_name or profile.lastname %}
                     <div class="card bg-warning">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fab fa-galactic-republic"></i>
-                                My Membership Pools
+                                Profile's Membership Pools
                             </h3>
-                            <div class="card-tools">
-                                <a href="{% url 'pool_list' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-globe-asia"></i> MORE POOLS
-                                </a>
-                            </div>
                             <!-- /.card-tools -->
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
-                            {% if profile.identity_verified and profile.contact_verified %}
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -341,30 +285,9 @@
                                 </tbody>
                                 {% endif %}
                             </table>
-                            {% endif %}
                         </div>
                         <!-- /.card-body -->
                     </div>
-                    {% else %}
-                    <div class="card bg-warning">
-                        <div class="card-header">
-                            <h3 class="card-title"><strong>Wanna become Member of Pools?</strong></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <div class="card-body" style="display: block;">
-                            <p class="h5">You must update your First Name & Last Name first for future transactions.
-                            </p>
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">UPDATE NAME</a>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    {% endif %}
                 </section>
                 <!-- right col -->
             </div>

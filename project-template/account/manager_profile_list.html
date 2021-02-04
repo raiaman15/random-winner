@@ -3,7 +3,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Manager: User List {% endblock %}
+{% block title %} Manager: Profile List {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Manager: User List</h1>
+                    <h1 class="m-0">Manager: Profile List</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Manager: User List</li>
+                        <li class="breadcrumb-item active">Manager: Profile List</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -45,7 +45,6 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-users"></i>
-                                User List
                             </h3>
 
                             <div class="card-tools">
@@ -53,7 +52,7 @@
                                 <form action="{% url 'manager_profile_search' %}" class="form-inline ml-3">
                                     <div class="input-group input-group-sm">
                                         <input class="form-control form-control-navbar bg-white border" type="search"
-                                            placeholder="User Search" aria-label="User Search" name="q">
+                                            placeholder="Profile Search" aria-label="Profile Search" name="q">
                                         <div class="input-group-append">
                                             <button class="btn btn-navbar bg-secondary" type="submit">
                                                 <i class="fas fa-search"></i>

@@ -310,7 +310,7 @@ class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     context_object_name = 'profiles'
     template_name = 'account/manager_profile_list.html'
     login_url = 'account_login'
-    paginate_by = 200
+    paginate_by = 100
     group_required = u"manager"
 
 
@@ -338,7 +338,7 @@ class ManagerProfileSearchView(ListView, GroupRequiredMixin):
     model = CustomUser
     context_object_name = 'profile_list'
     template_name = 'account/profile_list.html'
-    paginate_by = 200
+    paginate_by = 100
     group_required = u"manager"
 
     def get_queryset(self):
