@@ -333,14 +333,21 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
 
 
 class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin, FormView):
-    context_object_name = 'profile'
+    profile = None
     template_name = 'account/manager_profile_approve_poolmaster.html'
     form_class = ManagerProfileApprovePoolmasterViewForm
     group_required = u"manager"
 
+    def get(self, request, *args, **kwargs):
+        self.profile = CustomUser.objects.get(id=self.kwargs['pk'])
+        return super(ManagerProfileApprovePoolmasterView, self).get(request, *args, **kwargs)
+
+    def get_object(self):
+        return get_object_or_404(self.model, pk=self.kwargs['pk'])
+
     def form_valid(self, form, *args, **kwargs):
-        if form.confirm == 'on':
-            user = CustomUser.objects.get(id=self.kwargs['pk'])
+        if form.cleaned_data['confirm'] == 'on':
+            user = CustomUser.objects.get(pk=self.kwargs['pk'])
             user.groups.add('master')
             user.save()
             messages.success(

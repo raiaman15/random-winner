@@ -69,7 +69,7 @@ class AccountResetPasswordWithOTPConfirmViewForm(forms.Form):
 
 
 class ManagerProfileApprovePoolmasterViewForm(forms.Form):
-    confirm = forms.CheckboxInput(check_test=True)
+    confirm = forms.BooleanField(label='Approve as Master')
 
 
 class CustomUserAdminForm(forms.ModelForm):

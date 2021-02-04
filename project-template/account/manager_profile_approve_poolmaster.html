@@ -26,7 +26,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Verify Identity</li>
+                        <li class="breadcrumb-item active">Approve Master</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -46,7 +46,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-id-card"></i>
-                                Verify User's Identity
+                                Approve as Master
                             </h3>
 
                             <div class="card-tools">
@@ -64,26 +64,29 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            {% if profile.identity_proof %}
+                            {% if view.profile.identity_proof %}
                             <div class="text-center">
-                                <img src="{{ profile.identity_proof.url }}" style="max-width: 50%;"><br />
+                                <img src="{{ view.profile.identity_proof.url }}" style="max-width: 50%;"><br />
                                 <small>
                                     Submitted Identity Proof
-                                    {% if profile.first_name or profile.last_name %}
-                                    by <b>{{profile.first_name}} {{profile.last_name}}</b>
+                                    {% if view.profile.first_name or view.profile.last_name %}
+                                    by <b>{{view.profile.first_name}} {{view.profile.last_name}}</b>
                                     {% endif %}
                                 </small>
                             </div>
 
-                            {% if profile.aadhaar_number or profile.pan_number %}
+                            {% if view.profile.aadhaar_number or view.profile.pan_number %}
                             <div class="text-center">
                                 Profile's claims to have:<br />
-                                PAN NUMBER: {{profile.pan_number}} |
-                                AADHAAR NUMBER: {{profile.aadhaar_number}}
+                                PAN NUMBER: {{view.profile.pan_number}} |
+                                AADHAAR NUMBER: {{view.profile.aadhaar_number}}
                             </div>
                             {% endif %}
 
                             <hr />
+
+                            Do you really want to approve this profile as Master (PoolMaster)?
+
                             {% endif %}
                             <form method="post">
                                 {% csrf_token %}
@@ -98,21 +101,6 @@
                                 {% for message in messages %}
                                 <p>{{ message }}</p>
                                 {% endfor %}
-                            </div><!-- /.col -->
-                        </div>
-                        {% elif user.first_name or user.last_name %}
-                        <div class="card-footer text-center text-bold">
-                            <div class="col-sm-12 text-center">
-                                You have updated your name.<br />
-                                Click <a href="{% url 'dashboard' %}">here</a> to go to your dashboard.
-                            </div><!-- /.col -->
-                        </div>
-                        {% else %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12 text-center">
-                                <p>
-                                    Please provide your Full Name which will be used for future transactions.
-                                </p>
                             </div><!-- /.col -->
                         </div>
                         {% endif %}
