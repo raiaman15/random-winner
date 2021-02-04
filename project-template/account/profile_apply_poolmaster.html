@@ -124,6 +124,7 @@
     document.body.innerHTML = document.body.innerHTML.replace('Is willing master', 'I Agree and I am Willing to become PoolMaster');
     function ValidateChecked() {
         if ($('#id_is_willing_master').is(':checked')) {
+        } else {
             alert('You must accept the terms and conditions by clicking/tapping on the checkbox.');
             return false
         }

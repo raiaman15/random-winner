@@ -1,4 +1,5 @@
 {% load static %}
+{% load account_extras %}
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-light-primary elevation-4 text-black">
   <!-- Brand Logo -->
@@ -100,6 +101,11 @@
         {% endif %}
         {% endif %}
 
+        {% if user|has_group:"mygroup" %}
+        <p>User belongs to my group
+          {% else %}
+        <p>User doesn't belong to mygroup</p>
+        {% endif %}
         {% if user.is_superuser %}
         <li class="nav-header">USERS</li>
         <li class="nav-item">
