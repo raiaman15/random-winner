@@ -45,15 +45,15 @@
                     <div class="card card-widget widget-user shadow">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
                         <div class="widget-user-header bg-warning">
-                            <h3 class="widget-user-username font-weight-bold">{{view.profile.first_name}}
-                                {{view.profile.last_name}}
+                            <h3 class="widget-user-username font-weight-bold">{{profile.first_name}}
+                                {{profile.last_name}}
                             </h3>
                             <h5 class="widget-user-desc">
-                                {% if view.profile.is_superuser %}
+                                {% if profile.is_superuser %}
                                 MANAGER - <i class="fas fa-check-circle text-primary"></i>
-                                {% elif view.profile.is_verified_master %}
+                                {% elif profile.is_verified_master %}
                                 MASTER - <i class="fas fa-check-circle text-primary"></i>
-                                {% elif view.profile.identity_verified and view.profile.contact_verified %}
+                                {% elif profile.identity_verified and profile.contact_verified %}
                                 MEMBER - <i class="fas fa-check-circle text-primary"></i>
                                 {% else %}
                                 MEMBER - <i class="fas fa-times-circle text-danger"></i>
@@ -62,10 +62,10 @@
                         </div>
                         <a href="{% url 'profile_picture' %}">
                             <div class="widget-user-image">
-                                {% if view.profile.picture %}
-                                <img src="{{ view.profile.picture.url }}" class="img-circle elevation-2"
+                                {% if profile.picture %}
+                                <img src="{{ profile.picture.url }}" class="img-circle elevation-2"
                                     style="height:6rem; width:6rem;"
-                                    alt="{{view.profile.first_name}} {{view.profile.last_name}} Image">
+                                    alt="{{profile.first_name}} {{profile.last_name}} Image">
                                 {% else %}
                                 <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
                                     alt="User Image">
@@ -74,38 +74,35 @@
                         </a>
                         <div class="card-footer">
                             <div class="row">
-                                <div
-                                    class="col-sm-{% if view.profile.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if profile.is_verified_master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{view.profile.balance_amount}}</h5>
+                                        <h5 class="description-header">{{profile.balance_amount}}</h5>
                                         <span class="description-text">BALANCE AMOUNT</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div
-                                    class="col-sm-{% if view.profile.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if profile.is_verified_master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{view.profile.member_of_pools.all.count}}</h5>
+                                        <h5 class="description-header">{{profile.member_of_pools.all.count}}</h5>
                                         <span class="description-text">MEMBER OF POOLS</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                {% if view.profile.is_verified_master %}
-                                <div
-                                    class="col-sm-{% if view.profile.is_verified_master %}3{%else%}4{%endif%} border-right">
+                                {% if profile.is_verified_master %}
+                                <div class="col-sm-{% if profile.is_verified_master %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{view.profile.member_of_pools.all.count}}</h5>
+                                        <h5 class="description-header">{{profile.member_of_pools.all.count}}</h5>
                                         <span class="description-text">MASTER OF POOLS</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
                                 {% endif %}
-                                <div class="col-sm-{% if view.profile.is_verified_master %}3{%else%}4{%endif%}">
+                                <div class="col-sm-{% if profile.is_verified_master %}3{%else%}4{%endif%}">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{view.profile.investment_amount}}</h5>
+                                        <h5 class="description-header">{{profile.investment_amount}}</h5>
                                         <span class="description-text">INVESTMENT AMOUNT</span>
                                     </div>
                                     <!-- /.description-block -->
@@ -121,9 +118,7 @@
                             <h3 class="card-title">Profile Details</h3>
 
                             <div class="card-tools">
-                                <a href="{% url 'profile_detail' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-edit"></i> EDIT PROFILE
-                                </a>
+
                             </div>
                             <!-- /.card-tools -->
                         </div>
@@ -133,51 +128,52 @@
                                 <thead>
                                     <tr>
                                         <td width="40%">Email ID</td>
-                                        <td>{{view.profile.email}}</td>
+                                        <td>{{profile.email}}</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>First Name</td>
-                                        <td>{{view.profile.first_name}}</td>
+                                        <td>{{profile.first_name}}</td>
                                     </tr>
                                     <tr>
                                         <td>Last Name</td>
-                                        <td>{{view.profile.last_name}}</td>
+                                        <td>{{profile.last_name}}</td>
                                     </tr>
                                     <tr>
                                         <td>Contact Number</td>
-                                        <td>{{view.profile.username}}</td>
+                                        <td>{{profile.username}}</td>
                                     </tr>
                                     <tr>
                                         <td>Aadhaar Number</td>
-                                        <td>{{view.profile.aadhaar_number}}</td>
+                                        <td>{{profile.aadhaar_number}}</td>
                                     </tr>
 
                                     <tr>
                                         <td>Identity Proof</td>
                                         <td>
-                                            {% if view.profile.identity_proof and view.profile.identity_verified %}
-                                            <a href="{{ view.profile.identity_proof.url }}">
-                                                <img src="{{ view.profile.identity_proof.url }}"
-                                                    alt="{{view.profile.identity_proof.url}}" style="max-width: 25%;">
+                                            {% if profile.identity_proof and profile.identity_verified %}
+                                            <a href="{{ profile.identity_proof.url }}">
+                                                <img src="{{ profile.identity_proof.url }}"
+                                                    alt="{{profile.identity_proof.url}}" style="max-width: 25%;">
                                             </a>
-                                            {%elif view.profile.identity_proof and view.profile.identity_reject_reason%}
-                                            REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
+                                            {%elif profile.identity_proof and profile.identity_reject_reason%}
+                                            REJECTED
                                             <br />
-                                            {{ view.profile.identity_reject_reason }}
-                                            {% elif view.profile.identity_proof %}
-                                            <a href="{{ view.profile.identity_proof.url }}">
-                                                <img src="{{ view.profile.identity_proof.url }}"
-                                                    alt="{{view.profile.identity_proof.url}}" style="max-width: 25%;">
+                                            {{ profile.identity_reject_reason }}
+                                            {% elif profile.identity_proof %}
+                                            <a href="{{ profile.identity_proof.url }}">
+                                                <img src="{{ profile.identity_proof.url }}"
+                                                    alt="{{profile.identity_proof.url}}" style="max-width: 25%;">
                                             </a>
                                             <span class="text-danger">
-                                                VERIFICATION PENDING FROM
-                                                {{PRODUCT_NAME|upper}}
+                                                VERIFICATION PENDING FROM {{PRODUCT_NAME|upper}} |
+                                                <a href="{% url 'manager_profile_identity_verify' profile.id %}">
+                                                    VERIFY
+                                                </a>
                                             </span>
                                             {% else %}
-                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
-                                                href="{%url 'profile_identity_proof_upload' %}">Upload</a> <br />
+                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -185,19 +181,18 @@
                                     <tr>
                                         <td>Identity Verified</td>
                                         <td>
-                                            {% if view.profile.identity_verified %}
+                                            {% if profile.identity_verified %}
                                             <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
                                             <i class="fas fa-times-circle text-danger"></i> |
-                                            <a
-                                                href="{%url 'manager_profile_identity_verify' {{ profile.id }} %}">Upload</a>
+                                            <a href="{% url 'manager_profile_identity_verify' profile.id %}">VERIFY</a>
                                             {% endif %}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Contact Verified</td>
                                         <td>
-                                            {% if view.profile.contact_verified %}
+                                            {% if profile.contact_verified %}
                                             <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
                                             <i class="fas fa-times-circle text-danger"></i>
@@ -213,7 +208,7 @@
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    {% if view.profile.is_verified_master %}
+                    {% if profile.is_verified_master %}
                     <div class="card bg-warning">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -241,9 +236,9 @@
                                         <th>INVESTMENT</th>
                                     </tr>
                                 </thead>
-                                {% if view.profile.master_of_pools.all %}
+                                {% if profile.master_of_pools.all %}
                                 <tbody>
-                                    {% for pool in view.profile.master_of_pools.all %}
+                                    {% for pool in profile.master_of_pools.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
@@ -273,7 +268,7 @@
                             <!-- /.card-tools -->
                         </div>
                         <div class="card-body" style="display: none;">
-                            {% if view.profile.is_willing_master %}
+                            {% if profile.is_willing_master %}
                             <p class="h5">
                                 You have already applied! Someone from team {{PRODUCT_NAME}} will
                                 reach out to you shortly.
@@ -283,9 +278,9 @@
                                 Your profile must be completely verified. Additionally all your details must
                                 be updated before you apply to become a PoolMaster.
                             </p>
-                            {% if view.profile.first_name or view.profile.lastname %}
-                            {% if view.profile.identity_verified %}
-                            {% if view.profile.aadhaar_number or view.profile.pan_number %}
+                            {% if profile.first_name or profile.lastname %}
+                            {% if profile.identity_verified %}
+                            {% if profile.aadhaar_number or profile.pan_number %}
                             <a href="{% url 'profile_apply_postmaster' %}" class="btn btn-secondary">Apply for
                                 PoolMaster</a>
                             {% else %}
@@ -305,7 +300,7 @@
                     </div>
                     {% endif %}
 
-                    {% if view.profile.first_name or view.profile.lastname %}
+                    {% if profile.first_name or profile.lastname %}
                     <div class="card bg-warning">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -321,7 +316,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
-                            {% if view.profile.identity_verified and view.profile.contact_verified %}
+                            {% if profile.identity_verified and profile.contact_verified %}
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -332,9 +327,9 @@
                                         <th>POOLMASTER</th>
                                     </tr>
                                 </thead>
-                                {% if view.profile.member_of_pools.all %}
+                                {% if profile.member_of_pools.all %}
                                 <tbody>
-                                    {% for pool in view.profile.member_of_pools.all %}
+                                    {% for pool in profile.member_of_pools.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>

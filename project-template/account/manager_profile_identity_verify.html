@@ -67,15 +67,25 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            {% if selected_user.identity_proof %}
-                            Provided ID Proof:<br />
-                            <img src="{% static selected_user.identity_proof %}"
-                                alt="{% static selected_user.identity_proof %}">
+                            {% if profile.identity_proof %}
+                            <div class="text-center">
+                                <img src="{{ profile.identity_proof.url }}" style="max-width: 25%;"><br />
+                                Profile's Identity Proof
+                            </div>
+
+                            {% if profile.aadhaar_number or profile.pan_number %}
+                            <div class="text-center">
+                                Profile's claims to have:<br />
+                                
+
+                            </div>
+
+                            <hr />
                             {% endif %}
                             <form method=" post">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" value="Update">
+                                <input type="submit" class="btn btn-secondary" value="APPROVE / REJECT">
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->

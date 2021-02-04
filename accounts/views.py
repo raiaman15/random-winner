@@ -307,7 +307,7 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
 
 class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
-    context_object_name = 'profile_list'
+    context_object_name = 'profiles'
     template_name = 'account/manager_profile_list.html'
     login_url = 'account_login'
     paginate_by = 200
@@ -316,22 +316,18 @@ class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 
 class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
-    context_object_name = 'user'
+    context_object_name = 'profile'
     template_name = 'account/manager_profile_detail.html'
     login_url = 'account_login'
     group_required = u"manager"
 
 
 class ManagerProfileIdentityVerifyView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
-    profile = None
     model = CustomUser
-    template_name = 'account/manager_profile_verify_identity.html'
+    context_object_name = 'profile'
+    template_name = 'account/manager_profile_identity_verify.html'
     fields = ['identity_verified', 'identity_reject_reason']
     group_required = u"manager"
-
-    def get(self, request, *args, **kwargs):
-        self.profile = CustomUser.objects.get(id=self.kwargs['id'])
-        return super(ManagerProfileIdentityVerifyView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.master = self.request.user
