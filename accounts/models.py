@@ -106,22 +106,22 @@ class BalanceTransaction(models.Model):
         ('D', 'Debit'),
         ('C', 'Credit')
     )
-    transaction_type = models.CharField(
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transaction', blank=False
+    )
+    type_of_transaction = models.CharField(
         max_length=1, choices=TRANSACTION_TYPE, blank=False,
         validators=[validate_balance_transaction_type]
     )
-    transaction_amount = models.DecimalField(
+    amount = models.DecimalField(
         null=False, blank=False, max_digits=7,
         validators=[validate_amount], decimal_places=2
     )
-    transaction_user = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transactions', blank=False
-    )
-
+    verified = models.BinaryField(default=False, editable=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.transaction_user.username + ':' + self.transaction_type + ':' + str(self.transaction_amount)
+        return self.transaction_user.username + ':' + self.transaction_type + ':' + str(self.created)
 
 
 class BillingAddress(models.Model):
@@ -130,44 +130,29 @@ class BillingAddress(models.Model):
     )
 
     user = models.OneToOneField(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='address', blank=False
-    )
-
+        CustomUser, on_delete=models.DO_NOTHING, related_name='address', blank=False)
     name = models.CharField(
         "Full Name", max_length=64, validators=[validate_name],
-        help_text="Name of Person for the Address"
-    )
-
+        help_text="Name of Person for the Address")
     address1 = models.CharField(
         "Address Line 1", max_length=128,
-        help_text="Line 1 of the Address"
-    )
-
+        help_text="Line 1 of the Address")
     address2 = models.CharField(
         "Address Line 2", max_length=128,
-        help_text="Line 2 of the Address"
-    )
-
+        help_text="Line 2 of the Address")
     zip_code = models.CharField(
         "ZIP / Postal code", max_length=12,
-        help_text="ZIP / Postal code for the Address"
-    )
-
+        help_text="ZIP / Postal code for the Address")
     city = models.CharField(
         "City", max_length=128,
-        help_text="City for the Address"
-    )
-
+        help_text="City for the Address")
     state = models.CharField(
         "State", max_length=128,
-        help_text="State for the Address"
-    )
-
+        help_text="State for the Address")
     country = models.CharField(
         "Country",
         max_length=3,
-        choices=COUNTRY,
-    )
+        choices=COUNTRY)
 
     def __str__(self):
         return self.name + ', ' + self.address1 + ', ' + self.address2

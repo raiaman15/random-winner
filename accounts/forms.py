@@ -82,4 +82,4 @@ class CustomUserAdminForm(forms.ModelForm):
 class BalanceTransactionAdmin(forms.ModelForm):
     class Meta:
         model = BalanceTransaction
-        fields = ('transaction_type', 'transaction_amount', 'transaction_user')
+        fields = ('verified',)
