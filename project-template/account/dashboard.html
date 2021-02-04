@@ -278,7 +278,7 @@
                             {% if user.first_name or user.lastname %}
                             {% if user.identity_verified %}
                             {% if user.aadhaar_number or user.pan_number %}
-                            <a href="{% url 'profile_apply_postmaster' %}" class="btn btn-secondary">Apply for
+                            <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
                                 PoolMaster</a>
                             {% else %}
                             <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional

@@ -201,7 +201,7 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
     model = CustomUser
     fields = ['is_willing_master']
     context_object_name = 'user'
-    template_name = 'account/poolmaster_apply.html'
+    template_name = 'account/profile_apply_poolmaster.html'
     login_url = 'account_login'
     success_url = reverse_lazy('status')
     group_required = u"member"

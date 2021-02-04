@@ -17,7 +17,7 @@ urlpatterns = [
          name='profile_name'),
     # Profile Master Completion Routes
     path('profile/apply/poolmaster/', accounts_views.ProfileApplyPoolmasterView.as_view(),
-         name='profile_apply_postmaster'),
+         name='profile_apply_poolmaster'),
     path('profile/detail/', accounts_views.ProfileDetailView.as_view(),
          name='profile_detail'),
     path('profile/picture/', accounts_views.ProfilePictureView.as_view(),

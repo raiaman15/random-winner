@@ -69,20 +69,26 @@
                         <div class="card-body">
                             {% if profile.identity_proof %}
                             <div class="text-center">
-                                <img src="{{ profile.identity_proof.url }}" style="max-width: 25%;"><br />
-                                Profile's Identity Proof
+                                <img src="{{ profile.identity_proof.url }}" style="max-width: 50%;"><br />
+                                <small>
+                                    Submitted Identity Proof
+                                    {% if profile.first_name or profile.last_name %}
+                                    by <b>{{profile.first_name}} {{profile.last_name}}</b>
+                                    {% endif %}
+                                </small>
                             </div>
 
                             {% if profile.aadhaar_number or profile.pan_number %}
                             <div class="text-center">
                                 Profile's claims to have:<br />
-                                
-
+                                PAN NUMBER: {{profile.pan_number}} |
+                                AADHAAR NUMBER: {{profile.aadhaar_number}}
                             </div>
+                            {% endif %}
 
                             <hr />
                             {% endif %}
-                            <form method=" post">
+                            <form method="post">
                                 {% csrf_token %}
                                 {{ form | crispy }}
                                 <input type="submit" class="btn btn-secondary" value="APPROVE / REJECT">
@@ -237,4 +243,15 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    $('#id_identity_verified').bind("change", function (event) {
+        if ($('#id_identity_verified').is(':checked')) {
+            $('#div_id_identity_reject_reason').hide()
+        } else {
+            $('#div_id_identity_reject_reason').show()
+        }
+    });
+
+</script>
+{% endblock javascripts %}
