@@ -72,7 +72,7 @@ class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('username', 'email', 'first_name', 'last_name', 'aadhaar_number', 'pan_number', 'identity_proof',
-                  'picture', 'identity_verified', 'contact_verified', 'is_willing_master', 'is_verified_master')
+                  'picture', 'identity_verified', 'contact_verified', 'is_willing_master', 'is_verified_master', 'groups')
 
 
 class BalanceTransactionAdmin(forms.ModelForm):
