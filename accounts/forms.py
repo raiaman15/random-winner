@@ -68,6 +68,10 @@ class AccountResetPasswordWithOTPConfirmViewForm(forms.Form):
     otp = forms.CharField()
 
 
+class ManagerProfileApprovePoolmasterViewForm(forms.Form):
+    confirm = forms.CheckboxInput(check_test=True)
+
+
 class CustomUserAdminForm(forms.ModelForm):
     class Meta:
         model = get_user_model()

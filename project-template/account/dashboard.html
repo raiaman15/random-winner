@@ -50,12 +50,14 @@
                             <h5 class="widget-user-desc">
                                 {% if user.is_superuser %}
                                 MANAGER - <i class="fas fa-check-circle text-primary"></i>
-                                {% elif user.is_verified_master %}
-                                MASTER - <i class="fas fa-check-circle text-primary"></i>
-                                {% elif user.identity_verified and user.contact_verified %}
-                                MEMBER - <i class="fas fa-check-circle text-primary"></i>
+                                {% endif %}
+                                {% if user.is_verified_master %}
+                                | MASTER - <i class="fas fa-check-circle text-primary"></i>
+                                {% endif %}
+                                {% if user.identity_verified and user.contact_verified %}
+                                | MEMBER - <i class="fas fa-check-circle text-primary"></i>
                                 {% else %}
-                                MEMBER - <i class="fas fa-times-circle text-danger"></i>
+                                , MEMBER - <i class="fas fa-times-circle text-danger"></i>
                                 {% endif %}
                             </h5>
                         </div>

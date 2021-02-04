@@ -1,0 +1,149 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %} Approve Master {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Approve Master</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Verify Identity</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-6 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-white elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card"></i>
+                                Verify User's Identity
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool btn-fullscreen" title="Maximize">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Close">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            {% if profile.identity_proof %}
+                            <div class="text-center">
+                                <img src="{{ profile.identity_proof.url }}" style="max-width: 50%;"><br />
+                                <small>
+                                    Submitted Identity Proof
+                                    {% if profile.first_name or profile.last_name %}
+                                    by <b>{{profile.first_name}} {{profile.last_name}}</b>
+                                    {% endif %}
+                                </small>
+                            </div>
+
+                            {% if profile.aadhaar_number or profile.pan_number %}
+                            <div class="text-center">
+                                Profile's claims to have:<br />
+                                PAN NUMBER: {{profile.pan_number}} |
+                                AADHAAR NUMBER: {{profile.aadhaar_number}}
+                            </div>
+                            {% endif %}
+
+                            <hr />
+                            {% endif %}
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <input type="submit" class="btn btn-secondary" value="APPROVE / REJECT">
+                            </form>
+                        </div><!-- /.card-body -->
+                        <!-- Help Text -->
+                        {% if messages %}
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                {% for message in messages %}
+                                <p>{{ message }}</p>
+                                {% endfor %}
+                            </div><!-- /.col -->
+                        </div>
+                        {% elif user.first_name or user.last_name %}
+                        <div class="card-footer text-center text-bold">
+                            <div class="col-sm-12 text-center">
+                                You have updated your name.<br />
+                                Click <a href="{% url 'dashboard' %}">here</a> to go to your dashboard.
+                            </div><!-- /.col -->
+                        </div>
+                        {% else %}
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Please provide your Full Name which will be used for future transactions.
+                                </p>
+                            </div><!-- /.col -->
+                        </div>
+                        {% endif %}
+                        <!-- /.Help Text -->
+                    </div>
+                    <!-- /.card -->
+                </section>
+                <!-- /.Left col -->
+                <!-- Right col -->
+                <section class="col-lg-6 connectedSortable text-center">
+                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
+                </section>
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+    $('#id_identity_verified').bind("change", function (event) {
+        if ($('#id_identity_verified').is(':checked')) {
+            $('#div_id_identity_reject_reason').hide()
+        } else {
+            $('#div_id_identity_reject_reason').show()
+        }
+    });
+</script>
+{% endblock javascripts %}

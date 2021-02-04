@@ -1,7 +1,7 @@
 import os
 from django.utils import timezone
 from datetime import timedelta
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.db.models import Q
 from django.contrib import messages
@@ -12,7 +12,8 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
 from .models import CustomUser, ContactNumberOTP
-from .forms import ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm, AccountResetPasswordWithOTPConfirmViewForm
+from .forms import (ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm,
+                    AccountResetPasswordWithOTPConfirmViewForm, ManagerProfileApprovePoolmasterViewForm)
 from config.validators import validate_username
 
 
@@ -219,10 +220,6 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
 
 ##############################################################################
 # Password Reset Using SMS - OTP (account_reset_password_with_otp)
-# from django.contrib.auth.models import User
-# u = User.objects.get(username__exact='john')
-# u.set_password('new password')
-# u.save()
 ##############################################################################
 class AccountResetPasswordWithOTPView(FormView):
     username = None
@@ -322,17 +319,36 @@ class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailVie
     group_required = u"manager"
 
 
-class ManagerProfileIdentityVerifyView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = CustomUser
     context_object_name = 'profile'
-    template_name = 'account/manager_profile_identity_verify.html'
+    template_name = 'account/manager_profile_verify_identity.html'
     fields = ['identity_verified', 'identity_reject_reason']
     group_required = u"manager"
 
     def form_valid(self, form):
         form.instance.master = self.request.user
-        #if request.POST.get('is_willing_master') == 'on':
-        return super(ManagerProfileIdentityVerifyView, self).form_valid(form)
+        # if request.POST.get('is_willing_master') == 'on':
+        return super(ManagerProfileVerifyIdentityView, self).form_valid(form)
+
+
+class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin, FormView):
+    context_object_name = 'profile'
+    template_name = 'account/manager_profile_approve_poolmaster.html'
+    form_class = ManagerProfileApprovePoolmasterViewForm
+    group_required = u"manager"
+
+    def form_valid(self, form, *args, **kwargs):
+        if form.confirm == 'on':
+            user = CustomUser.objects.get(id=self.kwargs['pk'])
+            user.groups.add('master')
+            user.save()
+            messages.success(
+                self.request, f'{user.username} is now a PoolMaster.')
+        return super(ManagerProfileApprovePoolmasterView, self).form_valid(form, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('manager_profile_detail',  kwargs={'pk': self.kwargs['pk']})
 
 
 class ManagerProfileSearchView(ListView, GroupRequiredMixin):

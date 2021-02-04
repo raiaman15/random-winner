@@ -170,7 +170,7 @@
                                             </a>
                                             <span class="text-danger">
                                                 VERIFICATION PENDING FROM {{PRODUCT_NAME|upper}} |
-                                                <a href="{% url 'manager_profile_identity_verify' profile.id %}">
+                                                <a href="{% url 'manager_profile_verify_identity' profile.id %}">
                                                     VERIFY
                                                 </a>
                                             </span>
@@ -187,7 +187,7 @@
                                             <i class="fas fa-check-circle text-primary"></i>
                                             {% elif profile.identity_proof %}
                                             <i class="fas fa-times-circle text-danger"></i> |
-                                            <a href="{% url 'manager_profile_identity_verify' profile.id %}">VERIFY</a>
+                                            <a href="{% url 'manager_profile_verify_identity' profile.id %}">VERIFY</a>
                                             {% else %}
                                             <i class="fas fa-times-circle text-danger"></i>
                                             {% endif %}
