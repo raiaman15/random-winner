@@ -233,27 +233,29 @@ class AccountResetPasswordWithOTPView(FormView):
         validate_username(request.POST.get("username"))
         self.username = int(request.POST.get("username"))
         if not CustomUser.objects.filter(username=self.username).exists():
-            message.error(
+            messages.error(
                 request, f'There is no user registered with the provided contact number {self.username}. You can Sign Up if you are new user.')
-        if ContactNumberOTP.objects.filter(username=self.username).exists():
-            td = timezone.now() - timedelta(minutes=5)
-            attempts = ContactNumberOTP.objects.filter(
-                username=self.username, created__gte=td)
-            if len(attempts) > 2:
-                messages.warning(
-                    request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
+        else:
+            if ContactNumberOTP.objects.filter(username=self.username).exists():
+                td = timezone.now() - timedelta(minutes=5)
+                attempts = ContactNumberOTP.objects.filter(
+                    username=self.username, created__gte=td)
+                if len(attempts) > 2:
+                    messages.warning(
+                        request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
+                else:
+                    request.session['username'] = self.username
+                    request.session['password_reset_attempt'] = 0
+                    CustomUser.objects.get(
+                        username=self.username).generate_otp()
+                    messages.success(
+                        request, f'Please verify the OTP sent to your registered contact number {self.username}.')
             else:
-                request.session['username'] = self.username
                 request.session['password_reset_attempt'] = 0
+                request.session['username'] = self.username
                 CustomUser.objects.get(username=self.username).generate_otp()
                 messages.success(
                     request, f'Please verify the OTP sent to your registered contact number {self.username}.')
-        else:
-            request.session['password_reset_attempt'] = 0
-            request.session['username'] = self.username
-            CustomUser.objects.get(username=self.username).generate_otp()
-            messages.success(
-                request, f'Please verify the OTP sent to your registered contact number {self.username}.')
         return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):

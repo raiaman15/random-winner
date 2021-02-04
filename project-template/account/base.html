@@ -102,7 +102,9 @@
 
   <!-- Username means Contact Number-->
   <script>
-    document.body.innerHTML = document.body.innerHTML.replace(/Username/g, 'Contact Number');
+    document.body.innerHTML = document.body.innerHTML.replace(/Username/g, 'Contact Number (10 digit)');
+    document.body.innerHTML = document.body.innerHTML.replace(/ username /g, ' contact number ');
+    document.body.innerHTML = document.body.innerHTML.replace(/CustomUser/g, 'Profile');
   </script>
 
   <!-- Interactive Background -->
