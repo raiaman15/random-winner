@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from config.validators import validate_investment, validate_name, validate_number, validate_investment_transaction_type, validate_amount
+from config.validators import validate_investment, validate_name, validate_number, validate_investment_transaction_type, validate_amount, validate_pool_size
 
 
 class Pool(models.Model):
@@ -18,9 +18,8 @@ class Pool(models.Model):
     )
     size = models.IntegerField(
         'Pool Size',
-        default=20, null=False, blank=False,
-        validators=[
-            validate_number], help_text='Pool size, i.e. maximum member count for the Pool'
+        default=20, null=False, blank=False, validators=[validate_pool_size],
+        help_text='Pool size, i.e. maximum member count for the Pool'
     )
     investment = models.DecimalField(
         'Pool Investment Amount',
@@ -66,7 +65,7 @@ class Pool(models.Model):
         return reverse('pool_detail', args=[str(self.id)])
 
     def __str__(self):
-        return self.name + ':' + self.master.email
+        return self.name + ':' + self.master
 
 
 class PoolMember(models.Model):
@@ -98,4 +97,4 @@ class InvestmentTransaction(models.Model):
     )
 
     def __str__(self):
-        return self.transaction_from.email + ':' + self.transaction_type + ':' + self.transaction_for_pool + ':' + str(self.transaction_amount) + ':' + self.transaction_to.email
+        return self.transaction_from + ':' + self.transaction_type + ':' + self.transaction_for_pool + ':' + str(self.transaction_amount) + ':' + self.transaction_to

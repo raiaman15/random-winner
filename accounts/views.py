@@ -328,13 +328,16 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
     group_required = u"manager"
 
     def form_valid(self, form):
-        form.instance.master = CustomUser.objects.get(pk=self.kwargs['pk'])
+        form.instance.master = get_object_or_404(
+            self.model, pk=self.kwargs['pk'])
         if bool(form.cleaned_data['identity_verified']) == True:
-            user = CustomUser.objects.get(pk=self.kwargs['pk'])
-            master_group = Group.objects.get(name='member')
-            master_group.user_set.add(user)
-            messages.success(
-                self.request, f'{user.username} is now a PoolMember.')
+            user = get_object_or_404(self.model, pk=self.kwargs['pk'])
+            # Managers are not allowed to become Members
+            if not user.groups.filter(name='manager').exists():
+                master_group = Group.objects.get(name='member')
+                master_group.user_set.add(user)
+                messages.success(
+                    self.request, f'{user.username} is now a PoolMember.')
         return super(ManagerProfileVerifyIdentityView, self).form_valid(form)
 
 
@@ -345,19 +348,18 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
     group_required = u"manager"
 
     def get(self, request, *args, **kwargs):
-        self.profile = CustomUser.objects.get(id=self.kwargs['pk'])
+        self.profile = get_object_or_404(CustomUser, pk=self.kwargs['pk'])
         return super(ManagerProfileApprovePoolmasterView, self).get(request, *args, **kwargs)
-
-    def get_object(self):
-        return get_object_or_404(self.model, pk=self.kwargs['pk'])
 
     def form_valid(self, form, *args, **kwargs):
         if bool(form.cleaned_data['confirm']) == True:
-            user = CustomUser.objects.get(pk=self.kwargs['pk'])
-            master_group = Group.objects.get(name='master')
-            master_group.user_set.add(user)
-            messages.success(
-                self.request, f'{user.username} is now a PoolMaster.')
+            user = get_object_or_404(CustomUser, pk=self.kwargs['pk'])
+            # Managers are not allowed to become Members
+            if not user.groups.filter(name='manager').exists():
+                master_group = Group.objects.get(name='master')
+                master_group.user_set.add(user)
+                messages.success(
+                    self.request, f'{user.username} is now a PoolMaster.')
         return super(ManagerProfileApprovePoolmasterView, self).form_valid(form, *args, **kwargs)
 
     def get_success_url(self):

@@ -50,10 +50,10 @@
                             </h3>
                             <h5 class="widget-user-desc">
                                 {% if user|has_group:"manager" %}
-                                MANAGER - <i class="fas fa-check-circle text-primary"></i>|
+                                MANAGER - <i class="fas fa-check-circle text-primary"></i>
                                 {% endif %}
                                 {% if user|has_group:"master" %}
-                                MASTER - <i class="fas fa-check-circle text-primary"></i>|
+                                MASTER - <i class="fas fa-check-circle text-primary"></i>
                                 {% endif %}
                                 {% if user|has_group:"member" %}
                                 MEMBER - <i class="fas fa-check-circle text-primary"></i>
@@ -214,7 +214,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fas fa-hat-cowboy"></i>
-                                My Poolmaster Pools
+                                My Mastership Pools
                             </h3>
                             <div class="card-tools">
                                 <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
@@ -354,7 +354,8 @@
                             <!-- /.card-tools -->
                         </div>
                         <div class="card-body" style="display: block;">
-                            <p class="h5">You must update your First Name & Last Name first for future transactions.
+                            <p class="h5">
+                                You must update your First Name & Last Name first for future transactions.
                             </p>
                             <a href="{% url 'profile_name' %}" class="btn btn-secondary">UPDATE NAME</a>
                         </div>
