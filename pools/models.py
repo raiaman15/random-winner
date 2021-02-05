@@ -58,7 +58,7 @@ class Pool(models.Model):
     def join_pool(self, user):
         """ Checks if pool is available and user is not already in the pool """
         if self.get_member_remaining > 0:
-            if not self.verify_member(user):
+            if not self.is_member(user):
                 self.members.add(user)
 
     def get_absolute_url(self):
