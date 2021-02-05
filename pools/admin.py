@@ -24,9 +24,8 @@ class PoolMemberAdmin(admin.ModelAdmin):
 
 @admin.register(InvestmentTransaction)
 class InvestmentTransactionAdmin(admin.ModelAdmin):
-    list_display = ('transaction_type', 'transaction_amount',
-                    'transaction_from', 'transaction_for_pool', 'transaction_to')
-    list_filter = ('transaction_type', 'transaction_for_pool')
+    list_display = ('type_of_transaction', 'amount', 'user', 'pool')
+    list_filter = ('type_of_transaction', 'pool')
 
     class Meta:
-        ordering = ('transaction_for_pool', 'transaction_amount')
+        ordering = ('pool', 'amount')

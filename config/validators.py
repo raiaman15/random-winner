@@ -40,7 +40,7 @@ def validate_amount(value):
         )
 
 
-def validate_balance_transaction_type(value):
+def validate_balance_type_of_transaction(value):
     """ Validates the transaction type (D/C) """
     if value not in ('D', 'C'):
         raise ValidationError(
@@ -49,7 +49,7 @@ def validate_balance_transaction_type(value):
         )
 
 
-def validate_investment_transaction_type(value):
+def validate_investment_type_of_transaction(value):
     """ Validates the investment transaction type (D/I) """
     if value not in ('D', 'I'):
         raise ValidationError(

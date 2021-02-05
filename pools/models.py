@@ -1,19 +1,19 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.contrib.auth import get_user_model
-from config.validators import validate_investment, validate_name, validate_number, validate_investment_transaction_type, validate_amount, validate_pool_size
+from config.validators import validate_investment, validate_name, validate_number, validate_investment_type_of_transaction, validate_amount, validate_pool_size
 
 
 class Pool(models.Model):
-    # Self Generate & Save - Override Save
     codename = models.CharField(
         'Pool Codename',
-        null=False, blank=False, unique=True, max_length=250,
+        blank=False, unique=True, max_length=250,
         help_text='Codename for the Pool'
     )
     name = models.CharField(
         'Pool Name',
-        null=False, blank=False, unique=False, max_length=250,
+        blank=False, unique=False, max_length=250,
         validators=[validate_name], help_text='Name for the Pool'
     )
     size = models.IntegerField(
@@ -35,7 +35,17 @@ class Pool(models.Model):
 
     def save(self, *args, **kwargs):
         """ Save only if the Master of Pool is verified by Manager
-        and if the investment amount if a multiple of a decided amount. """
+        and if the investment amount if a multiple of a decided amount. 
+        Generates codename (Limits 1 pool creation per minute)
+        """
+        prefix = self.master[:3]
+        t = timezone.now()
+        yy = t.strftime("%Y")
+        mm = t.strftime("%m")
+        dd = t.strftime("%d")
+        hh = t.strftime("%H")
+        mm = t.strftime("%M")
+        self.codename = prefix+yy+mm+dd+hh+mm
         if self.master.groups.filter(name='master').exists() and self.investment % 10000 == 0:
             super(Pool, self).save(*args, **kwargs)
 
@@ -55,11 +65,35 @@ class Pool(models.Model):
         """ Checks if the user is member of this pool """
         return user in self.members
 
-    def join_pool(self, user):
+    def can_join_pool(self, user):
         """ Checks if pool is available and user is not already in the pool """
         if self.get_member_remaining > 0:
             if not self.is_member(user):
-                self.members.add(user)
+                return True
+        return False
+
+    def invite(self, user):
+        """ Invites a user in this pool """
+        """ Checks if user haven't been invited previously """
+        if self.can_join_pool(user):
+            if not PoolInvite.objects.filter(pool=self, user=user).exists():
+                PoolInvite(pool=self, user=user).save()
+                return True
+        return False
+
+    def initiate_join(self, user):
+        """ Initiates a Transaction to Join the Pool """
+        # Refresh User's Balance
+        
+        # If they have sufficient balance
+        InvestmentTransaction(
+            type_of_transaction='I',
+            amount=self.investment,
+            user=user,
+            pool=self
+        ).save()
+        # Refresh User's Balance
+
 
     def get_absolute_url(self):
         return reverse('pool_detail', args=[str(self.id)])
@@ -73,28 +107,32 @@ class PoolMember(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
 
 
+class PoolInvite(models.Model):
+    pool = models.ForeignKey(Pool, on_delete=models.PROTECT)
+    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    accept = models.BooleanField(default=False)
+
+
 class InvestmentTransaction(models.Model):
     TRANSACTION_TYPE = (
         ('I', 'Invest'),
         ('D', 'Disinvest')
     )
-    transaction_type = models.CharField(
+    type_of_transaction = models.CharField(
         max_length=1, choices=TRANSACTION_TYPE, blank=False,
-        validators=[validate_investment_transaction_type]
+        validators=[validate_investment_type_of_transaction]
     )
-    transaction_amount = models.DecimalField(
+    amount = models.DecimalField(
         null=False, blank=False, max_digits=7, decimal_places=2,
         validators=[validate_amount]
     )
-    transaction_from = models.ForeignKey(
+    user = models.ForeignKey(
         get_user_model(), on_delete=models.DO_NOTHING, related_name='outgoing_investment_transactions', blank=False
     )
-    transaction_for_pool = models.ForeignKey(
+    pool = models.ForeignKey(
         Pool, on_delete=models.DO_NOTHING, related_name='investment_transactions', blank=False
     )
-    transaction_to = models.ForeignKey(
-        get_user_model(), on_delete=models.DO_NOTHING, related_name='incoming_investment_transactions', blank=False
-    )
+    verified = models.BinaryField(default=False, editable=True)
 
     def __str__(self):
-        return self.transaction_from + ':' + self.transaction_type + ':' + self.transaction_for_pool + ':' + str(self.transaction_amount) + ':' + self.transaction_to
+        return self.user + ':' + self.type_of_transaction + ':' + self.pool + ':' + str(self.amount)

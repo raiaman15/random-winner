@@ -4,8 +4,9 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import validate_name, validate_aadhaar_number, validate_pan_number, validate_username, validate_amount, validate_otp, validate_balance_transaction_type
+from config.validators import validate_name, validate_aadhaar_number, validate_pan_number, validate_username, validate_amount, validate_otp, validate_balance_type_of_transaction
 from config.utils import send_otp
+from pools.models import InvestmentTransaction
 
 
 class CustomUser(AbstractUser):
@@ -74,8 +75,26 @@ class CustomUser(AbstractUser):
         ContactNumberOTP(username=self.username, otp=totp).save()
 
     def apply_for_master(self):
-        if self.identity_verified and self.contact_verified:
+        if self.groups(name='master').exists():
             self.is_willing_master = True
+
+    def refresh_balance_investment(self):
+        # Balance
+        bts = BalanceTransaction.objects.filter(user=self, verified=True).all()
+        btc = [t.amount for t in bts if t.type_of_transaction == 'C']
+        btd = [t.amount for t in bts if t.type_of_transaction == 'D']
+        # Net Balance Amount
+        nba = btc-btd
+        # Investment
+        its = InvestmentTransaction.objects.filter(
+            user=self, verified=True).all()
+        iti = [t.amount for t in its if t.type_of_transaction == 'I']
+        itd = [t.amount for t in its if t.type_of_transaction == 'D']
+        # Net Investment Amount
+        nia = iti-itd
+        # Net Final Balance & Investment
+        self.balance_amount = nba-nia
+        self.investment_amount = nia
 
     def apply_for_withdrawal(self, amount):
         if self.identity_verified and self.contact_verified:
@@ -111,7 +130,7 @@ class BalanceTransaction(models.Model):
     )
     type_of_transaction = models.CharField(
         max_length=1, choices=TRANSACTION_TYPE, blank=False,
-        validators=[validate_balance_transaction_type]
+        validators=[validate_balance_type_of_transaction]
     )
     amount = models.DecimalField(
         null=False, blank=False, max_digits=7,
@@ -121,14 +140,13 @@ class BalanceTransaction(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.transaction_user.username + ':' + self.transaction_type + ':' + str(self.created)
+        return self.transaction_user.username + ':' + self.type_of_transaction + ':' + str(self.created)
 
 
 class BillingAddress(models.Model):
     COUNTRY = (
         ('IN', 'India'),
     )
-
     user = models.OneToOneField(
         CustomUser, on_delete=models.DO_NOTHING, related_name='address', blank=False)
     name = models.CharField(
