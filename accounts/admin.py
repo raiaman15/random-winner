@@ -15,7 +15,8 @@ class CustomUserAdmin(admin.ModelAdmin):
                     'identity_verified', 'contact_verified', 'is_willing_master')
     list_filter = ('identity_verified',
                    'contact_verified', 'is_willing_master')
-    search_fields = ('first_name__startswith', 'last_name__startswith')
+    search_fields = ('username__startswith', 'first_name__startswith',
+                     'last_name__startswith')
 
     class Meta:
         ordering = ('first_name', 'last_name')

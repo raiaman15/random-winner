@@ -234,9 +234,9 @@
                                         <th>INVESTMENT</th>
                                     </tr>
                                 </thead>
-                                {% if profile.master_of_pools.all %}
+                                {% if profile.master_of_pool.all %}
                                 <tbody>
-                                    {% for pool in profile.master_of_pools.all %}
+                                    {% for pool in profile.master_of_pool.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
@@ -274,9 +274,9 @@
                                         <th>POOLMASTER</th>
                                     </tr>
                                 </thead>
-                                {% if profile.member_of_pools.all %}
+                                {% if profile.member_of_pool.all %}
                                 <tbody>
-                                    {% for pool in profile.member_of_pools.all %}
+                                    {% for pool in profile.member_of_pool.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>

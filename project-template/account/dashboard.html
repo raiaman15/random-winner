@@ -85,7 +85,7 @@
                                 <!-- /.col -->
                                 <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{user.member_of_pools.all.count}}</h5>
+                                        <h5 class="description-header">{{user.member_of_pool.count}}</h5>
                                         <span class="description-text">MEMBER OF POOLS</span>
                                     </div>
                                     <!-- /.description-block -->
@@ -94,7 +94,7 @@
                                 {% if user|has_group:"master" %}
                                 <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{user.member_of_pools.all.count}}</h5>
+                                        <h5 class="description-header">{{user.member_of_pool.count}}</h5>
                                         <span class="description-text">MASTER OF POOLS</span>
                                     </div>
                                     <!-- /.description-block -->
@@ -235,9 +235,9 @@
                                         <th>INVESTMENT</th>
                                     </tr>
                                 </thead>
-                                {% if user.master_of_pools.all %}
+                                {% if user.master_of_pool.all %}
                                 <tbody>
-                                    {% for pool in user.master_of_pools.all %}
+                                    {% for pool in user.master_of_pool.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
@@ -314,6 +314,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
+                            {% if user.member_of_pool.all %}
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -324,9 +325,8 @@
                                         <th>POOLMASTER</th>
                                     </tr>
                                 </thead>
-                                {% if user.member_of_pools.all %}
                                 <tbody>
-                                    {% for pool in user.member_of_pools.all %}
+                                    {% for pool in user.member_of_pool.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
@@ -336,10 +336,21 @@
                                     </tr>
                                     {% endfor %}
                                 </tbody>
-                                {% endif %}
                             </table>
+                            {% else %}
+                            <div class="text-center p-4 text-lg">
+                                <a href="{% url 'pool_list' %}">
+                                    Explore Global Pools <i class="fas fa-globe-asia fa-4x"></i> Start Joining...
+                                </a>
+                            </div>
+                            {% endif %}
                         </div>
                         <!-- /.card-body -->
+                        <div class="card-footer">
+                            {% if not user.member_of_pool.count %}
+                            Join some pools to start
+                            {% endif %}
+                        </div>
                     </div>
                     {% else %}
                     <div class="card bg-warning">
@@ -355,11 +366,15 @@
                         </div>
                         <div class="card-body" style="display: block;">
                             <p class="h5">
-                                You must update your First Name & Last Name first for future transactions.
+                                Pools will get activated once your profile is verified.<br /> Meanwhile, you can update
+                                profile and add billing address to speed up the process.
                             </p>
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">UPDATE NAME</a>
                         </div>
                         <!-- /.card-body -->
+                        <div class="card-footer" style="display:block;">
+                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">ADD BILLING ADDRESS</a>
+                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">UPDATE PROFILE DETAILS</a>
+                        </div>
                     </div>
                     {% endif %}
                 </section>

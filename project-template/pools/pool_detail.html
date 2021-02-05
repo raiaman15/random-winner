@@ -228,9 +228,9 @@
                                         <th>INVESTMENT</th>
                                     </tr>
                                 </thead>
-                                {% if user.master_of_pools.all %}
+                                {% if user.master_of_pool.all %}
                                 <tbody>
-                                    {% for pool in user.master_of_pools.all %}
+                                    {% for pool in user.master_of_pool.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
@@ -311,9 +311,9 @@
                                         <th>POOLMASTER</th>
                                     </tr>
                                 </thead>
-                                {% if user.member_of_pools.all %}
+                                {% if user.member_of_pool.all %}
                                 <tbody>
-                                    {% for pool in user.member_of_pools.all %}
+                                    {% for pool in user.member_of_pool.all %}
                                     <tr>
                                         <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
                                         <td>{{pool.size}}</td>
@@ -357,7 +357,7 @@
         <h3>Members</h3>
         <ul>
             {% if pool.members %}
-            {% for member in pool.member_of_pools %}
+            {% for member in pool.member_of_pool %}
             <li>
                 <img class="memberpicture" src="{{ member.picture.url }}" alt="{{ member.first_name }}">
                 {{ member.email }} ({{ member.email }})

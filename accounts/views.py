@@ -22,6 +22,14 @@ class UserStatusView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
+        # User Group Based Redirect
+        if user.groups.filter(name='manager').exists():
+            return redirect('manager_profile_list')
+        if user.groups.filter(name='master').exists():
+            return redirect('pool_list')
+        if user.groups.filter(name='member').exists():
+            return redirect('pool_list')
+
         # If user signed up with email and confirmed their email address
         if (EmailAddress.objects.filter(user=user).exists() and not user.contact_verified):
             if (EmailAddress.objects.filter(user=user, verified=False).exists()):
