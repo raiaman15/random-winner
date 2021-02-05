@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from upload.views import image_upload
 from pages import views as pages_views
 
 
@@ -30,5 +29,4 @@ urlpatterns = [
     # Local apps
     path('', include('pages.urls')),
     path('pools/', include('pools.urls')),
-    path('upload/', image_upload, name='upload'),
 ]

@@ -4,9 +4,9 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import validate_name, validate_aadhaar_number, validate_pan_number, validate_username, validate_amount, validate_otp, validate_balance_type_of_transaction
+from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username,
+                               validate_amount, validate_otp, validate_balance_type_of_transaction, validate_investment_type_of_transaction)
 from config.utils import send_otp
-from pools.models import InvestmentTransaction
 
 
 class CustomUser(AbstractUser):
@@ -96,8 +96,15 @@ class CustomUser(AbstractUser):
         self.balance_amount = nba-nia
         self.investment_amount = nia
 
-    def apply_for_withdrawal(self, amount):
-        if self.identity_verified and self.contact_verified:
+    def initiate_deposit(self, amount):
+        # Refresh User's Balance
+        self.refresh_balance_investment()
+        # If they have sufficient balance
+        if self.groups(name='member').exists():
+            pass
+
+    def initiate_withdrawal(self, amount):
+        if self.groups(name='member').exists():
             pass
             # TODO-NORMAL: Raise request for admin.
 
@@ -122,11 +129,12 @@ class ContactNumberOTP(models.Model):
 
 class BalanceTransaction(models.Model):
     TRANSACTION_TYPE = (
-        ('D', 'Debit'),
-        ('C', 'Credit')
+        ('C', 'Credit'),
+        ('D', 'Debit')
+
     )
     user = models.ForeignKey(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='balance_transaction', blank=False
+        get_user_model(), on_delete=models.DO_NOTHING, related_name='balance_transaction', blank=False
     )
     type_of_transaction = models.CharField(
         max_length=1, choices=TRANSACTION_TYPE, blank=False,
@@ -143,12 +151,37 @@ class BalanceTransaction(models.Model):
         return self.transaction_user.username + ':' + self.type_of_transaction + ':' + str(self.created)
 
 
+class InvestmentTransaction(models.Model):
+    TRANSACTION_TYPE = (
+        ('I', 'Invest'),
+        ('D', 'Disinvest')
+    )
+    type_of_transaction = models.CharField(
+        max_length=1, choices=TRANSACTION_TYPE, blank=False,
+        validators=[validate_investment_type_of_transaction]
+    )
+    amount = models.DecimalField(
+        null=False, blank=False, max_digits=7, decimal_places=2,
+        validators=[validate_amount]
+    )
+    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING,
+                             related_name='outgoing_investment_transactions', blank=False)
+    pool = models.ForeignKey('pools.Pool', on_delete=models.DO_NOTHING,
+                             related_name='investment_transactions', blank=False)
+    verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user + ':' + self.type_of_transaction + ':' + self.pool + ':' + str(self.amount)
+
+    # TODO-NORMAL: Override save method with verified=True to generate & send invoice.
+
+
 class BillingAddress(models.Model):
     COUNTRY = (
         ('IN', 'India'),
     )
     user = models.OneToOneField(
-        CustomUser, on_delete=models.DO_NOTHING, related_name='address', blank=False)
+        get_user_model(), on_delete=models.DO_NOTHING, related_name='address', blank=False)
     name = models.CharField(
         "Full Name", max_length=64, validators=[validate_name],
         help_text="Name of Person for the Address")

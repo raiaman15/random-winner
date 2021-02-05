@@ -11,8 +11,9 @@ CustomUser = get_user_model()
 @admin.register(get_user_model())
 class CustomUserAdmin(admin.ModelAdmin):
     form = CustomUserAdminForm
+    # readonly_fields = ('contact_verified',)
     list_display = ('username', 'first_name', 'last_name', 'email', 'aadhaar_number', 'identity_proof',
-                    'identity_verified', 'contact_verified', 'is_willing_master')
+                    'identity_verified', 'is_willing_master')
     list_filter = ('identity_verified',
                    'contact_verified', 'is_willing_master')
     search_fields = ('username__startswith', 'first_name__startswith',

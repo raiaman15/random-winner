@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     # Local
     'accounts',
     'pools',
-    'upload',
     'pages'
 ]
 

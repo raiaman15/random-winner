@@ -79,6 +79,7 @@ def validate_pool_size(value):
 
 def validate_investment(value, decided_amount=10000):
     """ Validates if the investment amount if multiple of decided amount. """
+    validate_amount(value)
     if value % decided_amount != 0:
         raise ValidationError(
             ('%(value)s is not a valid amount number. It must be in multiples of %(decided_amount)s'),
@@ -155,10 +156,9 @@ def validate_pan_number(value):
             ('%(value)s is not a valid PAN Number Type. Type the XXXXXXXXXX formatted number from your PAN Card! (without spaces)'),
             params={'value': value})
 
+
 #######################################
 # Custom Validators for Business Logics
 #######################################
-
-
 # We are treating the username field of CustomUser as username for allauth
 custom_username_validator = [validate_username]

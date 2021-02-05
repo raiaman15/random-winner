@@ -5,7 +5,6 @@ Various utilities including:
 
 import urllib.request
 import urllib.parse
-from decimal import *
 from django.conf import settings
 
 key = 'x9Wv/NxkW+M-PIYn7TIxcaB2meS9QAG'
@@ -16,7 +15,7 @@ def sendSMS(apikey, numbers, sender, message):
     """ #TODO-URGENT: Send the OPT to contact number via SMS """
 
     if settings.DEBUG:
-        print(message)
+        return print(message)
 
     data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
                                    'message': message, 'sender': sender})
@@ -57,3 +56,15 @@ def send_otp(number, otp, first_name='', last_name=''):
     message = '%n'.join(lines)
     response = sendSMS(key, number, sender, message)
     print(response)
+
+
+def send_sms_platform_invite(number, username, password):
+    print(f'SMS: number: {number}, username:{username}, password:{password}')
+
+
+def send_sms_pool_invite(number, pool_id):
+    print(f'SMS: username:{number}, pool_id:{pool_id}')
+
+
+def send_email_pool_invite(email, pool_id):
+    print(f'e-Mail: email:{email}, pool_id:{pool_id}')
