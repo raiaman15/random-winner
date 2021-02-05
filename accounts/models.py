@@ -69,10 +69,12 @@ class CustomUser(AbstractUser):
     )
 
     def generate_otp(self):
-        self.contact_secret = pyotp.random_base32()
-        totp = pyotp.TOTP(self.contact_secret, interval=125).now()
+        if not self.contact_secret:
+            self.contact_secret = pyotp.random_base32()
+            self.save()
+        totp = pyotp.TOTP(self.contact_secret).now()
         send_otp(self.username, totp)
-        ContactNumberOTP(username=self.username, otp=totp).save()
+        ContactNumberOTP(username=self.username).save()
 
     def apply_for_master(self):
         if self.groups(name='master').exists():
@@ -117,12 +119,8 @@ class CustomUser(AbstractUser):
 
 class ContactNumberOTP(models.Model):
     username = models.CharField(
-        max_length=17, blank=False,
+        max_length=12, blank=False,
         validators=[validate_username], editable=False
-    )
-    otp = models.CharField(
-        max_length=6, blank=False,
-        validators=[validate_otp], editable=False
     )
     created = models.DateTimeField(auto_now_add=True, editable=False)
 

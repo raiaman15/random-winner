@@ -1,4 +1,5 @@
 import os
+import pyotp
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -70,11 +71,9 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
             messages.success(request, 'You have already verified!')
         elif ContactNumberOTP.objects.filter(username=user.username).exists():
             td = timezone.now() - timedelta(minutes=5)
-            attempts = ContactNumberOTP.objects.filter(
-                username=self.request.user.username, created__gte=td)
+            attempts = ContactNumberOTP.objects.filter(username=self.request.user.username, created__gte=td)
             if len(attempts) > 2:
-                messages.warning(
-                    request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
+                messages.warning(request, '3+ OTP attempts in 5 minutes. Please try again in 5 minutes!')
             else:
                 user.generate_otp()
         else:
@@ -93,14 +92,13 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
                     user_otp = int(request.POST.get("otp_confirm"))
-            truth = ContactNumberOTP.objects.filter(
-                username=user.username).last()
-            if int(user_otp) == int(truth.otp):
+            totp = pyotp.TOTP(user.contact_secret)
+            token_valid = totp.verify(user_otp, valid_window=3)
+            if token_valid:
                 request.user.contact_verified = True
                 request.user.save()
                 messages.success(request, 'Contact Number Verified')
-                ContactNumberOTP.objects.filter(
-                    username=user.username).delete()
+                ContactNumberOTP.objects.filter(username=user.username).delete()
             else:
                 messages.error(
                     request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
@@ -290,15 +288,17 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
         if isinstance(request.POST.get("otp"), str):
             if len(request.POST.get("otp")) == 6:
                 user_otp = int(request.POST.get("otp"))
-        truth = ContactNumberOTP.objects.filter(username=self.username).last()
-        if int(user_otp) == int(truth.otp):
+        contact_secret = get_object_or_404(CustomUser, username=self.username).contact_secret
+        totp = pyotp.TOTP(contact_secret)
+        token_valid = totp.verify(user_otp, valid_window=3)
+        if token_valid:
             ContactNumberOTP.objects.filter(username=self.username).delete()
             request.session.flush()
             user = CustomUser.objects.get(username=self.username)
             user.set_password(f'{self.username}{user_otp}')
             user.save()
             messages.success(
-                request, f'Password Changed. New password is {self.username}XXXXXX where XXXXXX is the OTP you just confirmed.')
+                request, f'Password Changed! New password is {self.username}XXXXXX where XXXXXX is the OTP you just confirmed.')
 
         else:
             messages.error(
