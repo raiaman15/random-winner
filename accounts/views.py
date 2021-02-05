@@ -69,15 +69,20 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         if user.contact_verified:
             messages.success(request, 'You have already verified!')
+            return redirect('status')
+
         elif ContactNumberOTP.objects.filter(username=user.username).exists():
             td = timezone.now() - timedelta(minutes=5)
             attempts = ContactNumberOTP.objects.filter(username=self.request.user.username, created__gte=td)
             if len(attempts) > 2:
-                messages.warning(request, '3+ OTP attempts in 5 minutes. Please try again in 5 minutes!')
+                messages.warning(request, '3+ OTP attempts in 5 minutes! Please try again in 5 minutes.')
             else:
                 user.generate_otp()
+                messages.success(request, f'OTP sent to your contact number {user.username}!')
         else:
             user.generate_otp()
+            messages.success(request, f'OTP sent to your contact number {user.username}!')
+
         return super(ProfileVerificationSMSView, self).get(request, *args, **kwargs)
 
     def get_object(self):
@@ -86,18 +91,21 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
     def post(self, request):
         user = request.user
         if user.contact_verified:
+            messages.success(request, 'You have already verified!')
             return redirect('status')
+
         if ContactNumberOTP.objects.filter(username=self.request.user.username).exists():
             user_otp = None
             if isinstance(request.POST.get("otp_confirm"), str):
                 if len(request.POST.get("otp_confirm")) == 6:
                     user_otp = int(request.POST.get("otp_confirm"))
+
             totp = pyotp.TOTP(user.contact_secret)
             token_valid = totp.verify(user_otp, valid_window=3)
             if token_valid:
                 request.user.contact_verified = True
                 request.user.save()
-                messages.success(request, 'Contact Number Verified')
+                messages.success(request, 'Contact Number Verified!')
                 ContactNumberOTP.objects.filter(username=user.username).delete()
             else:
                 messages.error(
@@ -157,7 +165,7 @@ class ProfileNameView(LoginRequiredMixin, UpdateView):
     context_object_name = 'user'
     template_name = 'account/profile_name.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('profile_name')
+    success_url = reverse_lazy('status')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
@@ -246,7 +254,7 @@ class AccountResetPasswordWithOTPView(FormView):
                     username=self.username, created__gte=td)
                 if len(attempts) > 2:
                     messages.warning(
-                        request, 'More than 3 OTP requests are not allowed within 5 minutes. Please type the last OTP or try again in 5 minutes for new OTP!')
+                        request, '3+ OTP attempts in 5 minutes! Please try again in 5 minutes.')
                 else:
                     request.session['username'] = self.username
                     request.session['password_reset_attempt'] = 0

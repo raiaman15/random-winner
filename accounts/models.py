@@ -76,10 +76,6 @@ class CustomUser(AbstractUser):
         send_otp(self.username, totp)
         ContactNumberOTP(username=self.username).save()
 
-    def apply_for_master(self):
-        if self.groups(name='master').exists():
-            self.is_willing_master = True
-
     def refresh_balance_investment(self):
         # Balance
         bts = BalanceTransaction.objects.filter(user=self, verified=True).all()
@@ -97,6 +93,7 @@ class CustomUser(AbstractUser):
         # Net Final Balance & Investment
         self.balance_amount = nba-nia
         self.investment_amount = nia
+        self.full_clean().save()
 
     def initiate_deposit(self, amount):
         # Refresh User's Balance

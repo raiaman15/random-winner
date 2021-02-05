@@ -25,6 +25,7 @@ urlpatterns = [
     # User management
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
+    path('captcha/', include('captcha.urls')),
 
     # Local apps
     path('', include('pages.urls')),

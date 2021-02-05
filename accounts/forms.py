@@ -1,4 +1,5 @@
 from PIL import Image
+from captcha.fields import CaptchaField
 from django import forms
 from django.core.files import File
 from django.contrib import messages
@@ -62,6 +63,7 @@ class ProfilePictureViewForm(forms.ModelForm):
 
 class AccountResetPasswordWithOTPViewForm(forms.Form):
     username = forms.CharField()
+    captcha = CaptchaField()
 
 
 class AccountResetPasswordWithOTPConfirmViewForm(forms.Form):

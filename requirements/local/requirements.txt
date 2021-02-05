@@ -14,3 +14,4 @@ python-stdnum==1.15
 django-braces==1.14.0
 numpy==1.20.0
 pandas==1.2.1
+django-simple-captcha==0.5.13
