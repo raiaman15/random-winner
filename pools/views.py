@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils import timezone
 from django.views.generic import CreateView, ListView, DetailView
 from .models import Pool, InvestmentTransaction
 from django.contrib.auth.mixins import (
@@ -13,7 +14,20 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = u"master"
 
     def form_valid(self, form):
+        """ Creates only if the Master of Pool is verified by Manager
+        and if the investment amount is a multiple of a decided amount.
+        Generates codename (Limits 1 pool creation per day)
+        """
         form.instance.master = self.request.user
+        prefix = self.request.user.username[:3]
+        t = timezone.now()
+        yy = t.strftime("%Y")
+        mm = t.strftime("%m")
+        dd = t.strftime("%d")
+        # A Master can create only 1 pool per day
+        # hh = t.strftime("%H")
+        # mm = t.strftime("%M")
+        form.instance.codename = prefix+yy+mm+dd  # +hh+mm
         return super(PoolCreateView, self).form_valid(form)
 
 

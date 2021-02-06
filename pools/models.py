@@ -29,21 +29,6 @@ class Pool(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     activated = models.DateTimeField(blank=True, null=True)
 
-    def create(self, *args, **kwargs):
-        """ Creates only if the Master of Pool is verified by Manager
-        and if the investment amount if a multiple of a decided amount.
-        Generates codename (Limits 1 pool creation per minute)
-        """
-        prefix = self.master[:3]
-        t = timezone.now()
-        yy = t.strftime("%Y")
-        mm = t.strftime("%m")
-        dd = t.strftime("%d")
-        hh = t.strftime("%H")
-        mm = t.strftime("%M")
-        self.codename = prefix+yy+mm+dd+hh+mm
-        super(Pool, self).create(*args, **kwargs)
-
     def get_member_count(self):
         """ Gets the count of members who have joined the pool """
         return self.members.count()
@@ -158,7 +143,7 @@ class PoolMember(models.Model):
 
 
 class PoolInvite(models.Model):
-    pool = models.ForeignKey('pools.Pool', on_delete=models.CASCADE)
+    pool = models.ForeignKey('pools.Pool', related_name='invitations', on_delete=models.CASCADE)
     username = models.CharField(
         max_length=12, blank=False, unique=True, validators=[validate_username],
     )

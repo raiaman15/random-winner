@@ -46,12 +46,12 @@
                     <!-- Custom tabs (Charts with tabs)-->
                     <div class="card card-widget widget-user shadow">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header bg-warning">
+                        <div class="widget-user-header bg-danger">
                             <h3 class="widget-user-username font-weight-bold">{{ pool.name }}
                             </h3>
-                            <h5 class="widget-user-desc">
-                                {{ pool.created | naturaltime }}
-                            </h5>
+                            <small class="widget-user-desc">
+                                Created {{ pool.created | naturaltime }}
+                            </small>
                         </div>
                         <a href="{% url 'profile_picture' %}">
                             <div class="widget-user-image">
@@ -68,16 +68,16 @@
                             <div class="row">
                                 <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{pool.get_balance_amount}}</h5>
-                                        <span class="description-text">POOL BALANCE</span>
+                                        <h5 class="description-header">{{pool.get_member_count}}</h5>
+                                        <span class="description-text">MEMBERS IN POOLS</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{pool.get_member_count}}</h5>
-                                        <span class="description-text">MEMBERS IN POOLS</span>
+                                        <h5 class="description-header">{{pool.get_member_remaining}}</h5>
+                                        <span class="description-text">MEMBERS REMAINING</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
@@ -107,7 +107,7 @@
                         </div>
                     </div>
 
-                    <div class="card bg-warning">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">Profile Details</h3>
 
@@ -203,7 +203,7 @@
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
                     {% if user|has_group:"master" %}
-                    <div class="card bg-warning">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon far fa-envelope-open"></i>
@@ -248,7 +248,7 @@
                         <!-- /.card-body -->
                     </div>
                     {% else %}
-                    <div class="card bg-warning collapsed-card">
+                    <div class="card bg-danger collapsed-card">
                         <div class="card-header">
                             <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
 
@@ -291,7 +291,7 @@
                     </div>
                     {% endif %}
 
-                    <div class="card bg-warning">
+                    <div class="card bg-danger">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fab fa-galactic-republic"></i>
