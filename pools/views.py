@@ -5,6 +5,8 @@ from .models import Pool, InvestmentTransaction
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, UserPassesTestMixin)
 from braces.views import GroupRequiredMixin
+from django.urls import reverse_lazy, reverse
+from django.contrib import messages
 
 
 class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -27,7 +29,11 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         # A Master can create only 1 pool per day
         # hh = t.strftime("%H")
         # mm = t.strftime("%M")
-        form.instance.codename = prefix+yy+mm+dd  # +hh+mm
+        if Pool.objects.filter(codename=prefix+yy+mm+dd).exists():
+            messages.error(self.request, 'You can create only one pool per day!')
+            return super(PoolCreateView, self).get(self.request)
+        else:
+            form.instance.codename = prefix+yy+mm+dd  # +hh+mm
         return super(PoolCreateView, self).form_valid(form)
 
 
