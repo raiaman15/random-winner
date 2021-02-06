@@ -11,7 +11,45 @@
 {% block body_class %} sidebar-mini {% endblock body_class %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+    .roulette {
+        display: block;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .wheel img {
+            transition: transform 10s cubic-bezier(0.3, 1, 0.7, 1),
+                10s filter cubic-bezier(0.1, 1, 0.8, 1),
+                10s -webkit-filter cubic-bezier(0.1, 1, 0.8, 1);
+            will-change: transform;
+            border-radius: 50%;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+            max-width: 300px;
+            /* border:4px dashed rgba(255,255,255, .5); */
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border: 80px solid transparent;
+            border-top: 110px solid tomato;
+            position: fixed;
+            left: 50%;
+            transform: translate(-50%, -100px);
+            z-index: 20;
+            border-radius: 0.35em;
+        }
+
+        .arrow:after {}
+    }
+
+    .spin {
+        cursor: crosshair;
+    }
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -109,99 +147,78 @@
 
                     <div class="card bg-black">
                         <div class="card-header">
-                            <h3 class="card-title">Profile Details</h3>
+                            <h3 class="card-title">Pool Roulette</h3>
 
                             <div class="card-tools">
-                                <a href="{% url 'profile_detail' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-edit"></i> EDIT PROFILE
-                                </a>
+                                <span class="btn btn-tool">
+                                    <i class="fas fa-clock"></i>
+                                    {{ view.timezone.now|naturaltime }}
+                                </span>
                             </div>
                             <!-- /.card-tools -->
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body" style="display: block;">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <td width="40%">Email ID</td>
-                                        <td>{{user.email}}</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>First Name</td>
-                                        <td>{{user.first_name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Last Name</td>
-                                        <td>{{user.last_name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Contact Number</td>
-                                        <td>{{user.username}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Aadhaar Number</td>
-                                        <td>{{user.aadhaar_number}}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Identity Proof</td>
-                                        <td>
-                                            {% if user.identity_proof and user.identity_verified %}
-                                            <a href="{{ user.identity_proof.url }}">
-                                                <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 25%;">
-                                            </a>
-                                            {% elif user.identity_proof and user.identity_reject_reason %}
-                                            REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
-                                            <br />
-                                            {{ user.identity_reject_reason }}
-                                            {% elif user.identity_proof %}
-                                            <a href="{{ user.identity_proof.url }}">
-                                                <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 25%;">
-                                            </a>
-                                            <span class="text-danger">
-                                                VERIFICATION PENDING FROM
-                                                {{PRODUCT_NAME|upper}}
-                                            </span>
-                                            {% else %}
-                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
-                                                href="{%url 'profile_identity_proof_upload' %}">Upload</a> <br />
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Identity Verified</td>
-                                        <td>
-                                            {% if user.identity_verified %}
-                                            <i class="fas fa-check-circle text-primary"></i>
-                                            {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Contact Verified</td>
-                                        <td>
-                                            {% if user.contact_verified %}
-                                            <i class="fas fa-check-circle text-primary"></i>
-                                            {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="card-body pb-5" style="display: block;">
+                            <div class="roulette text-center">
+                                <div class="wheel spin text-center">
+                                    <div class="arrow text-center">
+                                    </div>
+                                    <img src="https://i.imgur.com/N01W3Ks.png" style="max-width: 80vw;">
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
+                        <div class="card-footer">
+                            Past Winners
+                        </div>
                     </div>
                 </section>
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
+                    <div class="card bg-black">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="nav-icon fab fa-galactic-republic"></i>
+                                Pool Membership
+                            </h3>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>SIZE</th>
+                                        <th>FILLED</th>
+                                        <th>INVESTMENT</th>
+                                        <th>POOLMASTER</th>
+                                    </tr>
+                                </thead>
+                                {% if user.member_of_pool.all %}
+                                <tbody>
+                                    {% for pool in user.member_of_pool.all %}
+                                    <tr>
+                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
+                                        <td>{{pool.size}}</td>
+                                        <td>{{pool.members.count}}</td>
+                                        <td>{{pool.investment|intcomma}}</td>
+                                        <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer text-center">
+                            {% if not pool.get_member_count %}
+                            The pool seems lonely! Invite members to start...
+                            {% endif %}
+                        </div>
+                    </div>
+
                     {% if user|has_group:"master" %}
                     <div class="card bg-black">
                         <div class="card-header">
@@ -246,89 +263,11 @@
                             </table>
                         </div>
                         <!-- /.card-body -->
-                    </div>
-                    {% else %}
-                    <div class="card bg-danger collapsed-card">
-                        <div class="card-header">
-                            <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
+                        <div class="card-footer text-center">
+                            Invite More Members? <small>({{pool.get_member_remaining}} invites remaining)</small>
                         </div>
-                        <div class="card-body" style="display: none;">
-                            {% if user.is_willing_master %}
-                            <p class="h5">
-                                You have already applied! Someone from team {{PRODUCT_NAME}} will
-                                reach out to you shortly.
-                            </p>
-                            {% else %}
-                            <p class="h5">Your profile must be completely verified. Additionally all your details must
-                                be updated before you apply to become a PoolMaster.
-                            </p>
-                            {% if user.first_name or user.lastname %}
-                            {% if user.identity_verified %}
-                            {% if user.aadhaar_number or user.pan_number %}
-                            <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
-                                PoolMaster</a>
-                            {% else %}
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
-                                Details</a>
-                            {% endif %}
-                            {% else %}
-                            Identity Proof Verification is pending.
-                            <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
-                            {% endif %}
-                            {% else %}
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <!-- /.card-body -->
                     </div>
                     {% endif %}
-
-                    <div class="card bg-danger">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="nav-icon fab fa-galactic-republic"></i>
-                                Pool Membership
-                            </h3>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>SIZE</th>
-                                        <th>FILLED</th>
-                                        <th>INVESTMENT</th>
-                                        <th>POOLMASTER</th>
-                                    </tr>
-                                </thead>
-                                {% if user.member_of_pool.all %}
-                                <tbody>
-                                    {% for pool in user.member_of_pool.all %}
-                                    <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                        <td>{{pool.size}}</td>
-                                        <td>{{pool.members.count}}</td>
-                                        <td>{{pool.investment|intcomma}}</td>
-                                        <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                                {% endif %}
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-
                 </section>
                 <!-- right col -->
             </div>
@@ -342,7 +281,39 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    perfecthalf = ((1 / 37) * 360) / 2;
+
+    let currentLength = perfecthalf;
+
+    $(".wheel img").css("transform", "rotate(" + perfecthalf + "deg)");
+
+    $(".spin").click(() => {
+        //$(".wheel img").css("filter", "blur(8px)");
+
+        spininterval = getRandomInt(0, 37) * (360 / 37) + getRandomInt(3, 4) * 360;
+        currentLength += spininterval;
+
+        numofsecs = spininterval;
+
+        console.log(currentLength);
+        $(".wheel img").css("transform", "rotate(" + currentLength + "deg)");
+
+        setTimeout(function () {
+            $(".wheel img").css("filter", "blur(0px)");
+        }, numofsecs);
+    });
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    $(document).ready(function () {
+        $(".spin").click();
+    })
+</script>
+{% endblock javascripts %}
 
 
 

@@ -1,3 +1,4 @@
+{% load account_extras %}
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
   <!-- Left navbar links -->
@@ -22,6 +23,7 @@
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
+    {% if user|has_group:"member" or user|has_group:"master" %}
     <!-- Invitation Count -->
     <li class="nav-item" title="Pool Invitations">
       <a class="nav-link" data-toggle="dropdown" href="#">
@@ -50,6 +52,7 @@
       </div>
     </li>
     <!-- User Dropdown Menu -->
+    {% endif %}
     <li class="nav-item dropdown">
       <a class="nav-link" data-toggle="dropdown" href="#" title="{{user.email}}">
         <i class="far fa-user"></i>
