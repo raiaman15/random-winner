@@ -30,7 +30,7 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         # hh = t.strftime("%H")
         # mm = t.strftime("%M")
         if Pool.objects.filter(codename=prefix+yy+mm+dd).exists():
-            messages.error(self.request, 'You can create only one pool per day!')
+            messages.error(self.request, 'You can create a maximum of one pool per day!')
             return super(PoolCreateView, self).get(self.request)
         else:
             form.instance.codename = prefix+yy+mm+dd  # +hh+mm
