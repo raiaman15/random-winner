@@ -75,15 +75,7 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if messages %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12 text-center">
-                                {% for message in messages %}
-                                <p>{{ message }}</p>
-                                {% endfor %}
-                            </div><!-- /.col -->
-                        </div>
-                        {% elif user.identity_verified %}
+                        {% if user.identity_verified %}
                         <div class="card-footer text-center text-bold">
                             Your Identity verification was successful!<br />
                             Click <a href="{% url 'status' %}">here</a> to go to Dashboard.
@@ -91,7 +83,8 @@
                         {% elif user.identity_proof and not user.identity_reject_reason %}
                         <div class="card-footer text-center text-bold">
                             Your Identity verification is in progress. It may take some time for the verification to
-                            complete. Please revisit in some time to proceed further.
+                            complete. Please revisit in some time to proceed further.<br />
+                            Click <a href="{% url 'dashboard' %}">here</a> to go to your dashboard.
                         </div>
                         {% elif user.identity_reject_reason %}
                         <div class="card-footer text-center text-bold">

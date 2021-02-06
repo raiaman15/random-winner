@@ -177,7 +177,7 @@ class ProfileDetailView(LoginRequiredMixin, UpdateView):
     context_object_name = 'user'
     template_name = 'account/profile_detail.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('profile_detail')
+    success_url = reverse_lazy('status')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
@@ -271,7 +271,9 @@ class AccountResetPasswordWithOTPView(FormView):
         return super(AccountResetPasswordWithOTPView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('account_reset_password_with_otp_confirm')
+        if self.request.session['username'] == self.username:
+            return reverse_lazy('account_reset_password_with_otp_confirm')
+        return reverse_lazy('account_reset_password_with_otp')
 
 
 class AccountResetPasswordWithOTPConfirmView(FormView):

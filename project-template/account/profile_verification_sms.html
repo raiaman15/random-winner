@@ -76,21 +76,10 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if messages %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12">
-                                {% for message in messages %}
-                                <p>{{ message }}</p><br />
-                                <p>Click <a href="{% url 'status' %}">here</a> to go to Dashboard.</p>
-                                {% endfor %}
-                            </div><!-- /.col -->
-                        </div>
-                        {% else %}
                         <div class="card-footer text-center">
                             An OTP was sent to your contact number {{user.username}}. Kindly confirm the OTP
                             within <span id="seconds"></span> seconds to complete your onboarding!
                         </div>
-                        {% endif %}
                         <!-- /.Help Text -->
                     </div>
                     <!-- /.card -->

@@ -27,7 +27,7 @@ class Pool(models.Model):
     master = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='master_of_pool', blank=False)
     members = models.ManyToManyField(get_user_model(), through="PoolMember", related_name='member_of_pool', blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    activated = models.DateTimeField(blank=True)
+    activated = models.DateTimeField(blank=True, null=True)
 
     def create(self, *args, **kwargs):
         """ Creates only if the Master of Pool is verified by Manager
@@ -42,8 +42,7 @@ class Pool(models.Model):
         hh = t.strftime("%H")
         mm = t.strftime("%M")
         self.codename = prefix+yy+mm+dd+hh+mm
-        if self.master.groups.filter(name='master').exists() and self.investment % 10000 == 0:
-            return super(Pool, self).create(*args, **kwargs)
+        super(Pool, self).create(*args, **kwargs)
 
     def get_member_count(self):
         """ Gets the count of members who have joined the pool """
@@ -159,7 +158,7 @@ class PoolMember(models.Model):
 
 
 class PoolInvite(models.Model):
-    pool = models.ForeignKey('pools.Pool', on_delete=models.PROTECT)
+    pool = models.ForeignKey('pools.Pool', on_delete=models.CASCADE)
     username = models.CharField(
         max_length=12, blank=False, unique=True, validators=[validate_username],
     )

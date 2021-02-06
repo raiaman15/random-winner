@@ -209,95 +209,6 @@
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    {% if user|has_group:"master" %}
-                    <div class="card bg-warning">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="nav-icon fas fa-hat-cowboy"></i>
-                                My Mastership Pools
-                            </h3>
-                            <div class="card-tools">
-                                <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
-                                    <i class="nav-icon fas fa-plus"></i>
-                                    CREATE POOL
-                                </a>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>SIZE</th>
-                                        <th>FILLED</th>
-                                        <th>INVESTMENT</th>
-                                    </tr>
-                                </thead>
-                                {% if user.master_of_pool.all %}
-                                <tbody>
-                                    {% for pool in user.master_of_pool.all %}
-                                    <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                        <td>{{pool.size}}</td>
-                                        <td>{{pool.members.count}}</td>
-                                        <td>
-                                            {% widthratio pool.investment 1 pool.members.count %}
-                                            ({{pool.investment|intcomma}} / Member)
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                                {% endif %}
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    {% else %}
-                    <div class="card bg-warning collapsed-card">
-                        <div class="card-header">
-                            <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <div class="card-body" style="display: none;">
-                            {% if user.is_willing_master %}
-                            <p class="h5">
-                                You have already applied! Someone from team {{PRODUCT_NAME}} will
-                                reach out to you shortly.
-                            </p>
-                            {% else %}
-                            <p class="h5">Your profile must be completely verified. Additionally all your details must
-                                be updated before you apply to become a PoolMaster.
-                            </p>
-                            {% if user.first_name or user.lastname %}
-                            {% if user.identity_verified %}
-                            {% if user.aadhaar_number or user.pan_number %}
-                            <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
-                                PoolMaster</a>
-                            {% else %}
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
-                                Details</a>
-                            {% endif %}
-                            {% else %}
-                            Identity Proof Verification is pending.
-                            <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
-                            {% endif %}
-                            {% else %}
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    {% endif %}
-
                     {% if user|has_group:"member" %}
                     <div class="card bg-warning">
                         <div class="card-header">
@@ -348,7 +259,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             {% if not user.member_of_pool.count %}
-                            Join some pools to start
+                            Join some pools to start Membership
                             {% endif %}
                         </div>
                     </div>
@@ -377,6 +288,110 @@
                         </div>
                     </div>
                     {% endif %}
+
+                    {% if user|has_group:"master" %}
+                    <div class="card bg-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="nav-icon fas fa-hat-cowboy"></i>
+                                My Mastership Pools
+                            </h3>
+                            <div class="card-tools">
+                                <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
+                                    <i class="nav-icon fas fa-plus"></i>
+                                    CREATE POOL
+                                </a>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            {% if user.master_of_pool.all %}
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>SIZE</th>
+                                        <th>FILLED</th>
+                                        <th>INVESTMENT</th>
+                                    </tr>
+                                </thead>
+                                {% if user.master_of_pool.all %}
+                                <tbody>
+                                    {% for pool in user.master_of_pool.all %}
+                                    <tr>
+                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
+                                        <td>{{pool.size}}</td>
+                                        <td>{{pool.members.count}}</td>
+                                        <td>
+                                            {% widthratio pool.investment 1 pool.members.count %}
+                                            ({{pool.investment|intcomma}} / Member)
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                            {% else %}
+                            <div class="text-center p-4 text-lg">
+                                <a href="{% url 'pool_create' %}">
+                                    Create a Pool <i class="fas fa-hat-cowboy fa-4x"></i> Be a PoolMaster...
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            {% if not user.master_of_pool.count %}
+                            Create some pools to start Mastership
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="card bg-warning collapsed-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <div class="card-body" style="display: none;">
+                            {% if user.is_willing_master %}
+                            <p class="h5">
+                                You have already applied! Someone from team {{PRODUCT_NAME}} will
+                                reach out to you shortly.
+                            </p>
+                            {% else %}
+                            <p class="h5">Your profile must be completely verified. Additionally all your details must
+                                be updated before you apply to become a PoolMaster.
+                            </p>
+                            {% if user.first_name or user.lastname %}
+                            {% if user.identity_verified %}
+                            {% if user.aadhaar_number or user.pan_number %}
+                            <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
+                                PoolMaster</a>
+                            {% else %}
+                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
+                                Details</a>
+                            {% endif %}
+                            {% else %}
+                            Identity Proof Verification is pending.
+                            <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
+                            {% endif %}
+                            {% else %}
+                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    {% endif %}
+
+
                 </section>
                 <!-- right col -->
             </div>

@@ -74,15 +74,7 @@
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->
-                        {% if messages %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12 text-center">
-                                {% for message in messages %}
-                                <p>{{ message }}</p>
-                                {% endfor %}
-                            </div><!-- /.col -->
-                        </div>
-                        {% elif user.first_name or user.last_name %}
+                        {% if user.first_name or user.last_name %}
                         <div class="card-footer text-center text-bold">
                             <div class="col-sm-12 text-center">
                                 You have updated your name.<br />
