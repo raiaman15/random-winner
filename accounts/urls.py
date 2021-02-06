@@ -27,6 +27,15 @@ urlpatterns = [
          name='account_reset_password_with_otp'),
     path('password/reset/otp/confirm/', accounts_views.AccountResetPasswordWithOTPConfirmView.as_view(),
          name='account_reset_password_with_otp_confirm'),
+    # Profile Billing Address & Transactions
+    path('profile/billing-address/create/', accounts_views.ProfileBillingAddresssCreateView.as_view(),
+         name='profile_billing_address_create'),
+    path('profile/billing-address/update/<int:pk>/', accounts_views.ProfileBillingAddresssUpdateView.as_view(),
+         name='profile_billing_address_update'),
+    path('profile/balance-transaction/', accounts_views.ProfileBalanceTransactionListView.as_view(),
+         name='profile_balance_transaction_list'),
+    path('profile/investment-transaction/', accounts_views.ProfileInvestmentTransactionListView.as_view(),
+         name='profile_investment_transaction_list'),
     # Profile Manager Specific Routes
     path('manager/profile/', accounts_views.ManagerProfileListView.as_view(),
          name='manager_profile_list'),

@@ -11,13 +11,17 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import View, ListView, DetailView, UpdateView, TemplateView, FormView
+from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
-from .models import CustomUser, ContactNumberOTP
+from .models import CustomUser, ContactNumberOTP, BillingAddress, BalanceTransaction, InvestmentTransaction
 from .forms import (ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm,
                     AccountResetPasswordWithOTPConfirmViewForm, ManagerProfileApprovePoolmasterViewForm)
 from config.validators import validate_username
 
+
+##############################################################################
+# User Onboarding & Management Views
+##############################################################################
 
 class UserStatusView(LoginRequiredMixin, View):
 
@@ -236,6 +240,7 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
 ##############################################################################
 # Password Reset Using SMS - OTP (account_reset_password_with_otp)
 ##############################################################################
+
 class AccountResetPasswordWithOTPView(FormView):
     username = None
     template_name = 'account/password_reset_with_otp.html'
@@ -317,7 +322,64 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
         return super(AccountResetPasswordWithOTPConfirmView, self).post(request, *args, **kwargs)
 
 ##############################################################################
-# Manager Specific Views
+# User Billing Address & Transactions Specific Views
+##############################################################################
+
+
+class ProfileBillingAddresssCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = BillingAddress
+    template_name = 'account/profile_billing_address.html'
+    fields = ['name', 'address1', 'address2', 'zip_code', 'city', 'state', 'country']
+    group_required = u"member"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ProfileBillingAddresssCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_billing_address_update',  kwargs={'pk': self.request.user.id})
+
+
+class ProfileBillingAddresssUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    model = BillingAddress
+    template_name = 'account/profile_billing_address.html'
+    fields = ['name', 'address1', 'address2', 'zip_code', 'city', 'state', 'country']
+    group_required = u"member"
+    success_url = reverse_lazy('status')
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(self.model, user_id=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ProfileBillingAddresssUpdateView, self).form_valid(form)
+
+
+class ProfileBalanceTransactionListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = BalanceTransaction
+    context_object_name = 'transactions'
+    template_name = 'account/profile_balance_transaction_list.html'
+    paginate_by = 100
+    group_required = u"member"
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.model.objects.filter(user=user)
+
+
+class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = InvestmentTransaction
+    context_object_name = 'transactions'
+    template_name = 'account/profile_investment_transaction_list.html'
+    paginate_by = 100
+    group_required = u"member"
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.model.objects.filter(user=user)
+
+##############################################################################
+# Manager Specific Views (User & Action Management)
 ##############################################################################
 
 
@@ -384,7 +446,7 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
         return reverse_lazy('manager_profile_detail',  kwargs={'pk': self.kwargs['pk']})
 
 
-class ManagerProfileSearchView(ListView, GroupRequiredMixin):
+class ManagerProfileSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'profile_list'
     template_name = 'account/profile_list.html'

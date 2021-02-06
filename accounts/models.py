@@ -176,7 +176,7 @@ class BillingAddress(models.Model):
         ('IN', 'India'),
     )
     user = models.OneToOneField(
-        get_user_model(), on_delete=models.DO_NOTHING, related_name='address', blank=False)
+        get_user_model(), on_delete=models.DO_NOTHING, related_name='billing_address', blank=False)
     name = models.CharField(
         "Full Name", max_length=64, validators=[validate_name],
         help_text="Name of Person for the Address")
@@ -199,6 +199,9 @@ class BillingAddress(models.Model):
         "Country",
         max_length=3,
         choices=COUNTRY)
+
+    def get_absolute_url():
+        return reverse('profile_billing_address_update', args=[str(self.id)])
 
     def __str__(self):
         return self.name + ', ' + self.address1 + ', ' + self.address2

@@ -75,7 +75,7 @@
                         </a>
                         <div class="card-footer">
                             <div class="row">
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.balance_amount}}</h5>
                                         <span class="description-text">BALANCE AMOUNT</span>
@@ -83,7 +83,7 @@
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.member_of_pool.count}}</h5>
                                         <span class="description-text">MEMBER OF POOLS</span>
@@ -92,7 +92,7 @@
                                 </div>
                                 <!-- /.col -->
                                 {% if user|has_group:"master" %}
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.member_of_pool.count}}</h5>
                                         <span class="description-text">MASTER OF POOLS</span>
@@ -101,7 +101,7 @@
                                 </div>
                                 <!-- /.col -->
                                 {% endif %}
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%}">
+                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
                                     <div class="description-block">
                                         <h5 class="description-header">{{user.investment_amount}}</h5>
                                         <span class="description-text">INVESTMENT AMOUNT</span>
@@ -130,7 +130,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <td width="40%">Email ID</td>
+                                        <td width="50%">Email ID</td>
                                         <td>{{user.email}}</td>
                                     </tr>
                                 </thead>
@@ -158,7 +158,7 @@
                                             {% if user.identity_proof and user.identity_verified %}
                                             <a href="{{ user.identity_proof.url }}">
                                                 <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 25%;">
+                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
                                             </a>
                                             {% elif user.identity_proof and user.identity_reject_reason %}
                                             REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
@@ -167,7 +167,7 @@
                                             {% elif user.identity_proof %}
                                             <a href="{{ user.identity_proof.url }}">
                                                 <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 25%;">
+                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
                                             </a>
                                             <span class="text-danger">
                                                 VERIFICATION PENDING FROM
@@ -205,9 +205,118 @@
                         </div>
                         <!-- /.card-body -->
                     </div>
+
+                    <div class="card bg-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">Profile Billing Address</h3>
+                            {% if user.billing_address %}
+                            <div class="card-tools">
+                                <a href="{% url 'profile_billing_address_update' %}" type="button" class="btn btn-tool">
+                                    <i class="fas fa-refresh"></i> Update
+                                </a>
+                            </div>
+                            {% else %}
+                            <div class="card-tools">
+                                <a href="{% url 'profile_billing_address_create' %}" type="button" class="btn btn-tool">
+                                    <i class="fas fa-plus"></i> CREATE
+                                </a>
+                            </div>
+                            {% endif %}
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td width="50%">Name</td>
+                                        <td>{{user.email}}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>First Name</td>
+                                        <td>{{user.first_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Name</td>
+                                        <td>{{user.last_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Number</td>
+                                        <td>{{user.username}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aadhaar Number</td>
+                                        <td>{{user.aadhaar_number}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Identity Proof</td>
+                                        <td>
+                                            {% if user.identity_proof and user.identity_verified %}
+                                            <a href="{{ user.identity_proof.url }}">
+                                                <img src="{{ user.identity_proof.url }}"
+                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
+                                            </a>
+                                            {% elif user.identity_proof and user.identity_reject_reason %}
+                                            REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
+                                            <br />
+                                            {{ user.identity_reject_reason }}
+                                            {% elif user.identity_proof %}
+                                            <a href="{{ user.identity_proof.url }}">
+                                                <img src="{{ user.identity_proof.url }}"
+                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
+                                            </a>
+                                            <span class="text-danger">
+                                                VERIFICATION PENDING FROM
+                                                {{PRODUCT_NAME|upper}}
+                                            </span>
+                                            {% else %}
+                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
+                                                href="{%url 'profile_identity_proof_upload' %}">Upload</a> <br />
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Identity Verified</td>
+                                        <td>
+                                            {% if user.identity_verified %}
+                                            <i class="fas fa-check-circle text-primary"></i>
+                                            {% else %}
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Verified</td>
+                                        <td>
+                                            {% if user.contact_verified %}
+                                            <i class="fas fa-check-circle text-primary"></i>
+                                            {% else %}
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            {% if user.billing_address %}
+                            {% else %}
+                            There is no Billing Address associated with your Profile.
+                            Please add a new Billing Address for future transactions from
+                            <a href="{% url 'profile_billing_address_create' %}" type="button" class="btn btn-tool">
+                                <i class="fas fa-plus"></i> here
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </section>
                 <!-- /.Left col -->
-                
+
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
                     {% if user|has_group:"member" %}

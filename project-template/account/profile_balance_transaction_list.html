@@ -1,0 +1,119 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %} Balance Transactions {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Balance Transaction List</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Balance Transaction List</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Section -->
+                <section class="col-lg-12 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-warning elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fab fa-galactic-republic"></i>
+                            </h3>
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            <div class="card-body table-responsive p-0">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>TIME</th>
+                                            <th>TRANSACTION TYPE</th>
+                                            <th>AMOUNT</th>
+                                            <th>VERIFIED</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for transaction in transactions %}
+                                        <tr>
+                                            <td>{{transaction.created|naturaltime}}</td>
+                                            <td>{{transaction.transaction_type}}</td>
+                                            <td>{{transaction.amount|intcomma}}</td>
+                                            <td>{{transaction.verified}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div><!-- /.card-body -->
+                        <!-- Pagination -->
+                        <div class="card-footer text-center">
+                            <div class="pagination">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        &laquo; First
+                                    </a>
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        Previous
+                                    </a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+
+                                    {% if page_obj.has_next %}
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        Next
+                                    </a>
+                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        Last &raquo;
+                                    </a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                </section>
+                <!-- /.Section -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
