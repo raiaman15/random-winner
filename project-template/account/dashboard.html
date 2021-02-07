@@ -45,7 +45,7 @@
                     <!-- Custom tabs (Charts with tabs)-->
                     <div class="card card-widget widget-user shadow">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header bg-warning">
+                        <div class="widget-user-header bg-white">
                             <h3 class="widget-user-username font-weight-bold">{{user.first_name}} {{user.last_name}}
                             </h3>
                             <h5 class="widget-user-desc">
@@ -114,7 +114,7 @@
                         </div>
                     </div>
 
-                    <div class="card bg-warning">
+                    <div class="card bg-white">
                         <div class="card-header">
                             <h3 class="card-title">Profile Details</h3>
 
@@ -206,12 +206,13 @@
                         <!-- /.card-body -->
                     </div>
 
-                    <div class="card bg-warning">
+                    <div class="card bg-white">
                         <div class="card-header">
                             <h3 class="card-title">Profile Billing Address</h3>
                             {% if user.billing_address %}
                             <div class="card-tools">
-                                <a href="{% url 'profile_billing_address_update' %}" type="button" class="btn btn-tool">
+                                <a href="{% url 'profile_billing_address_update' user.id %}" type="button"
+                                    class="btn btn-tool">
                                     <i class="fas fa-refresh"></i> Update
                                 </a>
                             </div>
@@ -229,75 +230,34 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <td width="50%">Name</td>
-                                        <td>{{user.email}}</td>
+                                        <td width="30%">Full Name</td>
+                                        <td>{{user.billing_address.name}}</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>First Name</td>
-                                        <td>{{user.first_name}}</td>
+                                        <td>Address Line 1</td>
+                                        <td>{{user.billing_address.address1}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Last Name</td>
-                                        <td>{{user.last_name}}</td>
+                                        <td>Address Line 2</td>
+                                        <td>{{user.billing_address.address2}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Contact Number</td>
-                                        <td>{{user.username}}</td>
+                                        <td>Zip / Postal Code</td>
+                                        <td>{{user.billing_address.zip_code}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Aadhaar Number</td>
-                                        <td>{{user.aadhaar_number}}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Identity Proof</td>
-                                        <td>
-                                            {% if user.identity_proof and user.identity_verified %}
-                                            <a href="{{ user.identity_proof.url }}">
-                                                <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
-                                            </a>
-                                            {% elif user.identity_proof and user.identity_reject_reason %}
-                                            REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
-                                            <br />
-                                            {{ user.identity_reject_reason }}
-                                            {% elif user.identity_proof %}
-                                            <a href="{{ user.identity_proof.url }}">
-                                                <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
-                                            </a>
-                                            <span class="text-danger">
-                                                VERIFICATION PENDING FROM
-                                                {{PRODUCT_NAME|upper}}
-                                            </span>
-                                            {% else %}
-                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
-                                                href="{%url 'profile_identity_proof_upload' %}">Upload</a> <br />
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Identity Verified</td>
-                                        <td>
-                                            {% if user.identity_verified %}
-                                            <i class="fas fa-check-circle text-primary"></i>
-                                            {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i>
-                                            {% endif %}
-                                        </td>
+                                        <td>City</td>
+                                        <td>{{user.billing_address.city}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Contact Verified</td>
-                                        <td>
-                                            {% if user.contact_verified %}
-                                            <i class="fas fa-check-circle text-primary"></i>
-                                            {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i>
-                                            {% endif %}
-                                        </td>
+                                        <td>State</td>
+                                        <td>{{user.billing_address.state}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Country</td>
+                                        <td>{{user.billing_address.country}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -320,7 +280,7 @@
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
                     {% if user|has_group:"member" %}
-                    <div class="card bg-warning">
+                    <div class="card bg-white">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fab fa-galactic-republic"></i>
@@ -374,7 +334,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card bg-warning">
+                    <div class="card bg-white">
                         <div class="card-header">
                             <h3 class="card-title"><strong>Wanna become Member of Pools?</strong></h3>
 
@@ -400,7 +360,7 @@
                     {% endif %}
 
                     {% if user|has_group:"master" %}
-                    <div class="card bg-warning">
+                    <div class="card bg-white">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fas fa-hat-cowboy"></i>
@@ -458,7 +418,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card bg-warning collapsed-card">
+                    <div class="card bg-white collapsed-card">
                         <div class="card-header">
                             <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
 

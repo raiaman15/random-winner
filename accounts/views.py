@@ -378,6 +378,10 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
         user = self.request.user
         return self.model.objects.filter(user=user)
 
+
+class ProfileJoinPool(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    pass
+
 ##############################################################################
 # Manager Specific Views (User & Action Management)
 ##############################################################################

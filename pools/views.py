@@ -1,12 +1,13 @@
 from django.db.models import Q
 from django.utils import timezone
-from django.views.generic import CreateView, ListView, DetailView
-from .models import Pool, InvestmentTransaction
+from django.views.generic import View, CreateView, ListView, DetailView
+from .models import Pool, PoolInvite
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, UserPassesTestMixin)
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
 
 
 class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -42,7 +43,7 @@ class PoolListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     context_object_name = 'pool_list'
     template_name = 'pools/pool_list.html'
     login_url = 'account_login'
-    group_required = [u"member", u"master", u"manager"]
+    group_required = [u"member", u"master"]
 
 
 class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
@@ -50,7 +51,14 @@ class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     context_object_name = 'pool'
     template_name = 'pools/pool_detail.html'
     login_url = 'account_login'
-    group_required = [u"member", u"master", u"manager"]
+    group_required = [u"member", u"master"]
+
+    def get(self, request, *args, **kwargs):
+        pool = get_object_or_404(self.model, id=self.kwargs['pk'])
+        if pool.is_member(request.user) or pool.is_master(request.user):
+            return super(PoolDetailView, self).get(request, *args, **kwargs)
+        else:
+            messages.error('The pool is not yours')
 
 
 class PoolSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -62,3 +70,37 @@ class PoolSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         return Pool.objects.filter(Q(name__icontains=query))
+
+
+# Pool Invite
+
+class PoolInviteCreateView(LoginRequiredMixin, GroupRequiredMixin, View):
+    group_required = [u"member", u"master"]
+
+    def post(self, request):
+        pool_id = int(request.POST.get('pool'))
+        pool = get_object_or_404(Pool, id=pool_id)
+        if pool.is_master(request.user):
+            invited = []
+            usernames = str(request.POST.get('contact_numbers')).strip().replace(' ', '').split(',')
+            remaining_invites = pool.size - pool.invitations.count()
+            for username in usernames[:remaining_invites]:
+                try:
+                    pool.invite(username)
+                    invited.append(username)
+                except:
+                    messages.error(request, f'{username} Invitation Failed!')
+            messages.success(request, f'{", ".join(invited)} Invited Successfully')
+        return redirect('status')
+
+
+class PoolInviteListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = PoolInvite
+    context_object_name = 'pool_invite_list'
+    template_name = 'pools/pool_invite_list.html'
+    login_url = 'account_login'
+    group_required = [u"member", u"master"]
+
+    def get_queryset(self):
+        username = self.request.user.username
+        return PoolInvite.objects.filter(username=username)

@@ -43,7 +43,7 @@ class Pool(models.Model):
 
     def is_member(self, user):
         """ Checks if the user is member of this pool """
-        return user in self.members
+        return user in self.members.all()
 
     def can_join_pool(self, user):
         """ Checks if the User is elidgible to join any pool """
@@ -56,10 +56,9 @@ class Pool(models.Model):
     def invite(self, username):
         """ Invites a user in this pool """
         """ Checks if user haven't been invited previously """
-        if self.can_join_pool(user):
+        if self.get_member_remaining() > 0:
             if not PoolInvite.objects.filter(pool=self, username=username).exists():
-                PoolInvite(pool=self, username=username).full_clean().save()
-                return True
+                PoolInvite(pool=self, username=username).save()
 
     def activate(self, user):
         """ Checks if the pool is filled """
@@ -150,20 +149,22 @@ class PoolInvite(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     accepted = models.BooleanField(default=False)
 
-    def create(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         """
         Sends E-Mail & SMS invite to join the pool if user exist in system
         Create User Account & send invite along with their login credentials
         """
         if get_user_model().objects.filter(username=self.username).exists():
-            user = get_user_model().get(username=self.username)
+            user = get_user_model().objects.get(username=self.username)
             send_sms_pool_invite(user.username, self.pool.id)
             if user.email:
-                send_email_pool_invite(user.username, self.pool.id)
+                send_email_pool_invite(user.email, self.pool.id)
         else:
             password = pyotp.random_base32()
-            get_user_model().create(username=self.username, password=password)
-            send_sms_platform_invite(user.username, self.username, password)
-            send_sms_pool_invite(user.username, self.pool.id)
+            get_user_model().objects.create_user(username=self.username, password=password)
+            send_sms_platform_invite(self.username, self.username, password)
+            send_sms_pool_invite(self.username, self.pool.id)
+        return super(PoolInvite, self).save(*args, **kwargs)
 
-        return super(Pool, self).create(*args, **kwargs)
+    def __str__(self):
+        return self.pool + ':' + self.username

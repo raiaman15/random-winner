@@ -4,7 +4,7 @@
 {% load humanize %}
 {% load crispy_forms_tags %}
 
-{% block title %} Balance Transactions {% endblock %}
+{% block title %} Pool Invitations {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -21,12 +21,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Balance Transaction List</h1>
+                    <h1 class="m-0">Pool Invitations</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Balance Transaction List</li>
+                        <li class="breadcrumb-item active">Pool Invitations</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -42,11 +42,27 @@
                 <!-- Section -->
                 <section class="col-lg-12 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-white elevation-2">
+                    <div class="card bg-warning elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fab fa-galactic-republic"></i>
                             </h3>
+
+                            <div class="card-tools">
+                                <!-- SEARCH FORM -->
+                                <form action="{% url 'pool_search_results' %}" class="form-inline ml-3">
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control form-control-navbar bg-white border" type="search"
+                                            placeholder="Pool Search" aria-label="Pool Search" name="q">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-navbar bg-secondary" type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
@@ -54,19 +70,21 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>TIME</th>
-                                            <th>TRANSACTION TYPE</th>
-                                            <th>AMOUNT</th>
-                                            <th>VERIFIED</th>
+                                            <th>POOL NAME</th>
+                                            <th>POOL MASTER</th>
+                                            <th>FILLED</th>
+                                            <th>INVESTMENT</th>
+                                            <th>ACCEPT/REJECT</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for transaction in transactions %}
+                                        {% for pool_invite in pool_invite_list %}
                                         <tr>
-                                            <td>{{transaction.created|naturaltime}}</td>
-                                            <td>{{transaction.transaction_type}}</td>
-                                            <td>{{transaction.amount|intcomma}}</td>
-                                            <td>{{transaction.verified}}</td>
+                                            <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
+                                            <td>{{pool.size}}</td>
+                                            <td>{{pool.members.count}}</td>
+                                            <td>{{pool.investment|intcomma}}</td>
+                                            <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>

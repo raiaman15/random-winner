@@ -94,7 +94,7 @@
                         <a href="{% url 'profile_picture' %}">
                             <div class="widget-user-image">
                                 {% if user.picture %}
-                                <img src="{{ user.picture.url }}" class="img-circle elevation-2"
+                                <img src="{{ pool.master.picture.url }}" class="img-circle elevation-2"
                                     style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
                                 {% else %}
                                 <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
@@ -224,14 +224,8 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon far fa-envelope-open"></i>
-                                Pool Invitations
+                                Invite Members to Pool
                             </h3>
-                            <div class="card-tools">
-                                <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
-                                    <i class="nav-icon fas fa-plus"></i>
-                                    SEND INVITE
-                                </a>
-                            </div>
                             <!-- /.card-tools -->
                         </div>
                         <!-- /.card-header -->
@@ -239,22 +233,23 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>NAME</th>
-                                        <th>SIZE</th>
-                                        <th>FILLED</th>
-                                        <th>INVESTMENT</th>
+                                        <th>Contact Number</th>
+                                        <th>Invitation Time</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
-                                {% if user.master_of_pool.all %}
+                                {% if pool.invitations.count %}
                                 <tbody>
-                                    {% for pool in user.master_of_pool.all %}
+                                    {% for invitation in pool.invitations.all %}
                                     <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                        <td>{{pool.size}}</td>
-                                        <td>{{pool.members.count}}</td>
+                                        <td>{{invitation.username}}</td>
+                                        <td>{{invitation.created|naturaltime}}</td>
                                         <td>
-                                            {% widthratio pool.investment 1 pool.members.count %}
-                                            ({{pool.investment|intcomma}} / Member)
+                                            {% if invitation.accepted %}
+                                            Accepted
+                                            {% else %}
+                                            Pending
+                                            {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -264,7 +259,21 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer text-center">
-                            Invite More Members? <small>({{pool.get_member_remaining}} invites remaining)</small>
+                            {% if pool.get_member_remaining %}
+                            <form method="post" action="{% url 'pool_invite_create' %}">
+                                <div class="form-group">
+                                    {% csrf_token %}
+                                    <input class="d-none" name="pool" value="{{pool.id}}">
+                                    <label>Invite More Members to your Pool?
+                                        <small>(Invited {{pool.invitations.count}} of {{pool.size}} Invitations)</small>
+                                    </label>
+                                    <textarea class="form-control bg-white" rows="2" name="contact_numbers"
+                                        placeholder="Comma separated 10 digit contact number. Example: 9999999999, 9999999998, 9999999997"></textarea>
+
+                                </div>
+                                <input class="btn btn-secondary" type="submit" value="Invite">
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
                     {% endif %}
