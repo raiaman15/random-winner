@@ -57,11 +57,13 @@ class CustomUser(AbstractUser):
     contact_secret = models.CharField(max_length=16, blank=True)
     contact_verified = models.BooleanField(default=False)
     is_willing_master = models.BooleanField(default=False)
+    # Maximum Balance of 9,99,999 at given time
     balance_amount = models.DecimalField(
         'Balance Amount',
-        default=0.00, max_digits=7, decimal_places=2,
+        default=0.00, max_digits=8, decimal_places=2,
         validators=[DecimalValidator, validate_amount]
     )
+    # Maximum Transaction of 99,999 at given time
     investment_amount = models.DecimalField(
         'Investment Amount',
         default=0.00, max_digits=7, decimal_places=2,
