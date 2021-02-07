@@ -395,6 +395,57 @@ class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     paginate_by = 100
     group_required = u"manager"
 
+    def get_queryset(self):
+        return self.model.objects.filter(Q(groups__name='member'))
+
+
+class ManagerProfileListPoolMemberView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = CustomUser
+    context_object_name = 'profiles'
+    template_name = 'account/manager_profile_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"manager"
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(groups__name='member') & ~Q(groups__name='master'))
+
+
+class ManagerProfileListPoolMasterView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = CustomUser
+    context_object_name = 'profiles'
+    template_name = 'account/manager_profile_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"manager"
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(groups__name='master'))
+
+
+class ManagerProfileListWillingPoolMasterView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = CustomUser
+    context_object_name = 'profiles'
+    template_name = 'account/manager_profile_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"manager"
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(groups__name='member') & ~Q(groups__name='master') & Q(is_willing_master=True))
+
+
+class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = CustomUser
+    context_object_name = 'profiles'
+    template_name = 'account/manager_profile_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"manager"
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(identity_verified=False) & ~Q(groups__name='manager') & Q(is_superuser=False))
+
 
 class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = CustomUser
