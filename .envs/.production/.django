@@ -3,7 +3,7 @@ MIMIC_PRODUCTION_LOCALLY=True
 
 SECRET_KEY=L\HS@*Wi@H%z9]Wdy@ILoY]2s&:_P"`{~%e}0wc}`MWc!!a"aS
 
-ALLOWED_HOSTS=0.0.0.0 test.infroid.com
+DJANGO_ALLOWED_HOSTS=0.0.0.0 test.infroid.com
 SQL_ENGINE=django.db.backends.postgresql
 SQL_DATABASE=product_name_db
 SQL_USER=product_name_db_user
@@ -19,10 +19,20 @@ WEBMASTER_EMAIL=webmaster@bit-boomer.com
 ADMINISTRATOR_NAME=Admin
 ADMINISTRATOR_EMAIL=admin@bit-boomer.com
 
+# Gmail as e-mail backend
+# EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# EMAIL_HOST=smtp.gmail.com
+# EMAIL_HOST_USER=developer@bit-boomer.com
+# EMAIL_HOST_PASSWORD=app_key_or_pass
+# EMAIL_PORT=587
+# EMAIL_USE_TLS=True
+# DEFAULT_FROM_EMAIL=no-reply@bit-boomer.com
+
+# Sendinblue as e-mail backend
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-EMAIL_HOST=smtp.gmail.com
-EMAIL_HOST_USER=developer@bit-boomer.com
-EMAIL_HOST_PASSWORD=app_key_or_pass
+EMAIL_HOST=smtp-relay.sendinblue.com
+EMAIL_HOST_USER=developer@infroid.com
+EMAIL_HOST_PASSWORD=xsmtpsib-dc2c207e05dcac9ce31e491b07e10fa9e64f9faf6ec929656daf06cfa74e00fc-jSyRHsfbraQKm9q8
 EMAIL_PORT=587
-EMAIL_USE_TLS=True
-DEFAULT_FROM_EMAIL=no-reply@bit-boomer.com
+EMAIL_USE_TLS=False
+DEFAULT_FROM_EMAIL=no-reply@infroid.com

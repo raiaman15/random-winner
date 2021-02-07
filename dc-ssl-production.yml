@@ -13,7 +13,6 @@ services:
       - static_volume:/app/files-static
       - media_volume:/app/files-media
     ports:
-      - 80:80 # HOST:CONTAINER
       - 443:443 # HOST:CONTAINER
     depends_on:
       - django_production
