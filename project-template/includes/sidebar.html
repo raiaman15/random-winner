@@ -68,7 +68,7 @@
         {% if user|has_group:"member" %}
         <li class="nav-header">POOLMEMBER POOLS</li>
         <li class="nav-item">
-          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/list' in request.path %}active{% endif %}">
+          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/all' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-globe-asia"></i>
             <p>
               Global Pool List
@@ -76,7 +76,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/invites' in request.path %}active{% endif %}">
+          <a href="{% url 'pool_invite_list' %}"
+            class="nav-link {% if 'pools/invite/' in request.path %}active{% endif %}">
             <i class="nav-icon far fa-envelope-open"></i>
             <p>
               Pool Invitations
@@ -84,7 +85,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/membership' in request.path %}active{% endif %}">
+          <a href="{% url 'pool_membership_list' %}"
+            class="nav-link {% if 'pools/membership' in request.path %}active{% endif %}">
             <i class="nav-icon fab fa-galactic-republic"></i>
             <p>
               My Membership Pools
@@ -103,7 +105,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/mastership' in request.path %}active{% endif %}">
+          <a href="{% url 'pool_mastership_list' %}"
+            class="nav-link {% if 'pools/mastership' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-hat-cowboy"></i>
             <p>
               My Mastership Pools

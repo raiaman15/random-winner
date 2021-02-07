@@ -2,12 +2,12 @@ from django.db.models import Q
 from django.utils import timezone
 from django.views.generic import View, CreateView, ListView, DetailView
 from .models import Pool, PoolInvite
-from django.contrib.auth.mixins import (
-    LoginRequiredMixin, UserPassesTestMixin)
+from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth import get_user_model
 
 
 class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -44,6 +44,30 @@ class PoolListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     template_name = 'pools/pool_list.html'
     login_url = 'account_login'
     group_required = [u"member", u"master"]
+
+
+class PoolMembershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Pool
+    context_object_name = 'pool_list'
+    template_name = 'pools/pool_list.html'
+    login_url = 'account_login'
+    group_required = [u"member", u"master"]
+
+    def get_queryset(self):
+        username = self.request.user.username
+        return get_user_model().objects.filter(username=username).member_of_pool.all()
+
+
+class PoolMastershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Pool
+    context_object_name = 'pool_list'
+    template_name = 'pools/pool_list.html'
+    login_url = 'account_login'
+    group_required = [u"member", u"master"]
+
+    def get_queryset(self):
+        username = self.request.user.username
+        return get_user_model().objects.filter(username=username).master_of_pool.all()
 
 
 class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
