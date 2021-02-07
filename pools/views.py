@@ -128,3 +128,39 @@ class PoolInviteListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     def get_queryset(self):
         username = self.request.user.username
         return PoolInvite.objects.filter(username=username)
+
+
+# Pool Join & Exit
+
+class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
+    group_required = [u"member", u"master"]
+
+    def post(self, request):
+        pool_id = int(request.POST.get('pool'))
+        pool = get_object_or_404(Pool, id=pool_id)
+        accept_reject = int(request.POST.get('accept_reject'))
+
+        if accept_reject == 'Accept':
+            try:
+                pool.join(request.user)
+                messages.success(request, f'You have joined the pool - {pool.name}')
+            except Exception as e:
+                messages.error(request, f'Unable to join the pool. Error: {e.__class__}')
+        else:
+            pass
+            # Delete the invitation
+        return redirect('pool_membership_list')
+
+
+class PoolExitView(LoginRequiredMixin, GroupRequiredMixin, View):
+    group_required = [u"member", u"master"]
+
+    def post(self, request):
+        pool_id = int(request.POST.get('pool'))
+        pool = get_object_or_404(Pool, id=pool_id)
+        try:
+            pool.exit(request.user)
+            messages.success(request, f'You have exited the pool - {pool.name}')
+        except Exception as e:
+            messages.error(request, f'Unable to exit the pool. Error: {e.__class__}')
+        return redirect('pool_membership_list')

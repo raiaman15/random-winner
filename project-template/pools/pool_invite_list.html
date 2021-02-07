@@ -81,10 +81,16 @@
                                         {% for pool_invite in pool_invite_list %}
                                         <tr>
                                             <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                            <td>{{pool.size}}</td>
-                                            <td>{{pool.members.count}}</td>
-                                            <td>{{pool.investment|intcomma}}</td>
                                             <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
+                                            <td>{{pool.members.count}} / {{pool.size}}</td>
+                                            <td>{{pool.investment|intcomma}}</td>
+                                            <td>
+                                                <form>
+                                                    
+                                                </form>
+                                            </td>
+                                            
+
                                         </tr>
                                         {% endfor %}
                                     </tbody>
