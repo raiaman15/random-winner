@@ -48,8 +48,8 @@ class Pool(models.Model):
     def can_join_pool(self, user):
         """ Checks if the User is elidgible to join any pool """
         """ Checks if pool is available and user is not already in the pool """
-        if user.groups(name='member').exists():
-            if self.get_member_remaining > 0:
+        if user.groups.filter(name='member').exists():
+            if self.get_member_remaining() > 0:
                 if not self.is_member(user):
                     return True
 

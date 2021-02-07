@@ -79,19 +79,21 @@ class CustomUser(AbstractUser):
         ContactNumberOTP(username=self.username).save()
 
     def refresh_balance_investment(self):
+        nba, nia = 0, 0
         # Balance
-        bts = BalanceTransaction.objects.filter(user=self, verified=True).all()
-        btc = [t.amount for t in bts if t.type_of_transaction == 'C']
-        btd = [t.amount for t in bts if t.type_of_transaction == 'D']
-        # Net Balance Amount
-        nba = btc-btd
+        if BalanceTransaction.objects.filter(user=self, verified=True).exists():
+            bts = BalanceTransaction.objects.filter(user=self, verified=True).all()
+            btc = sum([t.amount for t in bts if t.type_of_transaction == 'C'])
+            btd = sum([t.amount for t in bts if t.type_of_transaction == 'D'])
+            # Net Balance Amount
+            nba = btc-btd
         # Investment
-        its = InvestmentTransaction.objects.filter(
-            user=self, verified=True).all()
-        iti = [t.amount for t in its if t.type_of_transaction == 'I']
-        itd = [t.amount for t in its if t.type_of_transaction == 'D']
-        # Net Investment Amount
-        nia = iti-itd
+        if InvestmentTransaction.objects.filter(user=self, verified=True).exists():
+            its = InvestmentTransaction.objects.filter(user=self, verified=True).all()
+            iti = sum([t.amount for t in its if t.type_of_transaction == 'I'])
+            itd = sum([t.amount for t in its if t.type_of_transaction == 'D'])
+            # Net Investment Amount
+            nia = iti-itd
         # Net Final Balance & Investment
         self.balance_amount = nba-nia
         self.investment_amount = nia

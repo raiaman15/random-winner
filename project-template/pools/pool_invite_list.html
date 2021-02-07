@@ -70,27 +70,37 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <th>ACCEPT/REJECT</th>
                                             <th>POOL NAME</th>
                                             <th>POOL MASTER</th>
                                             <th>FILLED</th>
                                             <th>INVESTMENT</th>
-                                            <th>ACCEPT/REJECT</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for pool_invite in pool_invite_list %}
                                         <tr>
-                                            <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                            <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
-                                            <td>{{pool.members.count}} / {{pool.size}}</td>
-                                            <td>{{pool.investment|intcomma}}</td>
                                             <td>
-                                                <form>
-                                                    
+                                                <form method="post" action="{% url 'pool_join' %}">
+                                                    {% csrf_token %}
+                                                    <input class="d-none" name="pool" value="{{pool_invite.pool.id}}">
+                                                    <input class="d-none" id="accept_reject" name="accept_reject"
+                                                        value="">
+                                                    <input type="submit" class="btn btn-sm btn-success"
+                                                        onclick="accepting()" value="Accept">
+                                                    <input type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="rejecting()" value="Reject">
                                                 </form>
                                             </td>
-                                            
-
+                                            <td>
+                                                <a href="{% url 'pool_detail' pool_invite.pool.id %}">
+                                                    {{pool_invite.pool.name}}
+                                                </a>
+                                            </td>
+                                            <td>{{pool_invite.pool.master.first_name}}
+                                                {{pool_invite.pool.master.last_name}}</td>
+                                            <td>{{pool_invite.pool.members.count}} / {{pool_invite.pool.size}}</td>
+                                            <td>{{pool_invite.pool.investment|intcomma}}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -140,4 +150,21 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    function accepting() {
+        if (confirm('Are you sure you want to accept the Pool Invitation & Join the Pool?')) {
+            $("#accept_reject").val("Accept")
+        } else {
+            return false;
+        }
+    }
+    function rejecting() {
+        if (confirm('Are you sure you want to reject the Pool Invitation?')) {
+            $("#accept_reject").val("Reject")
+        } else {
+            return false;
+        }
+    }
+</script>
+{% endblock javascripts %}
