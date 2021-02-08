@@ -65,8 +65,12 @@
                                         {% for transaction in transactions %}
                                         <tr>
                                             <td>{{transaction.created|naturaltime}}</td>
-                                            <td>{{transaction.transaction_type}}</td>
-                                            <td>{{transaction.amount|intcomma}}</td>
+                                            <td>{{transaction.type_of_transaction}}</td>
+                                            {% ifequal transaction.type_of_transaction "I" %}
+                                            <td class="text-success">{{transaction.amount|intcomma}}</td>
+                                            {% else %}
+                                            <td class="text-danger">{{transaction.amount|intcomma}}</td>
+                                            {% endifequal %}
                                             <td>{{transaction.pool}}</td>
                                             <td>{{transaction.verified}}</td>
                                         </tr>

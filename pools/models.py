@@ -78,7 +78,6 @@ class Pool(models.Model):
             # If they have sufficient balance
             if user.balance_amount > self.investment:
                 # Initiate Transaction
-                print('Initiating Transaction')
                 it = InvestmentTransaction(type_of_transaction='I', amount=self.investment, user=user, pool=self)
                 it.save()
                 # Check latest pool status
@@ -86,7 +85,6 @@ class Pool(models.Model):
                     # Add the User in the Pool
                     self.members.add(user)
                     # Complete Transaction
-                    print('Completing Transaction')
                     it = InvestmentTransaction.objects.get(id=it.id)
                     it.verified = True
                     it.save()
@@ -139,7 +137,7 @@ class Pool(models.Model):
         return reverse('pool_detail', args=[str(self.id)])
 
     def __str__(self):
-        return self.name + ':' + self.master.username
+        return f'{self.name} : {self.master.username}'
 
 
 class PoolMember(models.Model):
@@ -173,4 +171,4 @@ class PoolInvite(models.Model):
         return super(PoolInvite, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.pool + ':' + self.username
+        return f'{self.pool} : {self.username}'

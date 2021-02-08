@@ -174,6 +174,7 @@ class InvestmentTransaction(models.Model):
     pool = models.ForeignKey('pools.Pool', on_delete=models.DO_NOTHING,
                              related_name='investment_transactions', blank=False)
     verified = models.BooleanField(default=False, editable=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def save(self):
         self.full_clean()
