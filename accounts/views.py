@@ -364,6 +364,7 @@ class ProfileBalanceTransactionListView(LoginRequiredMixin, GroupRequiredMixin, 
 
     def get_queryset(self):
         user = self.request.user
+        user.refresh_balance_investment()
         return self.model.objects.filter(user=user)
 
 
@@ -376,11 +377,9 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
     def get_queryset(self):
         user = self.request.user
+        user.refresh_balance_investment()
         return self.model.objects.filter(user=user)
 
-
-class ProfileJoinPool(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
-    pass
 
 ##############################################################################
 # Manager Specific Views (User & Action Management)
@@ -396,7 +395,7 @@ class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     group_required = u"manager"
 
     def get_queryset(self):
-        return self.model.objects.filter(Q(groups__name='member'))
+        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False))
 
 
 class ManagerProfileListPoolMemberView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -408,7 +407,7 @@ class ManagerProfileListPoolMemberView(LoginRequiredMixin, GroupRequiredMixin, L
     group_required = u"manager"
 
     def get_queryset(self):
-        return self.model.objects.filter(Q(groups__name='member') & ~Q(groups__name='master'))
+        return self.model.objects.filter(Q(groups__name='member'))
 
 
 class ManagerProfileListPoolMasterView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -432,7 +431,7 @@ class ManagerProfileListWillingPoolMasterView(LoginRequiredMixin, GroupRequiredM
     group_required = u"manager"
 
     def get_queryset(self):
-        return self.model.objects.filter(Q(groups__name='member') & ~Q(groups__name='master') & Q(is_willing_master=True))
+        return self.model.objects.filter(~Q(groups__name='master') & Q(groups__name='member') & Q(is_willing_master=True))
 
 
 class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -444,7 +443,7 @@ class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredM
     group_required = u"manager"
 
     def get_queryset(self):
-        return self.model.objects.filter(Q(identity_verified=False) & ~Q(groups__name='manager') & Q(is_superuser=False))
+        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False) & Q(identity_verified=False))
 
 
 class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):

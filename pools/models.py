@@ -29,6 +29,10 @@ class Pool(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     activated = models.DateTimeField(blank=True, null=True)
 
+    def save(self):
+        self.full_clean()
+        super(Pool, self).save()
+
     def get_member_count(self):
         """ Gets the count of members who have joined the pool """
         return self.members.count()
@@ -74,21 +78,23 @@ class Pool(models.Model):
             # If they have sufficient balance
             if user.balance_amount > self.investment:
                 # Initiate Transaction
-                InvestmentTransaction(type_of_transaction='I', amount=self.investment,
-                                      user=user, pool=self).full_clean().create()
+                print('Initiating Transaction')
+                it = InvestmentTransaction(type_of_transaction='I', amount=self.investment, user=user, pool=self)
+                it.save()
                 # Check latest pool status
                 if self.get_member_remaining() > 0:
                     # Add the User in the Pool
                     self.members.add(user)
                     # Complete Transaction
-                    it = InvestmentTransaction.objects.filter(
-                        type_of_transaction='I', amount=self.investment, user=user, pool=self)
+                    print('Completing Transaction')
+                    it = InvestmentTransaction.objects.get(id=it.id)
                     it.verified = True
-                    it.full_clean().save()
+                    it.save()
                     return True
                 else:
-                    InvestmentTransaction.objects.filter(
-                        type_of_transaction='I', amount=self.investment, user=user, pool=self).delete()
+                    InvestmentTransaction.objects.filter(id=it.id).delete()
+            else:
+                raise ValueError('Insufficient Balance Amount')
             # Refresh User's Balance
             user.refresh_balance_investment()
 
@@ -133,7 +139,7 @@ class Pool(models.Model):
         return reverse('pool_detail', args=[str(self.id)])
 
     def __str__(self):
-        return self.name + ':' + self.master
+        return self.name + ':' + self.master.username
 
 
 class PoolMember(models.Model):

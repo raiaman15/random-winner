@@ -7,6 +7,8 @@ from django.core.validators import FileExtensionValidator, DecimalValidator
 from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username,
                                validate_amount, validate_otp, validate_balance_type_of_transaction, validate_investment_type_of_transaction)
 from config.utils import send_otp
+from django.db.models import Q
+from decimal import Decimal
 
 
 class CustomUser(AbstractUser):
@@ -79,7 +81,7 @@ class CustomUser(AbstractUser):
         ContactNumberOTP(username=self.username).save()
 
     def refresh_balance_investment(self):
-        nba, nia = 0, 0
+        nba, nia = Decimal(0.00), Decimal(0.00)
         # Balance
         if BalanceTransaction.objects.filter(user=self, verified=True).exists():
             bts = BalanceTransaction.objects.filter(user=self, verified=True).all()
@@ -97,7 +99,7 @@ class CustomUser(AbstractUser):
         # Net Final Balance & Investment
         self.balance_amount = nba-nia
         self.investment_amount = nia
-        self.full_clean().save()
+        return super(CustomUser, self).save()
 
     def initiate_deposit(self, amount):
         # Refresh User's Balance
@@ -140,11 +142,15 @@ class BalanceTransaction(models.Model):
         validators=[validate_balance_type_of_transaction]
     )
     amount = models.DecimalField(
-        null=False, blank=False, max_digits=7,
-        validators=[validate_amount], decimal_places=2
+        null=False, blank=False, max_digits=7, decimal_places=2,
+        validators=[validate_amount]
     )
-    verified = models.BinaryField(default=False, editable=True)
+    verified = models.BooleanField(default=False, editable=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def save(self):
+        self.full_clean()
+        return super(BalanceTransaction, self).save()
 
     def __str__(self):
         return self.transaction_user.username + ':' + self.type_of_transaction + ':' + str(self.created)
@@ -167,12 +173,15 @@ class InvestmentTransaction(models.Model):
                              related_name='outgoing_investment_transactions', blank=False)
     pool = models.ForeignKey('pools.Pool', on_delete=models.DO_NOTHING,
                              related_name='investment_transactions', blank=False)
-    verified = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False, editable=True)
+
+    def save(self):
+        self.full_clean()
+        # TODO-NORMAL: Override save method with verified=True to generate & send invoice.
+        return super(InvestmentTransaction, self).save()
 
     def __str__(self):
-        return self.user + ':' + self.type_of_transaction + ':' + self.pool + ':' + str(self.amount)
-
-    # TODO-NORMAL: Override save method with verified=True to generate & send invoice.
+        return self.user.username + ':' + self.type_of_transaction + ':' + str(self.pool.id) + ':' + str(self.amount)
 
 
 class BillingAddress(models.Model):

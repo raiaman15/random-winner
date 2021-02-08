@@ -55,7 +55,7 @@ class PoolMembershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 
     def get_queryset(self):
         username = self.request.user.username
-        return get_user_model().objects.filter(username=username).member_of_pool.all()
+        return get_object_or_404(get_user_model(), username=username).member_of_pool.all()
 
 
 class PoolMastershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -67,7 +67,7 @@ class PoolMastershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 
     def get_queryset(self):
         username = self.request.user.username
-        return get_user_model().objects.filter(username=username).master_of_pool.all()
+        return get_object_or_404(get_user_model(), username=username).master_of_pool.all()
 
 
 class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
@@ -136,20 +136,23 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
     group_required = [u"member", u"master"]
 
     def post(self, request):
+        accept_reject = str(request.POST.get('accept_reject'))
         pool_id = int(request.POST.get('pool'))
         pool = get_object_or_404(Pool, id=pool_id)
-        accept_reject = str(request.POST.get('accept_reject'))
         if accept_reject in ('Accept', 'Reject'):
             if accept_reject == 'Accept':
                 pool.join(request.user)
-                # try:
-                #     pool.join(request.user)
-                #     messages.success(request, f'You have joined the pool - {pool.name}')
-                # except Exception as e:
-                #     messages.error(request, f'Unable to join the pool. Error: {e.__class__} {e}')
+                try:
+                    pool.join(request.user)
+                    messages.success(request, f'You have joined the pool - {pool.name}')
+                    PoolInvite.objects.filter(pool=pool, username=request.user.username).delete()
+                except Exception as e:
+                    messages.error(request, f'Unable to join the pool. Error: {e}')
             else:
-                pass
-                # Delete the invitation
+                try:
+                    PoolInvite.objects.filter(pool=pool, username=request.user.username).delete()
+                except Exception as e:
+                    messages.error(request, f'Unable to join the pool. Error: {e}')
         else:
             messages.error(request, 'Your response is invalid. Please try again!')
         return redirect('pool_invite_list')
