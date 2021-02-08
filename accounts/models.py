@@ -153,7 +153,7 @@ class BalanceTransaction(models.Model):
         return super(BalanceTransaction, self).save()
 
     def __str__(self):
-        return self.transaction_user.username + ':' + self.type_of_transaction + ':' + str(self.created)
+        return f'{self.transaction_user.username} : {self.type_of_transaction} : {self.created}'
 
 
 class InvestmentTransaction(models.Model):
@@ -181,7 +181,7 @@ class InvestmentTransaction(models.Model):
         return super(InvestmentTransaction, self).save()
 
     def __str__(self):
-        return self.user.username + ':' + self.type_of_transaction + ':' + str(self.pool.id) + ':' + str(self.amount)
+        return f'{self.user.username} : {self.type_of_transaction} : {self.pool.id} : {self.amount}'
 
 
 class BillingAddress(models.Model):
@@ -217,4 +217,4 @@ class BillingAddress(models.Model):
         return reverse('profile_billing_address_update', args=[str(self.id)])
 
     def __str__(self):
-        return self.name + ', ' + self.address1 + ', ' + self.address2
+        return f'{self.name}, {self.address1}, {self.address2}'
