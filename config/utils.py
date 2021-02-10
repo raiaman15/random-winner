@@ -68,3 +68,11 @@ def send_sms_pool_invite(number, pool_id):
 
 def send_email_pool_invite(email, pool_id):
     print(f'e-Mail: email:{email}, pool_id:{pool_id}')
+
+
+def send_sms_pool_winner(number, pool_id):
+    print(f'SMS: username:{number}, pool_id:{pool_id} is the lucky winner of the month.')
+
+
+def send_email_pool_winner(email, pool_id):
+    print(f'e-Mail: email:{email}, pool_id:{pool_id} is the lucky winner of the month.')

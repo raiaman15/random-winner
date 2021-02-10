@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from config.validators import validate_username, validate_investment, validate_name, validate_number, validate_amount, validate_pool_size
-from config.utils import send_sms_pool_invite, send_email_pool_invite, send_sms_platform_invite
+from config.utils import send_sms_pool_invite, send_email_pool_invite, send_sms_platform_invite, send_email_pool_winner, send_sms_pool_winner
 from accounts.models import InvestmentTransaction
 
 
@@ -61,10 +61,9 @@ class Pool(models.Model):
 
     def invite(self, username):
         """ Invites a user in this pool """
-        """ Checks if user haven't been invited previously """
+        """ Checks if users can be invited in the Pool """
         if self.get_member_remaining() > 0:
-            if not PoolInvite.objects.filter(pool=self, username=username).exists():
-                PoolInvite(pool=self, username=username).save()
+            PoolInvite(pool=self, username=username).save()
 
     def activate(self, user):
         """ Checks if the pool is filled """
@@ -75,18 +74,12 @@ class Pool(models.Model):
     def join(self, user):
         """ Initiates a Transaction to Join the Pool """
         if self.can_join_pool(user):
-            # Refresh User's Balance
             user.refresh_balance_investment()
-            # If they have sufficient balance
             if user.balance_amount > self.investment:
-                # Initiate Transaction
                 it = InvestmentTransaction(type_of_transaction='I', amount=self.investment, user=user, pool=self)
                 it.save()
-                # Check latest pool status
                 if self.get_member_remaining() > 0:
-                    # Add the User in the Pool
                     self.members.add(user)
-                    # Complete Transaction
                     it = InvestmentTransaction.objects.get(id=it.id)
                     it.verified = True
                     it.save()
@@ -95,19 +88,19 @@ class Pool(models.Model):
                     InvestmentTransaction.objects.filter(id=it.id).delete()
             else:
                 raise ValueError('Insufficient Balance Amount')
-            # Refresh User's Balance
             user.refresh_balance_investment()
 
     def spin(self):
         if not self.activate:
             raise ValueError('The pool is still not active. Wait for other members to join!')
-        lower_limit = 1
-        upper_limit = self.get_member_count()+1
-        selected = random.randint(lower_limit, upper_limit)
-        user = self.members[selected]
-        winner = PoolWinner(pool=self, user=user)
-        winner.save()
-        self.exit(user)
+        else:
+            lower_limit = 1
+            upper_limit = self.get_member_count()+1
+            selected = random.randint(lower_limit, upper_limit)
+            user = self.members[selected]
+            winner = PoolWinner(pool=self, user=user)
+            winner.save()
+            self.exit(user)
 
     def exit(self, user):
         """ Initiates a Transaction to Join the Pool """
@@ -143,7 +136,8 @@ class Pool(models.Model):
                 itu.full_clean().save()
                 itm.full_clean().save()
                 # SMS & e-Mail Notification of Transaction
-                return True
+                send_email_pool_winner()
+                send_sms_pool_winner(number=self.user.username, pool_id=self.id)
                 # Refresh User's Balance
                 user.refresh_balance_investment()
 
@@ -173,17 +167,20 @@ class PoolInvite(models.Model):
         Sends E-Mail & SMS invite to join the pool if user exist in system
         Create User Account & send invite along with their login credentials
         """
-        if get_user_model().objects.filter(username=self.username).exists():
-            user = get_user_model().objects.get(username=self.username)
-            send_sms_pool_invite(user.username, self.pool.id)
-            if user.email:
-                send_email_pool_invite(user.email, self.pool.id)
+        if not PoolInvite.objects.filter(pool=self, username=username).exists():
+            if get_user_model().objects.filter(username=self.username).exists():
+                user = get_user_model().objects.get(username=self.username)
+                send_sms_pool_invite(user.username, self.pool.id)
+                if user.email:
+                    send_email_pool_invite(user.email, self.pool.id)
+            else:
+                password = pyotp.random_base32()
+                get_user_model().objects.create_user(username=self.username, password=password)
+                send_sms_platform_invite(self.username, self.username, password)
+                send_sms_pool_invite(self.username, self.pool.id)
+            return super(PoolInvite, self).save(*args, **kwargs)
         else:
-            password = pyotp.random_base32()
-            get_user_model().objects.create_user(username=self.username, password=password)
-            send_sms_platform_invite(self.username, self.username, password)
-            send_sms_pool_invite(self.username, self.pool.id)
-        return super(PoolInvite, self).save(*args, **kwargs)
+            raise ValueError('User is already invited once in this pool!')
 
     def __str__(self):
         return f'{self.pool} : {self.username}'
