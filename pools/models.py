@@ -56,7 +56,8 @@ class Pool(models.Model):
         if user.groups.filter(name='member').exists():
             if self.get_member_remaining() > 0:
                 if not self.is_member(user):
-                    return True
+                    if not self.activated:
+                        return True
 
     def invite(self, username):
         """ Invites a user in this pool """
@@ -98,24 +99,27 @@ class Pool(models.Model):
             user.refresh_balance_investment()
 
     def spin(self):
+        if not self.activate:
+            raise ValueError('The pool is still not active. Wait for other members to join!')
         lower_limit = 1
         upper_limit = self.get_member_count()+1
         selected = random.randint(lower_limit, upper_limit)
         user = self.members[selected]
         winner = PoolWinner(pool=self, user=user)
         winner.save()
+        self.exit(user)
 
     def exit(self, user):
         """ Initiates a Transaction to Join the Pool """
         incentive = 0
         if not self.activate:
-            return
+            raise ValueError('The pool is still not active. Wait for other members to join!')
         else:
             now = timezone.now()
             yd = now.year - self.activated.year
             md = now.month - self.activated.month
             month = int((yd * 12) + md)
-            incentive = 1000 * month
+            incentive = (0.05*self.investment)*month  # 5% of investment per month
         if self.is_member(user):
             # Refresh User's Balance
             user.refresh_balance_investment()
@@ -138,9 +142,10 @@ class Pool(models.Model):
                 itu.verified, itm.verified = True, True
                 itu.full_clean().save()
                 itm.full_clean().save()
+                # SMS & e-Mail Notification of Transaction
                 return True
-            # Refresh User's Balance
-            user.refresh_balance_investment()
+                # Refresh User's Balance
+                user.refresh_balance_investment()
 
     def get_absolute_url(self):
         return reverse('pool_detail', args=[str(self.id)])
@@ -190,15 +195,8 @@ class PoolWinner(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def save(self):
+        self.full_clean()
         if PoolWinner.objects.filter(pool=self.pool, user=self.user).exists():
             raise ValueError('The user is already out of Pool!')
         else:
-            pass
-
-            # Create Investment Transaction (Exit Pool Member & commission Master)
-            #
-            # Notify user via SMS (scheduled) & e-mail
-            #
-            # Save Super
-            #
-            #
+            return super(PoolWinner, self).save()
