@@ -1,4 +1,5 @@
 import pyotp
+import random
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -96,6 +97,14 @@ class Pool(models.Model):
             # Refresh User's Balance
             user.refresh_balance_investment()
 
+    def spin(self):
+        lower_limit = 1
+        upper_limit = self.get_member_count()+1
+        selected = random.randint(lower_limit, upper_limit)
+        user = self.members[selected]
+        winner = PoolWinner(pool=self, user=user)
+        winner.save()
+
     def exit(self, user):
         """ Initiates a Transaction to Join the Pool """
         incentive = 0
@@ -143,6 +152,7 @@ class Pool(models.Model):
 class PoolMember(models.Model):
     pool = models.ForeignKey('pools.Pool', on_delete=models.PROTECT)
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
 
 
 class PoolInvite(models.Model):
@@ -172,3 +182,23 @@ class PoolInvite(models.Model):
 
     def __str__(self):
         return f'{self.pool} : {self.username}'
+
+
+class PoolWinner(models.Model):
+    pool = models.ForeignKey('pools.Pool', on_delete=models.PROTECT)
+    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def save(self):
+        if PoolWinner.objects.filter(pool=self.pool, user=self.user).exists():
+            raise ValueError('The user is already out of Pool!')
+        else:
+            pass
+
+            # Create Investment Transaction (Exit Pool Member & commission Master)
+            #
+            # Notify user via SMS (scheduled) & e-mail
+            #
+            # Save Super
+            #
+            #

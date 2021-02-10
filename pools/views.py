@@ -130,7 +130,7 @@ class PoolInviteListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
         return PoolInvite.objects.filter(username=username)
 
 
-# Pool Join, Spin & Exit
+# Pool Join & Exit
 
 class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
     group_required = [u"member", u"master"]
@@ -155,27 +155,3 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
         else:
             messages.error(request, 'Your response is invalid. Please try again!')
         return redirect('pool_invite_list')
-
-
-class PoolSpinView(LoginRequiredMixin, GroupRequiredMixin, View):
-    group = [u"member", u"master"]
-
-    def get(self, request):
-        pass
-
-    def post(self, request):
-        pass
-
-
-class PoolExitView(LoginRequiredMixin, GroupRequiredMixin, View):
-    group_required = [u"member", u"master"]
-
-    def post(self, request):
-        pool_id = int(request.POST.get('pool'))
-        pool = get_object_or_404(Pool, id=pool_id)
-        try:
-            pool.exit(request.user)
-            messages.success(request, f'You have exited the pool - {pool.name}')
-        except Exception as e:
-            messages.error(request, f'Unable to exit the pool. Error: {e.__class__}')
-        return redirect('pool_membership_list')
