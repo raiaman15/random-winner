@@ -136,8 +136,8 @@ class Pool(models.Model):
                 itu.full_clean().save()
                 itm.full_clean().save()
                 # SMS & e-Mail Notification of Transaction
-                send_email_pool_winner()
-                send_sms_pool_winner(number=self.user.username, pool_id=self.id)
+                send_email_pool_winner(email=user.email, pool_id=self.id)
+                send_sms_pool_winner(number=user.username, pool_id=self.id)
                 # Refresh User's Balance
                 user.refresh_balance_investment()
 
