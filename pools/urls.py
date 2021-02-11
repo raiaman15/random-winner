@@ -14,5 +14,4 @@ urlpatterns = [
     path('invite/', views.PoolInviteListView.as_view(), name='pool_invite_list'),
 
     path('join/', views.PoolJoinView.as_view(), name='pool_join'),
-    path('exit/', views.PoolExitView.as_view(), name='pool_exit'),
 ]

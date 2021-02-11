@@ -183,6 +183,7 @@ class PoolInvite(models.Model):
         Sends E-Mail & SMS invite to join the pool if user exist in system
         Create User Account & send invite along with their login credentials
         """
+        self.full_clean()
         if not PoolInvite.objects.filter(pool=self, username=username).exists():
             if get_user_model().objects.filter(username=self.username).exists():
                 user = get_user_model().objects.get(username=self.username)

@@ -180,6 +180,7 @@ class InvestmentTransaction(models.Model):
         self.full_clean()
         if self.verified == True:
             # TODO-NORMAL: Generate and send invoice
+            pass
         return super(InvestmentTransaction, self).save()
 
     def __str__(self):
