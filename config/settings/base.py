@@ -52,9 +52,9 @@ INSTALLED_APPS = [
     'captcha',
 
     # Local
-    'accounts',
-    'pools',
-    'pages'
+    'accounts.apps.AccountsConfig',
+    'pools.apps.PoolsConfig',
+    'pages.apps.PagesConfig'
 ]
 
 MIDDLEWARE = [

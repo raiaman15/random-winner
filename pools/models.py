@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django_q.models import Schedule
 from config.validators import validate_username, validate_investment, validate_name, validate_number, validate_amount, validate_pool_size
 from config.utils import send_sms_pool_invite, send_email_pool_invite, send_sms_platform_invite, send_email_pool_winner, send_sms_pool_winner
 from accounts.models import InvestmentTransaction
@@ -32,6 +33,28 @@ class Pool(models.Model):
 
     def save(self):
         self.full_clean()
+        # Schedule activation check every day
+        if not Schedule.objects.filter(name=self.__str__() + 'Activation', func="pools.models.Pool.activate", args=f"'{self}'").exists():
+            next_date_time = timezone.now().replace(hour=11, minute=59)
+            Schedule.objects.create(
+                name=self.__str__() + 'Activation',
+                func="pools.models.Pool.activate",
+                args=f"'{self}'",
+                schedule_type=Schedule.DAILY,
+                next_run=next_date_time
+            )
+        # Schedule spin every month if activated before 11th of that month
+        if self.activated:
+            if self.activated < timezone.now().replace(date=11, hour=00, minute=00):
+                if not Schedule.objects.filter(name=self.__str__() + 'Activation', func="pools.models.Pool.spin", args=f"'{self}'").exists():
+                    next_date_time = timezone.now().replace(date=1, hour=11, minute=59)
+                    Schedule.objects.create(
+                        name=self.__str__() + 'Activation',
+                        func="pools.models.Pool.spin",
+                        args=f"'{self}'",
+                        schedule_type=Schedule.MONTHLY,
+                        next_run=next_date_time
+                    )
         super(Pool, self).save()
 
     def get_member_count(self):
@@ -63,7 +86,8 @@ class Pool(models.Model):
         """ Invites a user in this pool """
         """ Checks if users can be invited in the Pool """
         if self.get_member_remaining() > 0:
-            PoolInvite(pool=self, username=username).save()
+            if not self.activated:
+                PoolInvite(pool=self, username=username).save()
 
     def activate(self, user):
         """ Checks if the pool is filled """
@@ -94,8 +118,7 @@ class Pool(models.Model):
         if not self.activate:
             raise ValueError('The pool is still not active. Wait for other members to join!')
         else:
-            lower_limit = 1
-            upper_limit = self.get_member_count()+1
+            lower_limit, upper_limit = 1, self.get_member_count()+1
             selected = random.randint(lower_limit, upper_limit)
             user = self.members[selected]
             winner = PoolWinner(pool=self, user=user)
@@ -114,38 +137,31 @@ class Pool(models.Model):
             month = int((yd * 12) + md)
             incentive = (0.05*self.investment)*month  # 5% of investment per month
         if self.is_member(user):
+            itu = InvestmentTransaction(
+                type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
+            itu.save()
+            itm = InvestmentTransaction(
+                type_of_transaction='D', amount=self.investment + incentive, user=self.master, pool=self)
+            itm.save()
+            self.members.remove(user)
+            itu = InvestmentTransaction.objects.filter(
+                type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
+            itm = InvestmentTransaction.objects.filter(
+                type_of_transaction='D', amount=self.investment + incentive, user=self.master, pool=self)
+            itu.verified, itm.verified = True, True
+            itu.save()
+            itm.save()
+            # SMS & e-Mail Notification of Spinning
+            send_email_pool_winner(email=user.email, pool_id=self.id)
+            send_sms_pool_winner(number=user.username, pool_id=self.id)
             # Refresh User's Balance
             user.refresh_balance_investment()
-            # If they have sufficient balance
-            if user.balance_amount > self.investment:
-                # Initiate Transaction for User & Master
-                InvestmentTransaction(
-                    type_of_transaction='D', amount=self.investment + incentive,
-                    user=user, pool=self).full_clean().create()
-                InvestmentTransaction(
-                    type_of_transaction='D', amount=self.investment + incentive,
-                    user=self.master, pool=self).full_clean().create()
-                # Remove the User from the Pool
-                self.members.remove(user)
-                # Complete Transaction for User & Master
-                itu = InvestmentTransaction.objects.filter(
-                    type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
-                itm = InvestmentTransaction.objects.filter(
-                    type_of_transaction='D', amount=self.investment + incentive, user=self.master, pool=self)
-                itu.verified, itm.verified = True, True
-                itu.full_clean().save()
-                itm.full_clean().save()
-                # SMS & e-Mail Notification of Transaction
-                send_email_pool_winner(email=user.email, pool_id=self.id)
-                send_sms_pool_winner(number=user.username, pool_id=self.id)
-                # Refresh User's Balance
-                user.refresh_balance_investment()
 
     def get_absolute_url(self):
         return reverse('pool_detail', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.name} : {self.master.username}'
+        return f'{self.codename} : {self.name} by {self.master.username}'
 
 
 class PoolMember(models.Model):

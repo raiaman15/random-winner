@@ -178,7 +178,8 @@ class InvestmentTransaction(models.Model):
 
     def save(self):
         self.full_clean()
-        # TODO-NORMAL: Override save method with verified=True to generate & send invoice.
+        if self.verified == True:
+            # TODO-NORMAL: Generate and send invoice
         return super(InvestmentTransaction, self).save()
 
     def __str__(self):
