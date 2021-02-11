@@ -216,7 +216,7 @@ class BillingAddress(models.Model):
         max_length=3,
         choices=COUNTRY)
 
-    def get_absolute_url():
+    def get_absolute_url(self):
         return reverse('profile_billing_address_update', args=[str(self.id)])
 
     def __str__(self):

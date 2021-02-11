@@ -7,8 +7,7 @@ urlpatterns = [
     path('membership/', views.PoolMembershipListView.as_view(), name='pool_membership_list'),
     path('mastership/', views.PoolMastershipListView.as_view(), name='pool_mastership_list'),
     path('detail/<int:pk>/', views.PoolDetailView.as_view(), name='pool_detail'),
-    path('search/', views.PoolSearchView.as_view(),
-         name='pool_search_results'),
+    path('search/', views.PoolSearchView.as_view(), name='pool_search_results'),
 
     path('invite/create/', views.PoolInviteCreateView.as_view(), name='pool_invite_create'),
     path('invite/', views.PoolInviteListView.as_view(), name='pool_invite_list'),
