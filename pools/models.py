@@ -184,7 +184,7 @@ class PoolInvite(models.Model):
         Create User Account & send invite along with their login credentials
         """
         self.full_clean()
-        if not PoolInvite.objects.filter(pool=self, username=self.username).exists():
+        if not PoolInvite.objects.filter(pool=self.pool, username=self.username).exists():
             if get_user_model().objects.filter(username=self.username).exists():
                 user = get_user_model().objects.get(username=self.username)
                 send_sms_pool_invite(user.username, self.pool.id)

@@ -139,6 +139,10 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
         accept_reject = str(request.POST.get('accept_reject'))
         pool_id = int(request.POST.get('pool'))
         pool = get_object_or_404(Pool, id=pool_id)
+        self.request.user.refresh_balance_investment()
+        if pool.investment > self.request.user.balance_amount:
+            messages.warning(request, f'Please add {pool.investment} amount to your account for joining the pool.')
+            return redirect('profile_balance_transaction_list')
         if accept_reject in ('Accept', 'Reject'):
             if accept_reject == 'Accept':
                 try:
