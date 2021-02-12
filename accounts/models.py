@@ -153,7 +153,7 @@ class BalanceTransaction(models.Model):
         return super(BalanceTransaction, self).save()
 
     def __str__(self):
-        return f'{self.transaction_user.username} : {self.type_of_transaction} : {self.created}'
+        return f'{self.user.username} : {self.type_of_transaction} : {self.created}'
 
 
 class InvestmentTransaction(models.Model):
@@ -191,33 +191,32 @@ class BillingAddress(models.Model):
     COUNTRY = (
         ('IN', 'India'),
     )
-    user = models.OneToOneField(
-        get_user_model(), on_delete=models.DO_NOTHING, related_name='billing_address', blank=False)
-    name = models.CharField(
-        "Full Name", max_length=64, validators=[validate_name],
-        help_text="Name of Person for the Address")
-    address1 = models.CharField(
-        "Address Line 1", max_length=128,
-        help_text="Line 1 of the Address")
-    address2 = models.CharField(
-        "Address Line 2", max_length=128,
-        help_text="Line 2 of the Address")
-    zip_code = models.CharField(
-        "ZIP / Postal code", max_length=12,
-        help_text="ZIP / Postal code for the Address")
-    city = models.CharField(
-        "City", max_length=128,
-        help_text="City for the Address")
-    state = models.CharField(
-        "State", max_length=128,
-        help_text="State for the Address")
-    country = models.CharField(
-        "Country",
-        max_length=3,
-        choices=COUNTRY)
+    user = models.OneToOneField(get_user_model(), on_delete=models.DO_NOTHING,
+                                related_name='billing_address', blank=False)
+    name = models.CharField("Full Name", max_length=64, validators=[validate_name], help_text="Name for Billing")
+    address1 = models.CharField("Address Line 1", max_length=128, help_text="Line 1 of the Address")
+    address2 = models.CharField("Address Line 2", max_length=128, help_text="Line 2 of the Address")
+    zip_code = models.CharField("ZIP / Postal code", max_length=12, help_text="ZIP / Postal code for the Address")
+    city = models.CharField("City", max_length=128, help_text="City for the Address")
+    state = models.CharField("State", max_length=128, help_text="State for the Address")
+    country = models.CharField("Country", max_length=3, choices=COUNTRY)
 
     def get_absolute_url(self):
         return reverse('profile_billing_address_update', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.name}, {self.address1}, {self.address2}'
+
+
+class BankAccountDetail(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.DO_NOTHING,
+                                related_name='bank_account_detail', blank=False)
+    bank_name = models.CharField("Bank Name", max_length=64, validators=[validate_name], help_text="Name of Bank")
+    account_number = models.CharField("Account Number", max_length=64, help_text="Your Account Number")
+    ifsc_code = models.CharField("IFSC Code", max_length=64, help_text="Your IFSC Code")
+
+    def get_absolute_url(self):
+        return reverse('profile_bank_account_detail_update', args=[str(self.id)])
+
+    def __str__(self):
+        return f'{self.user.username} : {self.account_number}'

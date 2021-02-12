@@ -94,6 +94,7 @@ class Pool(models.Model):
         """ Activates the pool if filled """
         if self.get_member_remaining() == 0:
             self.activated = timezone.now()
+            self.save()
 
     def join(self, user):
         """ Initiates a Transaction to Join the Pool """

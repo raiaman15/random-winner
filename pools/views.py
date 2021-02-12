@@ -82,7 +82,8 @@ class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
         if pool.is_member(request.user) or pool.is_master(request.user):
             return super(PoolDetailView, self).get(request, *args, **kwargs)
         else:
-            messages.error('The pool is not yours')
+            messages.error(request, 'You cannot access details. You can only join the pool. Reason: The pool is not yours')
+            return redirect('pool_list')
 
 
 class PoolSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):

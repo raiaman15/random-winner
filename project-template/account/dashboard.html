@@ -213,7 +213,7 @@
                             <div class="card-tools">
                                 <a href="{% url 'profile_billing_address_update' user.id %}" type="button"
                                     class="btn btn-tool">
-                                    <i class="fas fa-refresh"></i> Update
+                                    <i class="fas fa-refresh"></i> UPDATE
                                 </a>
                             </div>
                             {% else %}
@@ -269,6 +269,60 @@
                             There is no Billing Address associated with your Profile.
                             Please add a new Billing Address for future transactions from
                             <a href="{% url 'profile_billing_address_create' %}" type="button" class="btn btn-tool">
+                                <i class="fas fa-plus"></i> here
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card bg-white">
+                        <div class="card-header">
+                            <h3 class="card-title">Profile Pank Account Detail</h3>
+                            {% if user.bank_account_detail %}
+                            <div class="card-tools">
+                                <a href="{% url 'profile_bank_account_detail_update' user.id %}" type="button"
+                                    class="btn btn-tool">
+                                    <i class="fas fa-refresh"></i> UPDATE
+                                </a>
+                            </div>
+                            {% else %}
+                            <div class="card-tools">
+                                <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
+                                    class="btn btn-tool">
+                                    <i class="fas fa-plus"></i> CREATE
+                                </a>
+                            </div>
+                            {% endif %}
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td width="30%">Bank Name</td>
+                                        <td>{{user.bank_account_detail.bank_name}}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Account Number</td>
+                                        <td>{{user.bank_account_detail.account_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IFSC Code</td>
+                                        <td>{{user.bank_account_detail.ifsc_code}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            {% if user.bank_account_detail %}
+                            {% else %}
+                            There is no Bank Account Detail associated with your Profile.
+                            Please add Bank Account Detail for recieving the returns
+                            <a href="{% url 'profile_bank_account_detail_create' %}" type="button" class="btn btn-tool">
                                 <i class="fas fa-plus"></i> here
                             </a>
                             {% endif %}
@@ -353,7 +407,8 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer" style="display:block;">
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">ADD BILLING ADDRESS</a>
+                            <a href="{% url 'profile_billing_address_create' %}" class="btn btn-secondary">ADD BILLING
+                                ADDRESS</a>
                             <a href="{% url 'profile_detail' %}" class="btn btn-secondary">UPDATE PROFILE DETAILS</a>
                         </div>
                     </div>

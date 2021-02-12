@@ -13,10 +13,11 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
-from .models import CustomUser, ContactNumberOTP, BillingAddress, BalanceTransaction, InvestmentTransaction
+from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDetail, BalanceTransaction, InvestmentTransaction
 from .forms import (ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm,
                     AccountResetPasswordWithOTPConfirmViewForm, ManagerProfileApprovePoolmasterViewForm)
 from config.validators import validate_username
+from pools.models import PoolInvite
 
 
 ##############################################################################
@@ -31,8 +32,12 @@ class UserStatusView(LoginRequiredMixin, View):
         if user.groups.filter(name='manager').exists():
             return redirect('manager_profile_list')
         if user.groups.filter(name='master').exists():
+            if PoolInvite.objects.filter(username=user.username).exists():
+                return redirect('pool_invite_list')
             return redirect('pool_list')
         if user.groups.filter(name='member').exists():
+            if PoolInvite.objects.filter(username=user.username).exists():
+                return redirect('pool_invite_list')
             return redirect('pool_list')
 
         # If user signed up with email and confirmed their email address
@@ -181,7 +186,7 @@ class ProfileDetailView(LoginRequiredMixin, UpdateView):
     context_object_name = 'user'
     template_name = 'account/profile_detail.html'
     login_url = 'account_login'
-    success_url = reverse_lazy('status')
+    success_url = reverse_lazy('profile_detail')
 
     def get_object(self):
         return get_object_or_404(self.model, pk=self.request.user.pk)
@@ -345,7 +350,6 @@ class ProfileBillingAddresssUpdateView(LoginRequiredMixin, GroupRequiredMixin, U
     template_name = 'account/profile_billing_address.html'
     fields = ['name', 'address1', 'address2', 'zip_code', 'city', 'state', 'country']
     group_required = u"member"
-    success_url = reverse_lazy('status')
 
     def get_object(self, *args, **kwargs):
         return get_object_or_404(self.model, user_id=self.kwargs['pk'])
@@ -353,6 +357,40 @@ class ProfileBillingAddresssUpdateView(LoginRequiredMixin, GroupRequiredMixin, U
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(ProfileBillingAddresssUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_billing_address_update',  kwargs={'pk': self.request.user.id})
+
+
+class ProfileBankAccountDetailCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = BankAccountDetail
+    template_name = 'account/profile_bank_account_detail.html'
+    fields = ['bank_name', 'account_number', 'ifsc_code']
+    group_required = u"member"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ProfileBankAccountDetailCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_bank_account_detail_update',  kwargs={'pk': self.request.user.id})
+
+
+class ProfileBankAccountDetailUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    model = BankAccountDetail
+    template_name = 'account/profile_bank_account_detail.html'
+    fields = ['bank_name', 'account_number', 'ifsc_code']
+    group_required = u"member"
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(self.model, user_id=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ProfileBankAccountDetailUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_bank_account_detail_update',  kwargs={'pk': self.request.user.id})
 
 
 class ProfileBalanceTransactionListView(LoginRequiredMixin, GroupRequiredMixin, ListView):

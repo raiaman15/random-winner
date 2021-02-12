@@ -200,8 +200,18 @@ def ACCOUNT_USER_DISPLAY(user):
     return user.username if user.username else user.email
 
 
-# Captcha Setting (Password Reset via OTP)
+# Captcha config (Password Reset via OTP)
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_IMAGE_SIZE = (100, 30)
 CAPTCHA_LETTER_ROTATION = (-5, 5)
 CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_null',)
+
+# Django Q config
+Q_CLUSTER = {
+    'name': PRODUCT_NAME,
+    'workers': 2,
+    'timeout': 90,
+    'retry': 120,
+    'label': 'Django Q',
+    'orm': 'default'
+}
