@@ -23,7 +23,7 @@ def short_url(url, apikey=key):
     return shorturl
 
 
-def sendSMS(apikey, numbers, sender, message):
+def send_sms(apikey, numbers, sender, message):
     """ #TODO-URGENT: Send the OPT to contact number via SMS """
 
     if settings.DEBUG:
@@ -66,7 +66,7 @@ def send_otp(number, otp, first_name='', last_name=''):
     )
 
     message = '\n'.join(lines)
-    response = sendSMS(key, number, sender, message)
+    response = send_sms(key, number, sender, message)
     print(response)
 
 
@@ -89,7 +89,7 @@ def send_sms_platform_invite(number, username, password, invitee_number):
     lines.append(f'Invited by {invitee_number}')
 
     message = '\n'.join(lines)
-    response = sendSMS(key, number, sender, message)
+    response = send_sms(key, number, sender, message)
     print(response)
 
 
@@ -110,7 +110,7 @@ def send_sms_pool_invite(number, pool_id, invitee_number):
     lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}!')
 
     message = '\n'.join(lines)
-    response = sendSMS(key, number, sender, message)
+    response = send_sms(key, number, sender, message)
     print(response)
 
 
@@ -158,7 +158,7 @@ def send_sms_pool_winner(number, pool_id):
     lines.append(f'Congratulations! You won this month spin for the pool {shorturl}!')
 
     message = '\n'.join(lines)
-    response = sendSMS(key, number, sender, message)
+    response = send_sms(key, number, sender, message)
     print(response)
 
 
