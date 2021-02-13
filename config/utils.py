@@ -3,12 +3,23 @@ Various utilities including:
 1. Send Text SMS with textlocal
 """
 
+import ast
 import urllib.request
 import urllib.parse
 from django.conf import settings
 
 key = 'x9Wv/NxkW+M-PIYn7TIxcaB2meS9QAG'
 sender = 'Infroid Shiksha API'
+
+
+def short_url(url, apikey=key):
+    data = urllib.parse.urlencode({'apikey': apikey, 'url': url})
+    data = data.encode('utf-8')
+    request = urllib.request.Request("https://api.textlocal.in/create_shorturl/")
+    f = urllib.request.urlopen(request, data)
+    d = ast.literal_eval(f.read().decode('utf-8', 'strict'))
+    shorturl = d['shorturl'].replace('\\', '')
+    return(shorturl)
 
 
 def sendSMS(apikey, numbers, sender, message):
@@ -35,7 +46,7 @@ def send_otp(number, otp, first_name='', last_name=''):
     1. According the ISO IEC 7813 the cardholder name length must be 2 to 26 
     characters including first name, last name and spaces.
     2. OTP length is 6 characters
-    3. Newline character is defined by '%n' and takes 1 character length
+    3. Newline character takes 1 character length
     """
 
     full_name = ''
@@ -58,12 +69,42 @@ def send_otp(number, otp, first_name='', last_name=''):
     print(response)
 
 
-def send_sms_platform_invite(number, username, password):
-    print(f'SMS: number: {number}, username:{username}, password:{password}')
+def send_sms_platform_invite(number, username, password, invitee_number):
+    """
+    response = send_otp('7007488735', '7007488734', '132435')
+
+    Dynamically formats the SMS body to meet the template conditions. Constraints:
+    1. According to the platform, username is phone number (12 digit max)
+    2. Default password is 16 character long
+    3. Newline character takes 1 character length
+    """
+
+    lines = []
+    lines.append(f'Welcome to BitBoomer!')
+    lines.append(f'Sign in with contact number: {username} and password: {password}!')
+    lines.append(f'Invited by {invitee_number}')
+
+    message = '\n'.join(lines)
+    response = sendSMS(key, number, sender, message)
+    print(response)
 
 
-def send_sms_pool_invite(number, pool_id):
-    print(f'SMS: username:{number}, pool_id:{pool_id}')
+def send_sms_pool_invite(number, pool_id, invitee_number):
+    """
+    response = send_otp('7007488735', '7007488734', '132435')
+
+    Dynamically formats the SMS body to meet the template conditions. Constraints:
+    1. According to the platform, username is phone number (12 digit max)
+    3. Newline character takes 1 character length
+    """
+
+    lines = []
+    lines.append(f'Hello from BitBoomer!')
+    lines.append(f'You have been invited by {invitee_number} to join their pool {pool_id}!')
+
+    message = '\n'.join(lines)
+    response = sendSMS(key, number, sender, message)
+    print(response)
 
 
 def send_email_pool_invite(email, pool_id):
