@@ -190,12 +190,12 @@ class PoolInvite(models.Model):
                 user = get_user_model().objects.get(username=self.username)
                 send_sms_pool_invite(user.username, self.pool.id, self.pool.master_of_pool.username)
                 if user.email:
-                    send_email_pool_invite(user.email, self.pool.id)
+                    send_email_pool_invite(user.email, self.pool.id, self.master_of_pool.username)
             else:
                 password = pyotp.random_base32()
                 get_user_model().objects.create_user(username=self.username, password=password)
                 send_sms_platform_invite(self.username, self.username, password, self.master_of_pool.username)
-                send_sms_pool_invite(self.username, self.pool.id)
+                send_sms_pool_invite(self.username, self.pool.id, self.master_of_pool.username)
             return super(PoolInvite, self).save(*args, **kwargs)
         else:
             raise ValueError('User is already invited once in this pool!')

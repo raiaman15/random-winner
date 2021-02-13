@@ -7,6 +7,7 @@ import ast
 import urllib.request
 import urllib.parse
 from django.conf import settings
+from django.core.mail import send_mail
 
 key = 'x9Wv/NxkW+M-PIYn7TIxcaB2meS9QAG'
 sender = 'Infroid Shiksha API'
@@ -19,7 +20,7 @@ def short_url(url, apikey=key):
     f = urllib.request.urlopen(request, data)
     d = ast.literal_eval(f.read().decode('utf-8', 'strict'))
     shorturl = d['shorturl'].replace('\\', '')
-    return(shorturl)
+    return shorturl
 
 
 def sendSMS(apikey, numbers, sender, message):
@@ -64,14 +65,14 @@ def send_otp(number, otp, first_name='', last_name=''):
         f'Hope you enjoy our platform and praise our effort in making affordable solution for Educational Institution!'
     )
 
-    message = '%n'.join(lines)
+    message = '\n'.join(lines)
     response = sendSMS(key, number, sender, message)
     print(response)
 
 
 def send_sms_platform_invite(number, username, password, invitee_number):
     """
-    response = send_otp('7007488735', '7007488734', '132435')
+    response = send_sms_platform_invite('7007488735', '7007488734', '132435')
 
     Dynamically formats the SMS body to meet the template conditions. Constraints:
     1. According to the platform, username is phone number (12 digit max)
@@ -79,9 +80,12 @@ def send_sms_platform_invite(number, username, password, invitee_number):
     3. Newline character takes 1 character length
     """
 
+    url = 'https://bit-boomer.com/accounts/signup/'
+    shorturl = short_url(url)
+
     lines = []
     lines.append(f'Welcome to BitBoomer!')
-    lines.append(f'Sign in with contact number: {username} and password: {password}!')
+    lines.append(f'Sign in at {shorturl} with contact number: {username} and password: {password}!')
     lines.append(f'Invited by {invitee_number}')
 
     message = '\n'.join(lines)
@@ -91,29 +95,97 @@ def send_sms_platform_invite(number, username, password, invitee_number):
 
 def send_sms_pool_invite(number, pool_id, invitee_number):
     """
-    response = send_otp('7007488735', '7007488734', '132435')
+    response = send_sms_pool_invite('7007488735', '7007488734', '132435')
 
     Dynamically formats the SMS body to meet the template conditions. Constraints:
     1. According to the platform, username is phone number (12 digit max)
     3. Newline character takes 1 character length
     """
 
+    url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
+    shorturl = short_url(url)
+
     lines = []
     lines.append(f'Hello from BitBoomer!')
-    lines.append(f'You have been invited by {invitee_number} to join their pool {pool_id}!')
+    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}!')
 
     message = '\n'.join(lines)
     response = sendSMS(key, number, sender, message)
     print(response)
 
 
-def send_email_pool_invite(email, pool_id):
-    print(f'e-Mail: email:{email}, pool_id:{pool_id}')
+def send_email_pool_invite(email, pool_id, invitee_number):
+    """
+    response = send_email_pool_invite('7007488735', '7007488734', '132435')
+
+    Dynamically formats the email body to meet the requirements. Constraints:
+    1. Precise Subject
+    2. Personalized Touch with Happy Tone
+    """
+
+    url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
+    shorturl = short_url(url)
+
+    lines = []
+    lines.append(f'Hello from BitBoomer!')
+    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}!')
+
+    message = '\n'.join(lines)
+
+    response = send_mail(
+        'BitBoomer | Pool Invitation Recieved! ',   # Subject
+        message,                                    # Body
+        [email],                                    # To | From in settings.py
+        fail_silently=True,                         # For troubleshoot, set False
+    )
+    print(bool(response), message)
 
 
 def send_sms_pool_winner(number, pool_id):
-    print(f'SMS: username:{number}, pool_id:{pool_id} is the lucky winner of the month.')
+    """
+    response = send_sms_pool_invite('7007488735', '7007488734', '132435')
+
+    Dynamically formats the SMS body to meet the template conditions. Constraints:
+    1. According to the platform, username is phone number (12 digit max)
+    3. Newline character takes 1 character length
+    """
+
+    url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
+    shorturl = short_url(url)
+
+    lines = []
+    lines.append(f'Hello from BitBoomer!')
+    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}!')
+
+    message = '\n'.join(lines)
+    response = sendSMS(key, number, sender, message)
+    print(response)
 
 
 def send_email_pool_winner(email, pool_id):
-    print(f'e-Mail: email:{email}, pool_id:{pool_id} is the lucky winner of the month.')
+    """
+    response = send_email_pool_invite('7007488735', '7007488734', '132435')
+
+    Dynamically formats the email body to meet the requirements. Constraints:
+    1. Precise Subject
+    2. Personalized Touch with Happy Tone
+    """
+
+    url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
+    shorturl = short_url(url)
+
+    lines = []
+    lines.append(f'Hello from BitBoomer!')
+    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}!')
+    lines.append(f'Payments will be processed shortly.')
+
+    message = '\n'.join(lines)
+
+    response = send_mail(
+        'BitBoomer | Pool Invitation Recieved! ',   # Subject
+        message,                                    # Body
+        [email],                                    # To | From in settings.py
+        fail_silently=True,                         # For troubleshoot, set False
+    )
+
+    print(bool(response), message)
