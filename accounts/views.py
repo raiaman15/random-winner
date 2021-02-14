@@ -326,10 +326,10 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
             return redirect('profile_verification_sms')
         return super(AccountResetPasswordWithOTPConfirmView, self).post(request, *args, **kwargs)
 
+
 ##############################################################################
 # User Billing Address & Transactions Specific Views
 ##############################################################################
-
 
 class ProfileBillingAddresssCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BillingAddress
@@ -425,7 +425,6 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 # Manager Specific Views (User & Action Management)
 ##############################################################################
 
-
 class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'profiles'
@@ -517,6 +516,7 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
                 master_group.user_set.add(user)
                 messages.success(
                     self.request, f'{user.username} is now a PoolMember.')
+                
         return super(ManagerProfileVerifyIdentityView, self).form_valid(form)
 
 

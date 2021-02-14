@@ -4,7 +4,11 @@ Various utilities including:
 2. Send platform Invite via SMS
 3. Send pool Invite via SMS
 4. Send pool Invite via e-mail
-5. Shorten URL to send via SMS
+5. Send profile Verified SMS
+6. Send profile Verified e-mail
+7. Send profile Approved PoolMaster SMS
+8. Send profile Approved PoolMaster SMS
+9. Shorten URL to send via SMS
 """
 
 import ast
