@@ -53,12 +53,6 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="btn btn-tool btn-fullscreen" title="Maximize">
-                                    <i class="fas fa-expand-arrows-alt"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Close">
-                                    <i class="fas fa-times"></i>
-                                </button>
                             </div>
 
                         </div><!-- /.card-header -->
@@ -74,12 +68,40 @@
                                     {% endif %}
                                 </small>
                             </div>
-
+                            <hr />
                             {% if view.profile.aadhaar_number or view.profile.pan_number %}
                             <div class="text-center">
-                                Profile's claims to have:<br />
-                                PAN NUMBER: {{view.profile.pan_number}} |
-                                AADHAAR NUMBER: {{view.profile.aadhaar_number}}
+                                <table width=100%>
+                                    <tr>
+                                        <th>CONTACT NUMBER</th>
+                                        <th>
+                                            {% if view.profile.email %}
+                                            EMAIL ADDRESS
+                                            {% endif %}
+                                        </th>
+                                        <th>AADHAAR NUMBER</th>
+                                        <th>PAN NUMBER</th>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="tel:{{view.profile.username}}">{{view.profile.username}}</a></td>
+                                        <td>
+                                            {% if view.profile.email %}
+                                            <a href="mailto:{{view.profile.email}}">{{view.profile.email}}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a target="_blank" href="https://resident.uidai.gov.in/verify">
+                                                {{view.profile.aadhaar_number}}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a target="_blank"
+                                                href="https://www1.incometaxindiaefiling.gov.in/e-FilingGS/Services/VerifyYourPanDeatils.html?lang=eng">
+                                                {{view.profile.pan_number}}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                             {% endif %}
 
@@ -91,7 +113,9 @@
                             <form method="post">
                                 {% csrf_token %}
                                 {{ form | crispy }}
-                                <input type="submit" class="btn btn-secondary" value="APPROVE / REJECT">
+                                <input type="submit" class="btn btn-secondary" value="APPROVE">
+                                <a href="{% url 'manager_profile_willing_master_list' %}"
+                                    class="btn btn-secondary">CANCEL</a>
                             </form>
                         </div><!-- /.card-body -->
                         <!-- Help Text -->

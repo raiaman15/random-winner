@@ -55,7 +55,7 @@
                                 {% if user|has_group:"master" %}
                                 MASTER - <i class="fas fa-check-circle text-primary"></i>
                                 {% endif %}
-                                {% if user|has_group:"member" %}
+                                {% if user.identity_verified and user.contact_verified %}
                                 MEMBER - <i class="fas fa-check-circle text-primary"></i>
                                 {% else %}
                                 MEMBER - <i class="fas fa-times-circle text-danger"></i>
@@ -163,7 +163,7 @@
                                             {% elif user.identity_proof and user.identity_reject_reason %}
                                             REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
                                             <br />
-                                            {{ user.identity_reject_reason }}
+                                            Last Rejection Reason: {{ user.identity_reject_reason }}
                                             {% elif user.identity_proof %}
                                             <a href="{{ user.identity_proof.url }}">
                                                 <img src="{{ user.identity_proof.url }}"
@@ -219,7 +219,7 @@
                             {% else %}
                             <div class="card-tools">
                                 <a href="{% url 'profile_billing_address_create' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-plus"></i> CREATE
+                                    <i class="fas fa-plus"></i> ADD
                                 </a>
                             </div>
                             {% endif %}
@@ -263,13 +263,15 @@
                             </table>
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
+                        <div class="card-footer text-center text-danger">
                             {% if user.billing_address %}
                             {% else %}
                             There is no Billing Address associated with your Profile.
-                            Please add a new Billing Address for future transactions from
-                            <a href="{% url 'profile_billing_address_create' %}" type="button" class="btn btn-tool">
-                                <i class="fas fa-plus"></i> here
+                            Please add a new Billing Address for future transactions.
+                            <br />
+                            <a href="{% url 'profile_billing_address_create' %}" type="button"
+                                class="btn btn-sm btn-secondary">
+                                Add Billing Address
                             </a>
                             {% endif %}
                         </div>
@@ -289,7 +291,7 @@
                             <div class="card-tools">
                                 <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
                                     class="btn btn-tool">
-                                    <i class="fas fa-plus"></i> CREATE
+                                    <i class="fas fa-plus"></i> ADD
                                 </a>
                             </div>
                             {% endif %}
@@ -317,13 +319,15 @@
                             </table>
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
+                        <div class="card-footer text-center text-danger">
                             {% if user.bank_account_detail %}
                             {% else %}
                             There is no Bank Account Detail associated with your Profile.
-                            Please add Bank Account Detail for recieving the returns
-                            <a href="{% url 'profile_bank_account_detail_create' %}" type="button" class="btn btn-tool">
-                                <i class="fas fa-plus"></i> here
+                            Please add Bank Account Detail for recieving the returns.
+                            <br />
+                            <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
+                                class="btn btn-sm btn-secondary">
+                                Add Bank Account Detail
                             </a>
                             {% endif %}
                         </div>

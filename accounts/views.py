@@ -160,7 +160,7 @@ class ProfileDashboardView(LoginRequiredMixin, TemplateView):
         user = request.user
         if not user.identity_verified:
             messages.error(
-                self.request, 'Identity Proof Not Verified! You won\'t be able to perform any operation until verification.')
+                self.request, 'Identity Proof Not Verified Yet! You won\'t be able to perform any operation until verification.')
 
         return super(ProfileDashboardView, self).get(request, *args, **kwargs)
 

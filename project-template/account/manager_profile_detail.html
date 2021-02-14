@@ -54,9 +54,11 @@
                             <h5 class="widget-user-desc">
                                 {% if profile|has_group:"manager" %}
                                 MANAGER - <i class="fas fa-check-circle text-primary"></i>
-                                {% elif profile|has_group:"master" %}
+                                {% endif %}
+                                {% if profile|has_group:"master" %}
                                 MASTER - <i class="fas fa-check-circle text-primary"></i>
-                                {% elif profile.identity_verified and profile.contact_verified %}
+                                {% endif %}
+                                {% if profile.identity_verified and profile.contact_verified %}
                                 MEMBER - <i class="fas fa-check-circle text-primary"></i>
                                 {% else %}
                                 MEMBER - <i class="fas fa-times-circle text-danger"></i>
