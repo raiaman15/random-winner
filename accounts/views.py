@@ -399,12 +399,11 @@ class ProfileBalanceTransactionListView(LoginRequiredMixin, GroupRequiredMixin, 
     template_name = 'account/profile_balance_transaction_list.html'
     paginate_by = 100
     group_required = u"member"
-    ordering = ['-created']
 
     def get_queryset(self):
         user = self.request.user
         user.refresh_balance_investment()
-        return self.model.objects.filter(user=user)
+        return self.model.objects.filter(user=user).order_by("-created")
 
 
 class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -413,12 +412,11 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
     template_name = 'account/profile_investment_transaction_list.html'
     paginate_by = 100
     group_required = u"member"
-    ordering = ['-created']
 
     def get_queryset(self):
         user = self.request.user
         user.refresh_balance_investment()
-        return self.model.objects.filter(user=user)
+        return self.model.objects.filter(user=user).order_by("-created")
 
 
 ##############################################################################
@@ -432,10 +430,9 @@ class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = 'account_login'
     paginate_by = 100
     group_required = u"manager"
-    ordering = ['username']
 
     def get_queryset(self):
-        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False))
+        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False)).order_by("username")
 
 
 class ManagerProfileListPoolMemberView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -445,10 +442,9 @@ class ManagerProfileListPoolMemberView(LoginRequiredMixin, GroupRequiredMixin, L
     login_url = 'account_login'
     paginate_by = 100
     group_required = u"manager"
-    ordering = ['username']
 
     def get_queryset(self):
-        return self.model.objects.filter(Q(groups__name='member'))
+        return self.model.objects.filter(Q(groups__name='member')).order_by("username")
 
 
 class ManagerProfileListPoolMasterView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -458,10 +454,9 @@ class ManagerProfileListPoolMasterView(LoginRequiredMixin, GroupRequiredMixin, L
     login_url = 'account_login'
     paginate_by = 100
     group_required = u"manager"
-    ordering = ['username']
 
     def get_queryset(self):
-        return self.model.objects.filter(Q(groups__name='master'))
+        return self.model.objects.filter(Q(groups__name='master')).order_by("username")
 
 
 class ManagerProfileListWillingPoolMasterView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -471,10 +466,9 @@ class ManagerProfileListWillingPoolMasterView(LoginRequiredMixin, GroupRequiredM
     login_url = 'account_login'
     paginate_by = 100
     group_required = u"manager"
-    ordering = ['username']
 
     def get_queryset(self):
-        return self.model.objects.filter(~Q(groups__name='master') & Q(groups__name='member') & Q(is_willing_master=True))
+        return self.model.objects.filter(~Q(groups__name='master') & Q(groups__name='member') & Q(is_willing_master=True)).order_by("username")
 
 
 class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -484,10 +478,9 @@ class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredM
     login_url = 'account_login'
     paginate_by = 100
     group_required = u"manager"
-    ordering = ['username']
 
     def get_queryset(self):
-        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False) & Q(identity_verified=False))
+        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False) & Q(identity_verified=False)).order_by("username")
 
 
 class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
@@ -516,7 +509,7 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
                 master_group.user_set.add(user)
                 messages.success(
                     self.request, f'{user.username} is now a PoolMember.')
-                
+
         return super(ManagerProfileVerifyIdentityView, self).form_valid(form)
 
 
@@ -551,11 +544,10 @@ class ManagerProfileSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView)
     template_name = 'account/profile_list.html'
     paginate_by = 100
     group_required = u"manager"
-    ordering = ['username']
 
     def get_queryset(self):
         query = self.request.GET.get('q')
         return self.model.objects.filter(
             Q(email__icontains=query) | Q(first_name__icontains=query) |
             Q(last_name__icontains=query) | Q(username__icontains=query)
-        )
+        ).order_by("username")

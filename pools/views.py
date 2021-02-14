@@ -110,9 +110,8 @@ class PoolInviteCreateView(LoginRequiredMixin, GroupRequiredMixin, View):
             usernames = str(request.POST.get('contact_numbers')).strip().replace(' ', '').split(',')
             remaining_invites = pool.size - pool.invitations.count()
             for username in usernames[:remaining_invites]:
-                pool.invite(username)
                 try:
-
+                    pool.invite(username)
                     invited.append(username)
                 except:
                     messages.error(request, f'{username} Invitation Failed!')

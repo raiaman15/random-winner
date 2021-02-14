@@ -29,29 +29,38 @@
     <li class="nav-item" title="Pool Invitations">
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="fas fa-wallet"></i>
-        <span class="badge badge-warning navbar-badge">₹</span>
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-        <span class="dropdown-item dropdown-header">Balance Amount: ₹ {{user.balance_amount|intcomma}}</span>
+        <span class="dropdown-item dropdown-header">My Balance</span>
+        <div class="dropdown-divider"></div>
+        <a href="{% url 'profile_balance_transaction_list' %}" class="dropdown-item">
+          <i class="fas fa-wallet mr-2"></i> Balance Amount: ₹ {{user.balance_amount|intcomma}}
+        </a>
+        <div class="dropdown-divider"></div>
       </div>
     </li>
     <!-- Investment Amount -->
     <li class="nav-item" title="Pool Invitations">
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="fas fa-chart-line"></i>
-        <span class="badge badge-warning navbar-badge">₹</span>
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-        <span class="dropdown-item dropdown-header">Investment Amount: ₹ {{user.investment_amount|intcomma}}</span>
+        <span class="dropdown-item dropdown-header">My Investment</span>
+        <div class="dropdown-divider"></div>
+        <a href="{% url 'profile_investment_transaction_list' %}" class="dropdown-item">
+          <i class="fas fa-chart-line mr-2"></i> Investment Amount: ₹ {{user.investment_amount|intcomma}}
+        </a>
+        <div class="dropdown-divider"></div>
       </div>
     </li>
     <!-- User Dropdown Menu -->
     {% endif %}
-    <li class="nav-item dropdown">
+    <li class="nav-item">
       <a class="nav-link" data-toggle="dropdown" href="#" title="{{user.email}}">
         <i class="far fa-user"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-lg text-center dropdown-menu-right">
+        <span class="dropdown-item dropdown-header">My Account</span>
         <div class="dropdown-divider"></div>
         <a href="{% url 'account_email' %}" class="dropdown-item">
           <i class="fas fa-envelope mr-2"></i> Add/Update e-Mail
