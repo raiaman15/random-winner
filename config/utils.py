@@ -1,6 +1,10 @@
 """
 Various utilities including:
-1. Send Text SMS with textlocal
+1. Send OTP SMS with textlocal
+2. Send platform Invite via SMS
+3. Send pool Invite via SMS
+4. Send pool Invite via e-mail
+5. Shorten URL to send via SMS
 """
 
 import ast
@@ -9,7 +13,7 @@ import urllib.parse
 from django.conf import settings
 from django.core.mail import send_mail
 
-key = 'x9Wv/NxkW+M-PIYn7TIxcaB2meS9QAG'
+key = settings.TXTLCL_KEY
 sender = 'Infroid Shiksha API'
 
 

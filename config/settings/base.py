@@ -215,3 +215,6 @@ Q_CLUSTER = {
     'label': 'Django Q',
     'orm': 'default'
 }
+
+# SMS Functionality
+TXTLCL_KEY = env("TXTLCL_KEY")

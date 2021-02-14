@@ -10,7 +10,16 @@ SQL_PORT=5432
 PRODUCT_NAME=BitBoomer
 COMPANY_NAME=BitBoomer
 
-# EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+# Gmail as e-mail backend
+# EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# EMAIL_HOST=smtp.gmail.com
+# EMAIL_HOST_USER=developer@bit-boomer.com
+# EMAIL_HOST_PASSWORD=app_key_or_pass
+# EMAIL_PORT=587
+# EMAIL_USE_TLS=True
+# DEFAULT_FROM_EMAIL=no-reply@bit-boomer.com
+
+# Sendinblue as e-mail backend
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp-relay.sendinblue.com
 EMAIL_HOST_USER=developer@infroid.com
@@ -18,3 +27,6 @@ EMAIL_HOST_PASSWORD=xsmtpsib-dc2c207e05dcac9ce31e491b07e10fa9e64f9faf6ec929656da
 EMAIL_PORT=587
 EMAIL_USE_TLS=False
 DEFAULT_FROM_EMAIL=no-reply@infroid.com
+
+# SMS using TextLocal
+TXTLCL_KEY=x9Wv/NxkW+M-PIYn7TIxcmYFvnsSemmDaB2meS9QAG
