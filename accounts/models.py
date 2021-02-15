@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
 from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username,
-                               validate_amount, validate_otp, validate_balance_type_of_transaction, validate_investment_type_of_transaction)
+                               validate_amount, validate_otp, validate_balance_type_of_transaction,
+                               validate_investment_type_of_transaction, validate_support_ticket_type_of_ticket, validate_message)
 from config.utils import send_otp
 from django.db.models import Q
 from decimal import Decimal
@@ -220,3 +221,38 @@ class BankAccountDetail(models.Model):
 
     def __str__(self):
         return f'{self.user.username} : {self.account_number}'
+
+
+class SupportTicket(models.Model):
+    TICKET_TYPE = (
+        ('F', 'Finance Related'),
+        ('A', 'Application Related')
+    )
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name='support_ticket', blank=False)
+
+    type_of_ticket = models.CharField(
+        max_length=1, choices=TICKET_TYPE, blank=False,
+        validators=[validate_support_ticket_type_of_ticket]
+    )
+
+    user_message = models.TextField(
+        'Description of Issue',
+        max_length=1000, validators=[validate_message], blank=True,
+        help_text='Please elaborate the issues you are facing.'
+    )
+
+    manager_message = models.TextField(
+        'Resolution Response',
+        max_length=1000, validators=[validate_message], blank=True,
+        help_text='Please elaborate the resolution of the issue.'
+    )
+
+    closed = models.BooleanField(default=False, editable=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def get_absolute_url(self):
+        pass
+
+    def __str__(self):
+        pass

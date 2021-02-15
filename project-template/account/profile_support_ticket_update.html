@@ -1,0 +1,130 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block title %} Support Ticket Detail {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<!-- Cropper.js -->
+<link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Support Ticket Detail</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Support Ticket Detail</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-6 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-white elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card"></i>
+                                Support Ticket Detail
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            <small>
+                                Support Ticket Internal ID <b>{{ticket.id}}</b>
+                                <span class="float-right">
+                                    Created <b>{{ticket.created|naturaltime}}</b>
+                                    by <b>{{ticket.user.username}}</b>
+                                </span>
+                            </small>
+                            <hr />
+                            Description of Issue:<br />
+                            {{ticket.user_message}}
+                            <hr />
+                            {% if ticket.manager_message %}
+                            Response from Support Team:<br />
+                            {{ticket.manager_message}}<br />
+                            <small>
+                                Please feel free to reach out to us over e-mail or call if the issue is not resolved.
+                            </small>
+                            {% else %}
+                            <small class="text-danger">
+                                Our team is looking into your issue. They may reach out to you at your contact
+                                number {{ticket.user.username}} for further support.
+                            </small>
+                            {% endif %}
+                            {% if not ticket.closed %}
+                            <hr />
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <input type="submit" class="btn btn-light" value="Save">
+                            </form>
+                            {% else %}
+                            <hr />
+                            <small class="text-success">
+                                You have closed the ticket.
+                                We hope that the issue was resolved.
+                                Please feel free to reach out to us over e-mail or call if the issue is not resolved.
+                            </small>
+                            {% endif %}
+                        </div><!-- /.card-body -->
+                        <!-- Help Text -->
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Click <a href="{% url 'status' %}">here</a> to go back.
+                                </p>
+                            </div><!-- /.col -->
+                        </div>
+                        <!-- /.Help Text -->
+                    </div>
+                    <!-- /.card -->
+                </section>
+                <!-- /.Left col -->
+                <!-- Right col -->
+                <section class="col-lg-6 connectedSortable text-center">
+                </section>
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

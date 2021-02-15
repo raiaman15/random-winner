@@ -58,6 +58,24 @@ def validate_investment_type_of_transaction(value):
         )
 
 
+def validate_support_ticket_type_of_ticket(value):
+    """ Validates the investment ticket type (F/A) """
+    if value not in ('F', 'A'):
+        raise ValidationError(
+            ('%(value)s is not a valid ticket type. It should either be Finance or Application.'),
+            params={'value': value},
+        )
+
+
+def validate_message(value):
+    """ Validates any alphanumeric message """
+    if not value.replace(" ", "").replace(".", "").replace(",", "").isalnum():
+        raise ValidationError(
+            ('%(value)s is not a valid message. It should contain only alphabets, digits and characters like "," or "."'),
+            params={'value': value},
+        )
+
+
 def validate_number(value):
     """ Validates if the value is a number """
     if not str(value).isnumeric():

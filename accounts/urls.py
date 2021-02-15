@@ -40,8 +40,15 @@ urlpatterns = [
          name='profile_balance_transaction_list'),
     path('profile/investment-transaction/', accounts_views.ProfileInvestmentTransactionListView.as_view(),
          name='profile_investment_transaction_list'),
+    # Support Ticket Specific Routes
+    path('profile/support-ticket/create', accounts_views.ProfileSupportTicketCreateView.as_view(),
+         name='profile_support_ticket_create'),
+    path('profile/support-ticket/update/<int:pk>/', accounts_views.ProfileSupportTicketUpdateView.as_view(),
+         name='profile_support_ticket_update'),
+    path('profile/support-ticket/all', accounts_views.ProfileSupportTicketListView.as_view(),
+         name='profile_support_ticket_list'),
     # Profile Manager Specific Routes
-    path('manager/profile/all', accounts_views.ManagerProfileListView.as_view(),
+    path('manager/profile/all/', accounts_views.ManagerProfileListView.as_view(),
          name='manager_profile_list'),
     path('manager/profile/member/', accounts_views.ManagerProfileListPoolMemberView.as_view(),
          name='manager_profile_member_list'),
@@ -49,7 +56,7 @@ urlpatterns = [
          name='manager_profile_master_list'),
     path('manager/profile/willing/master/', accounts_views.ManagerProfileListWillingPoolMasterView.as_view(),
          name='manager_profile_willing_master_list'),
-    path('manager/profile/unverified', accounts_views.ManagerProfileListUnverifiedProfileView.as_view(),
+    path('manager/profile/unverified/', accounts_views.ManagerProfileListUnverifiedProfileView.as_view(),
          name='manager_profile_unverified_list'),
     path('manager/profile/<int:pk>/', accounts_views.ManagerProfileDetailView.as_view(),
          name='manager_profile_detail'),
@@ -59,4 +66,12 @@ urlpatterns = [
          name='manager_profile_approve_poolmaster'),
     path('manager/profile/search/', accounts_views.ManagerProfileSearchView.as_view(),
          name='manager_profile_search'),
+    # List All Active Support Ticket
+    # Update Active Ticket Details (Some Readonly Fields)
+    path('manager/support-ticket/financial/', accounts_views.ManagerFinancialSupportTicketListView.as_view(),
+         name='manager_financial_support_ticket_list'),
+    path('manager/support-ticket/application/', accounts_views.ManagerApplicationSupportTicketListView.as_view(),
+         name='manager_application_support_ticket_list'),
+    path('manager/support-ticket/update/<int:pk>/', accounts_views.ManagerSupportTicketUpdateView.as_view(),
+         name='manager_support_ticket_update'),
 ]

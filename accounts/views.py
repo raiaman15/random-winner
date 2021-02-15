@@ -13,7 +13,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
-from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDetail, BalanceTransaction, InvestmentTransaction
+from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDetail, BalanceTransaction, InvestmentTransaction, SupportTicket
 from .forms import (ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm,
                     AccountResetPasswordWithOTPConfirmViewForm, ManagerProfileApprovePoolmasterViewForm)
 from config.validators import validate_username
@@ -420,8 +420,56 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
 
 ##############################################################################
+# Support Ticket Specific Views
+##############################################################################
+
+class ProfileSupportTicketCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = SupportTicket
+    template_name = 'account/profile_support_ticket_create.html'
+    fields = ['type_of_ticket', 'user_message', 'closed']
+    login_url = 'account_login'
+    group_required = u"member"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ProfileSupportTicketCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_support_ticket_list')
+
+
+class ProfileSupportTicketUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    model = SupportTicket
+    context_object_name = 'ticket'
+    template_name = 'account/profile_support_ticket_update.html'
+    fields = ['closed', ]
+    login_url = 'account_login'
+    group_required = u"member"
+
+    def form_valid(self, form):
+        if form.instance.user == self.request.user:
+            return super(ProfileSupportTicketUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_support_ticket_update', kwargs={'pk': self.kwargs['pk']})
+
+
+class ProfileSupportTicketListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = SupportTicket
+    context_object_name = 'tickets'
+    template_name = 'account/profile_support_ticket_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"member"
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.model.objects.filter(user=user).order_by("closed", "-created")
+
+##############################################################################
 # Manager Specific Views (User & Action Management)
 ##############################################################################
+
 
 class ManagerProfileListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
@@ -551,3 +599,39 @@ class ManagerProfileSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView)
             Q(email__icontains=query) | Q(first_name__icontains=query) |
             Q(last_name__icontains=query) | Q(username__icontains=query)
         ).order_by("username")
+
+
+class ManagerFinancialSupportTicketListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = SupportTicket
+    context_object_name = 'tickets'
+    template_name = 'account/manager_support_ticket_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"manager"
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(type_of_ticket='F')).order_by("closed", "-created")
+
+
+class ManagerApplicationSupportTicketListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = SupportTicket
+    context_object_name = 'tickets'
+    template_name = 'account/manager_support_ticket_list.html'
+    login_url = 'account_login'
+    paginate_by = 100
+    group_required = u"manager"
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(type_of_ticket='A')).order_by("closed", "-created")
+
+
+class ManagerSupportTicketUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    model = SupportTicket
+    context_object_name = 'ticket'
+    template_name = 'account/manager_support_ticket_update.html'
+    fields = ['manager_message', 'closed']
+    login_url = 'account_login'
+    group_required = u"manager"
+
+    def get_success_url(self):
+        return reverse_lazy('manager_support_ticket_update', kwargs={'pk': self.kwargs['pk']})

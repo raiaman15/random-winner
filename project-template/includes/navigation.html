@@ -26,7 +26,7 @@
   <ul class="navbar-nav ml-auto">
     {% if user|has_group:"member" or user|has_group:"master" %}
     <!-- Balance Amount -->
-    <li class="nav-item" title="Pool Invitations">
+    <li class="nav-item" title="My Balance">
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="fas fa-wallet"></i>
       </a>
@@ -40,7 +40,7 @@
       </div>
     </li>
     <!-- Investment Amount -->
-    <li class="nav-item" title="Pool Invitations">
+    <li class="nav-item" title="My Investment">
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="fas fa-chart-line"></i>
       </a>
@@ -53,13 +53,30 @@
         <div class="dropdown-divider"></div>
       </div>
     </li>
-    <!-- User Dropdown Menu -->
+    <!-- Support Ticket -->
+    <li class="nav-item" title="Help & Support">
+      <a class="nav-link" data-toggle="dropdown" href="#">
+        <i class="fas fa-headset"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <span class="dropdown-item dropdown-header">Support Tickets</span>
+        <div class="dropdown-divider"></div>
+        <a href="{% url 'profile_support_ticket_create' %}" class="dropdown-item">
+          <i class="fas fa-plus mr-2"></i> Create New Ticket
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{% url 'profile_support_ticket_list' %}" class="dropdown-item">
+          <i class="fas fa-eye mr-2"></i> Check Ticket Status
+        </a>
+      </div>
+    </li>
     {% endif %}
+    <!-- User Dropdown Menu -->
     <li class="nav-item">
       <a class="nav-link" data-toggle="dropdown" href="#" title="{{user.email}}">
         <i class="far fa-user"></i>
       </a>
-      <div class="dropdown-menu dropdown-menu-lg text-center dropdown-menu-right">
+      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
         <span class="dropdown-item dropdown-header">My Account</span>
         <div class="dropdown-divider"></div>
         <a href="{% url 'account_email' %}" class="dropdown-item">
