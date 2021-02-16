@@ -219,6 +219,7 @@
                         </div>
                     </div>
 
+                    {% ifequal pool.master.username user.username %}
                     {% if user|has_group:"master" %}
                     <div class="card bg-black">
                         <div class="card-header">
@@ -265,7 +266,9 @@
                                     {% csrf_token %}
                                     <input class="d-none" name="pool" value="{{pool.id}}">
                                     <label>Invite More Members to your Pool?
-                                        <small>(Invited {{pool.invitations.count}} of {{pool.size}} Invitations)</small>
+                                        <small>
+                                            (Consumed {{pool.invitations.count}} of {{pool.size}} Invitations)
+                                        </small>
                                     </label>
                                     <textarea class="form-control bg-white" rows="2" name="contact_numbers"
                                         placeholder="Comma separated 10 digit contact number. Example: 9999999999, 9999999998, 9999999997"></textarea>
@@ -277,6 +280,7 @@
                         </div>
                     </div>
                     {% endif %}
+                    {% endifequal %}
                 </section>
                 <!-- right col -->
             </div>

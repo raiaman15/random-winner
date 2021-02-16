@@ -93,7 +93,7 @@ def send_sms_platform_invite(number, username, password, invitee_number):
 
     lines = []
     lines.append(f'Welcome to BitBoomer!')
-    lines.append(f'Sign in at {shorturl} with contact number: {username} and password: {password}!')
+    lines.append(f'Sign in at {shorturl} with contact number: {username} and password: {password}')
     lines.append(f'Invited by {invitee_number}')
 
     message = '\n'.join(lines)
@@ -115,7 +115,7 @@ def send_sms_pool_invite(number, pool_id, invitee_number):
 
     lines = []
     lines.append(f'Hello from BitBoomer!')
-    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}!')
+    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}')
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -136,7 +136,7 @@ def send_email_pool_invite(email, pool_id, invitee_number):
 
     lines = []
     lines.append(f'Hello from BitBoomer!')
-    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}!')
+    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}')
 
     message = '\n'.join(lines)
 
@@ -163,7 +163,7 @@ def send_sms_pool_winner(number, pool_id):
 
     lines = []
     lines.append(f'Hello from BitBoomer!')
-    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}!')
+    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}')
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -184,7 +184,7 @@ def send_email_pool_winner(email, pool_id):
 
     lines = []
     lines.append(f'Hello from BitBoomer!')
-    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}!')
+    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}')
     lines.append(f'Payments will be processed shortly.')
 
     message = '\n'.join(lines)

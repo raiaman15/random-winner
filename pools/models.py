@@ -100,7 +100,7 @@ class Pool(models.Model):
         """ Initiates a Transaction to Join the Pool """
         if self.can_join_pool(user):
             user.refresh_balance_investment()
-            if user.balance_amount > self.investment:
+            if user.balance_amount >= self.investment:
                 it = InvestmentTransaction(type_of_transaction='I', amount=self.investment, user=user, pool=self)
                 it.save()
                 if self.get_member_remaining() > 0:
