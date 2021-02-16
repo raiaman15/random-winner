@@ -41,7 +41,7 @@ urlpatterns = [
     path('profile/investment-transaction/', accounts_views.ProfileInvestmentTransactionListView.as_view(),
          name='profile_investment_transaction_list'),
     # Profile Add Balance
-    path('profile/balance/add', accounts_views.ProfileAddBalanceView.as_view(),
+    path('profile/balance/add/', accounts_views.ProfileAddBalanceView.as_view(),
          name='profile_balance_transaction_create'),
     path('profile/balance/add/confirm/<int:pk>/', accounts_views.ProfileAddBalanceConfirmView.as_view(),
          name='profile_balance_transaction_confirm'),

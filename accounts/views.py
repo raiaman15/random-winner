@@ -1,6 +1,7 @@
 import os
 import pyotp
 import razorpay
+from decimal import *
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,6 +14,8 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
 from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDetail, BalanceTransaction, InvestmentTransaction, SupportTicket
@@ -427,7 +430,6 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
 class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
-    balance_transaction_id = None
     template_name = 'account/profile_balance_transaction_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
@@ -436,20 +438,25 @@ class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.type_of_transaction = 'C'
         form.instance.user = self.request.user
+        getcontext().prec = 3
+        getcontext().rounding = ROUND_UP
+        form.instance.tax = Decimal(0.18)*form.instance.amount  # Adding 18% GST
         # Initiate RazorPay Transaction
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
-        response = client.order.create(
-            dict(amount=round(form.instance.amount*100), currency='INR')
-        )  # RazorPay Transactions are in Paise
-        order_id = response['id']
-        order_status = response['status']
+        order_status = None
+        try:
+            response = client.order.create(
+                dict(amount=round((form.instance.amount+form.instance.tax)*100), currency='INR')
+            )  # RazorPay Transactions are in Paise; Added GST
+            order_id = response['id']
+            order_status = response['status']
+        except Exception as e:
+            messages.error(self.request, f'Error Occurred: {e}')
+            return redirect('profile_balance_transaction_create')
+        # Saving order_id in DB
         if order_status == 'created':
             form.instance.order_id = order_id
-            self.balance_transaction_id = form.instance.id
             return super(ProfileAddBalanceView, self).form_valid(form)
-        else:
-            messages.error(self.request, 'Payment Gateway Error. Please try again later!')
-            return redirect('profile_balance_transaction_create')
 
     def get_success_url(self):
         return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': self.object.id})
@@ -484,11 +491,15 @@ class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Detail
     login_url = 'account_login'
     group_required = u"member"
 
-    def get(self, request):
-        messages.error('Invalid Request')
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProfileAddBalanceStatusView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        messages.error(request, 'Invalid Request')
         return redirect('status')
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         balance_transaction_id = self.kwargs['pk']
         balance_transaction = get_object_or_404(BalanceTransaction, id=balance_transaction_id)
 
@@ -501,18 +512,27 @@ class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Detail
 
             # Verifying Signature
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+
             try:
                 status = client.utility.verify_payment_signature(param_dict)
-                balance_transaction.make_verified(
-                    request.POST.get('razorpay_payment_id'),
-                    request.POST.get('razorpay_order_id'),
-                    request.POST.get('razorpay_signature')
-                )
+                # Explicitly Reconfirm Payment Status at RazorPay Server
+                payments = client.order.payments(request.POST.get('razorpay_order_id'))
+
+                for payment in payments['items']:
+                    if payment['id'] == request.POST.get('razorpay_payment_id'):
+                        if payment['order_id'] == request.POST.get('razorpay_order_id'):
+                            balance_transaction.make_verified(
+                                request.POST.get('razorpay_payment_id'),
+                                request.POST.get('razorpay_order_id'),
+                                request.POST.get('razorpay_signature')
+                            )
+                            messages.success(
+                                request, f'Payment Successfull! ₹ {balance_transaction.amount} added to your balance.')
+
             except Exception as e:
                 messages.error(request, f'Payment Failed: {e}')
                 return redirect('profile_balance_transaction_list')
-
-            return super(ProfileAddBalanceConfirmView, self).get(request)
+            return super(ProfileAddBalanceStatusView, self).get(request, * args, **kwargs)
         else:
             messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
             return redirect('profile_balance_transaction_status')

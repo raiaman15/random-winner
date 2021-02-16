@@ -149,6 +149,11 @@ class BalanceTransaction(models.Model):
     )
     amount = models.DecimalField(
         null=False, blank=False, max_digits=7, decimal_places=2,
+        validators=[validate_amount],
+        help_text="The amount in INR to be added (Taxes will be added on this amount)"
+    )
+    tax = models.DecimalField(
+        null=False, blank=False, max_digits=7, decimal_places=2,
         validators=[validate_amount]
     )
     verified = models.BooleanField(default=False, editable=True)

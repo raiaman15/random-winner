@@ -41,6 +41,28 @@
             <div class="row">
                 <!-- Section -->
                 <section class="col-lg-12 connectedSortable">
+                    <!-- Meta Information -->
+                    <div class="row">
+                        <div class="col-lg-12 col-12">
+                            <!-- small box -->
+                            <div class="small-box bg-white">
+                                <div class="inner">
+                                    <h3>₹ {{user.investment_amount|intcomma}}</h3>
+
+                                    <p>My Investment Amount</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <a href="{% url 'pool_list' %}" class="small-box-footer">
+                                    Investment in Pool
+                                    <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                    </div>
+                    <!-- /Meta Information -->
                     <!-- Custom tabs (Charts with tabs)-->
                     <div class="card bg-white elevation-2">
                         <div class="card-header">
