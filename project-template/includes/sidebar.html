@@ -185,6 +185,19 @@
           </a>
         </li>
         {% endif %}
+
+        {% if user|has_group:"manager" %}
+        <li class="nav-header">MANUAL SPIN</li>
+        <li class="nav-item">
+          <a href="{% url 'manager_financial_support_ticket_list' %}"
+            class="nav-link {% if 'users' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-sync-alt"></i>
+            <p>
+              Spin Details
+            </p>
+          </a>
+        </li>
+        {% endif %}
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
