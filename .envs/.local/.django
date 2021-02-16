@@ -30,3 +30,7 @@ DEFAULT_FROM_EMAIL=no-reply@infroid.com
 
 # SMS using TextLocal
 TXTLCL_KEY=x9Wv/NxkW+M-PIYn7TIxcmYFvnsSemmDaB2meS9QAG
+
+# Payment using Razorpay
+RAZORPAY_KEY_ID=rzp_test_1nKn3pffbiXN21
+RAZORPAY_SECRET_KEY=hktlhJBeDB6AV7ikk5TvM4Af

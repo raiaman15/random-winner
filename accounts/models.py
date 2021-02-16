@@ -1,4 +1,6 @@
 import pyotp
+import razorpay
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -135,6 +137,9 @@ class BalanceTransaction(models.Model):
         ('D', 'Debit')
 
     )
+    order_id = models.CharField(max_length=250, blank=False)  # Payment Gateway's Reference ID
+    payment_id = models.CharField(max_length=250, blank=True)  # Payment Gateway's Payment ID
+    payment_signature = models.CharField(max_length=250, blank=True)  # Payment Gateway's Signature
     user = models.ForeignKey(
         get_user_model(), on_delete=models.DO_NOTHING, related_name='balance_transaction', blank=False
     )
@@ -152,6 +157,13 @@ class BalanceTransaction(models.Model):
     def save(self):
         self.full_clean()
         return super(BalanceTransaction, self).save()
+
+    def make_verified(self, payment_id, order_id, payment_signature):
+        if self.order_id == order_id:
+            self.payment_id = payment_id
+            self.payment_signature = payment_signature
+            self.verified = True
+            self.save()
 
     def __str__(self):
         return f'{self.user.username} : {self.type_of_transaction} : {self.created}'

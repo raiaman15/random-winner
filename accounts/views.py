@@ -1,5 +1,6 @@
 import os
 import pyotp
+import razorpay
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +8,7 @@ from braces.views import GroupRequiredMixin
 from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.contrib import messages
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
@@ -433,12 +435,88 @@ class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.type_of_transaction = 'C'
         form.instance.user = self.request.user
-        return super(ProfileAddBalanceView, self).form_valid(form)
+        # Initiate RazorPay Transaction
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+        response = client.order.create(dict(amount=self.form.amount,))
+        order_id = response['id']
+        order_status = response['status']
+        if order_status == 'created':
+            form.instance.order_id = order_id
+            return super(ProfileAddBalanceView, self).form_valid(form)
+        else:
+            messages.error(self.request, 'Payment Gateway Error. Please try again later!')
+            return redirect('profile_balance_transaction_create')
 
     def get_success_url(self):
-        # Initiate RazorPay Transaction
-        return reverse_lazy('profile_balance_transaction_create')
+        balance_transaction_id = get_object_or_404(BalanceTransaction, order_id=self.form.instance.order_id)
+        return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': balance_transaction_id.id})
 
+
+class ProfileAddBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+    model = BalanceTransaction
+    context_object_name = 'transaction'
+    template_name = 'account/profile_balance_transaction_confirm.html'
+    login_url = 'account_login'
+    group_required = u"member"
+
+    def get(self, request):
+        balance_transaction_id = self.kwargs['pk']
+        balance_transaction = get_object_or_404(BalanceTransaction, id=balance_transaction_id)
+        if balance_transaction in request.user.balance_transaction.all():
+            return super(ProfileAddBalanceConfirmView, self).get(request)
+        else:
+            messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
+            return redirect('profile_balance_transaction_create')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['key'] = settings.RAZORPAY_KEY_ID
+        return context
+
+
+class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+    model = BalanceTransaction
+    context_object_name = 'transaction'
+    template_name = 'account/profile_balance_transaction_status.html'
+    login_url = 'account_login'
+    group_required = u"member"
+
+    def get(self, request):
+        messages.error('Invalid Request')
+        return redirect('status')
+
+    def post(self, request):
+        balance_transaction_id = self.kwargs['pk']
+        balance_transaction = get_object_or_404(BalanceTransaction, id=balance_transaction_id)
+
+        if balance_transaction in request.user.balance_transaction.all() and balance_transaction.order_id == request.POST.get('razorpay_order_id'):
+            param_dict = {
+                'razorpay_payment_id': request.POST.get('razorpay_payment_id'),
+                'razorpay_order_id': balance_transaction.order_id,
+                'razorpay_signature': request.POST.get('razorpay_signature')
+            }
+
+            # Verifying Signature
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+            try:
+                status = client.utility.verify_payment_signature(param_dict)
+                balance_transaction.make_verified(
+                    request.POST.get('razorpay_payment_id'),
+                    request.POST.get('razorpay_order_id'),
+                    request.POST.get('razorpay_signature')
+                )
+            except Exception as e:
+                messages.error(request, f'Payment Failed: {e}')
+                return redirect('profile_balance_transaction_list')
+
+            return super(ProfileAddBalanceConfirmView, self).get(request)
+        else:
+            messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
+            return redirect('profile_balance_transaction_status')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 ##############################################################################
 # Support Ticket Specific Views

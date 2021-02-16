@@ -43,6 +43,10 @@ urlpatterns = [
     # Profile Add Balance
     path('profile/balance/add', accounts_views.ProfileAddBalanceView.as_view(),
          name='profile_balance_transaction_create'),
+    path('profile/balance/add/confirm', accounts_views.ProfileAddBalanceConfirmView.as_view(),
+         name='profile_balance_transaction_confirm'),
+    path('profile/balance/add/status', accounts_views.ProfileAddBalanceStatusView.as_view(),
+         name='profile_balance_transaction_status'),
     # Support Ticket Specific Routes
     path('profile/support-ticket/create', accounts_views.ProfileSupportTicketCreateView.as_view(),
          name='profile_support_ticket_create'),

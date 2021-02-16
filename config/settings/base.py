@@ -218,3 +218,7 @@ Q_CLUSTER = {
 
 # SMS Functionality
 TXTLCL_KEY = env("TXTLCL_KEY")
+
+# Payment Functionality
+RAZORPAY_KEY_ID = env("RAZORPAY_KEY_ID")
+RAZORPAY_SECRET_KEY = env("RAZORPAY_SECRET_KEY")
