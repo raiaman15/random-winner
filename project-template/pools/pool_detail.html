@@ -270,7 +270,7 @@
                                             (Consumed {{pool.invitations.count}} of {{pool.size}} Invitations)
                                         </small>
                                     </label>
-                                    <textarea class="form-control bg-white" rows="2" name="contact_numbers"
+                                    <textarea class="form-control bg-black" rows="2" name="contact_numbers"
                                         placeholder="Comma separated 10 digit contact number. Example: 9999999999, 9999999998, 9999999997"></textarea>
 
                                 </div>
@@ -327,29 +327,3 @@
     })
 </script>
 {% endblock javascripts %}
-
-
-
-<!-- 
-<div class="pool-detail">
-
-    <h2><a href="">{{ pool.name }}</a></h2>
-    <p>Master: {{ pool.master }}</p>
-    <p>Member Count: {{ pool.get_member_count }} / {{ pool.size }}</p>
-    <p>Investment Amount: {{ pool.investment }}</p>
-    <div>
-        <h3>Members</h3>
-        <ul>
-            {% if pool.members %}
-            {% for member in pool.member_of_pool %}
-            <li>
-                <img class="memberpicture" src="{{ member.picture.url }}" alt="{{ member.first_name }}">
-                {{ member.email }} ({{ member.email }})
-            </li>
-            {% endfor %}
-            {% endif %}
-
-        </ul>
-    </div>
-</div>
- -->

@@ -114,7 +114,7 @@
                         </div>
                     </div>
 
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">Profile Details</h3>
 
@@ -209,7 +209,7 @@
                         <!-- /.card-body -->
                     </div>
 
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">Profile Billing Address</h3>
                             {% if user.billing_address %}
@@ -280,9 +280,9 @@
                         </div>
                     </div>
 
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
-                            <h3 class="card-title">Profile Pank Account Detail</h3>
+                            <h3 class="card-title">Profile Bank Account Detail</h3>
                             {% if user.bank_account_detail %}
                             <div class="card-tools">
                                 <a href="{% url 'profile_bank_account_detail_update' user.id %}" type="button"
@@ -341,7 +341,7 @@
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
                     {% if user|has_group:"member" %}
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fab fa-galactic-republic"></i>
@@ -395,7 +395,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title"><strong>Wanna become Member of Pools?</strong></h3>
 
@@ -422,7 +422,7 @@
                     {% endif %}
 
                     {% if user|has_group:"master" %}
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fas fa-hat-cowboy"></i>
@@ -480,7 +480,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card bg-white collapsed-card">
+                    <div class="card bg-black collapsed-card">
                         <div class="card-header">
                             <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
 

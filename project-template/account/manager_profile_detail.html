@@ -118,7 +118,7 @@
                         </div>
                     </div>
 
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">Profile Details</h3>
 
@@ -214,11 +214,96 @@
                         </div>
                         <!-- /.card-body -->
                     </div>
+
+                    <div class="card bg-black">
+                        <div class="card-header">
+                            <h3 class="card-title">Profile Billing Address</h3>
+                            {% if profile.billing_address %}
+                            <div class="card-tools">
+                                <a href="{% url 'profile_billing_address_update' profile.id %}" type="button"
+                                    class="btn btn-tool">
+                                    <i class="fas fa-refresh"></i> UPDATE
+                                </a>
+                            </div>
+                            {% else %}
+                            <div class="card-tools">
+                            </div>
+                            {% endif %}
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td width="30%">Full Name</td>
+                                        <td>{{profile.billing_address.name}}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Address Line 1</td>
+                                        <td>{{profile.billing_address.address1}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address Line 2</td>
+                                        <td>{{profile.billing_address.address2}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Zip / Postal Code</td>
+                                        <td>{{profile.billing_address.zip_code}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>City</td>
+                                        <td>{{profile.billing_address.city}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>State</td>
+                                        <td>{{profile.billing_address.state}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Country</td>
+                                        <td>{{profile.billing_address.country}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card bg-black">
+                        <div class="card-header">
+                            <h3 class="card-title">Profile Bank Account Detail</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="display: block;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td width="30%">Bank Name</td>
+                                        <td>{{profile.bank_account_detail.bank_name}}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Account Number</td>
+                                        <td>{{profile.bank_account_detail.account_number}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IFSC Code</td>
+                                        <td>{{profile.bank_account_detail.ifsc_code}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
                 </section>
                 <!-- /.Left col -->
                 <!-- Right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable text-center">
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fas fa-hat-cowboy"></i>
@@ -243,7 +328,7 @@
                                 <tbody>
                                     {% for pool in profile.master_of_pool.all %}
                                     <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
+                                        <td>{{pool.name}}</td>
                                         <td>{{pool.size}}</td>
                                         <td>{{pool.members.count}}</td>
                                         <td>
@@ -259,7 +344,7 @@
                         <!-- /.card-body -->
                     </div>
 
-                    <div class="card bg-white">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="nav-icon fab fa-galactic-republic"></i>
@@ -283,7 +368,7 @@
                                 <tbody>
                                     {% for pool in profile.member_of_pool.all %}
                                     <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
+                                        <td>{{pool.name}}</td>
                                         <td>{{pool.size}}</td>
                                         <td>{{pool.members.count}}</td>
                                         <td>{{pool.investment|intcomma}}</td>
