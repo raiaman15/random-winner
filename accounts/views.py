@@ -420,8 +420,30 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
 
 ##############################################################################
+# Payment Specific Views (Add Balance)
+##############################################################################
+
+class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = BalanceTransaction
+    template_name = 'account/profile_balance_transaction_create.html'
+    fields = ['amount', ]
+    login_url = 'account_login'
+    group_required = u"member"
+
+    def form_valid(self, form):
+        form.instance.type_of_transaction = 'C'
+        form.instance.user = self.request.user
+        return super(ProfileAddBalanceView, self).form_valid(form)
+
+    def get_success_url(self):
+        # Initiate RazorPay Transaction
+        return reverse_lazy('profile_balance_transaction_create')
+
+
+##############################################################################
 # Support Ticket Specific Views
 ##############################################################################
+
 
 class ProfileSupportTicketCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = SupportTicket
@@ -465,6 +487,7 @@ class ProfileSupportTicketListView(LoginRequiredMixin, GroupRequiredMixin, ListV
     def get_queryset(self):
         user = self.request.user
         return self.model.objects.filter(user=user).order_by("closed", "-created")
+
 
 ##############################################################################
 # Manager Specific Views (User & Action Management)
