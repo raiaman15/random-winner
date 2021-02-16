@@ -427,6 +427,7 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
 class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
+    balance_transaction_id = None
     template_name = 'account/profile_balance_transaction_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
@@ -437,19 +438,21 @@ class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         form.instance.user = self.request.user
         # Initiate RazorPay Transaction
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
-        response = client.order.create(dict(amount=self.form.amount,))
+        response = client.order.create(
+            dict(amount=round(form.instance.amount*100), currency='INR')
+        )  # RazorPay Transactions are in Paise
         order_id = response['id']
         order_status = response['status']
         if order_status == 'created':
             form.instance.order_id = order_id
+            self.balance_transaction_id = form.instance.id
             return super(ProfileAddBalanceView, self).form_valid(form)
         else:
             messages.error(self.request, 'Payment Gateway Error. Please try again later!')
             return redirect('profile_balance_transaction_create')
 
     def get_success_url(self):
-        balance_transaction_id = get_object_or_404(BalanceTransaction, order_id=self.form.instance.order_id)
-        return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': balance_transaction_id.id})
+        return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': self.object.id})
 
 
 class ProfileAddBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
@@ -459,11 +462,11 @@ class ProfileAddBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, Detai
     login_url = 'account_login'
     group_required = u"member"
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         balance_transaction_id = self.kwargs['pk']
         balance_transaction = get_object_or_404(BalanceTransaction, id=balance_transaction_id)
         if balance_transaction in request.user.balance_transaction.all():
-            return super(ProfileAddBalanceConfirmView, self).get(request)
+            return super(ProfileAddBalanceConfirmView, self).get(request, *args, **kwargs)
         else:
             messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
             return redirect('profile_balance_transaction_create')
