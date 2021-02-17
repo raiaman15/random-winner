@@ -16,6 +16,7 @@ import urllib.request
 import urllib.parse
 from django.conf import settings
 from django.core.mail import send_mail
+from django.urls import reverse_lazy
 
 key = settings.TXTLCL_KEY
 sender = ''  # Leave unless approved by DLT & TXTLCL max 6 alphanumeric
@@ -120,7 +121,7 @@ def send_sms_pool_invite(number, pool_id, invitee_number):
     print(response)
 
 
-def send_email_pool_invite(email, pool_id, invitee_number):
+def send_email_pool_invite(email_id, pool_id, invitee_number):
     """
     response = send_email_pool_invite('7007488735', '7007488734', '132435')
 
@@ -130,21 +131,22 @@ def send_email_pool_invite(email, pool_id, invitee_number):
     """
 
     url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
-    shorturl = short_url(url)
 
     lines = []
     lines.append(f'Hello from BitBoomer!')
-    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}')
+    lines.append(f'You have been invited by {invitee_number} to join their pool {url}')
 
     message = '\n'.join(lines)
-
-    response = send_mail(
-        'BitBoomer | Pool Invitation Recieved! ',   # Subject
-        message,                                    # Body
-        [email],                                    # To | From in settings.py
-        fail_silently=True,                         # For troubleshoot, set False
-    )
-    print(bool(response), message)
+    try:
+        send_mail(
+            subject='BitBoomer | Pool Invitation Recieved! ',
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email_id],
+            fail_silently=True,
+        )
+    except Exception as e:
+        print(f'Exception Occurred {e}')
 
 
 def send_sms_pool_winner(number, pool_id):
@@ -195,3 +197,9 @@ def send_email_pool_winner(email, pool_id):
     )
 
     print(bool(response), message)
+
+
+def print_hello():
+    return reverse_lazy('')
+    print("hello")
+

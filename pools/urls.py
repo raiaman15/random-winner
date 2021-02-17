@@ -13,4 +13,6 @@ urlpatterns = [
     path('invite/', views.PoolInviteListView.as_view(), name='pool_invite_list'),
 
     path('join/', views.PoolJoinView.as_view(), name='pool_join'),
+    path('p9k4u2h3t6f0e8s/', views.AutomaticActivateScheduleView.as_view(), name='automatic_activate_pool'),
+    path('z2s2c7f8b7h5m3k1e2c3t1b3y1m/', views.AutomaticSpinScheduleView.as_view(), name='automatic_spin_pool'),
 ]

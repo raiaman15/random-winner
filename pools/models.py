@@ -32,30 +32,10 @@ class Pool(models.Model):
     activated = models.DateTimeField(blank=True, null=True)
 
     def save(self):
+        """Ensure that the creator of pool is actually PoolMaster"""
         self.full_clean()
-        # Schedule activation check every day
-        if not Schedule.objects.filter(name=self.__str__() + 'Activation', func="pools.models.Pool.activate", args=f"'{self}'").exists():
-            next_date_time = timezone.now().replace(hour=11, minute=59)
-            Schedule.objects.create(
-                name=self.__str__() + 'Activation',
-                func="pools.models.Pool.activate",
-                args=f"'{self}'",
-                schedule_type=Schedule.DAILY,
-                next_run=next_date_time
-            )
-        # Schedule spin every month if activated before 11th of that month
-        if self.activated:
-            if self.activated < timezone.now().replace(date=11, hour=00, minute=00):
-                if not Schedule.objects.filter(name=self.__str__() + 'Activation', func="pools.models.Pool.spin", args=f"'{self}'").exists():
-                    next_date_time = timezone.now().replace(date=1, hour=11, minute=59)
-                    Schedule.objects.create(
-                        name=self.__str__() + 'Activation',
-                        func="pools.models.Pool.spin",
-                        args=f"'{self}'",
-                        schedule_type=Schedule.MONTHLY,
-                        next_run=next_date_time
-                    )
-        super(Pool, self).save()
+        if self.master.groups.filter(name='master').exists():
+            super(Pool, self).save()
 
     def get_member_count(self):
         """ Gets the count of members who have joined the pool """
@@ -86,10 +66,11 @@ class Pool(models.Model):
         """ Invites a user in this pool """
         """ Checks if users can be invited in the Pool """
         if self.get_member_remaining() > 0:
-            if not self.activated:
-                PoolInvite(pool=self, username=username).save()
+            if PoolInvite.objects.filter(pool=self).count() < self.get_member_remaining():
+                if not self.activated:
+                    PoolInvite(pool=self, username=username).save()
 
-    def activate(self, user):
+    def activate(self):
         """ Checks if the pool is filled """
         """ Activates the pool if filled """
         if self.get_member_remaining() == 0:

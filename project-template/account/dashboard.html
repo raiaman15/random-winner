@@ -199,7 +199,8 @@
                                             {% if user.contact_verified %}
                                             <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i>
+                                            <i class="fas fa-times-circle text-danger"></i> |
+                                            <a href="{% url 'profile_verification_sms' %}">VERIFY NOW</a>
                                             {% endif %}
                                         </td>
                                     </tr>

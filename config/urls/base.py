@@ -18,7 +18,7 @@ from django.urls import path, include
 from django_otp.admin import OTPAdminSite
 
 # Enable 2FA for Admin (Device Authentication)
-admin.site.__class__ = OTPAdminSite
+#admin.site.__class__ = OTPAdminSite
 
 urlpatterns = [
     # Django admin

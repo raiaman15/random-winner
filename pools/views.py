@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.http.response import HttpResponse
 from django.utils import timezone
 from django.views.generic import View, CreateView, ListView, DetailView
 from .models import Pool, PoolInvite
@@ -22,7 +23,7 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         Generates codename (Limits 1 pool creation per day)
         """
         form.instance.master = self.request.user
-        prefix = self.request.user.username[:3]
+        prefix = self.request.user.username
         t = timezone.now()
         yy = t.strftime("%Y")
         mm = t.strftime("%m")
@@ -162,3 +163,29 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
         else:
             messages.error(request, 'Your response is invalid. Please try again!')
         return redirect('pool_invite_list')
+
+
+# Automatic Schedule: Activate Pools, Spin, Exit PoolMember
+class AutomaticActivateScheduleView(View):
+    def get(self, request):
+        pools = Pool.objects.all()
+        activated_count = 0
+        for pool in pools:
+            if not pool.activated:
+                pool.activate()
+                activated_count += 1
+
+        return HttpResponse(f'{activated_count} Pools Activated')
+
+
+class AutomaticSpinScheduleView(View):
+    def get(self, request):
+        pools = Pool.objects.all()
+        activated_count = 0
+        if timezone.now() < timezone.now().replace(date=1, hour=00, minute=00):
+            for pool in pools:
+                if not pool.activated:
+                    pool.activate()
+                    activated_count += 1
+
+        return HttpResponse(f'{activated_count} Pools Activated')
