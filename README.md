@@ -38,7 +38,7 @@
 *NOTE: You must update the compose/ssl_production/nginx/domain_ssl_cert.pem file with the file generated for your domain. You can generate it from Cloudflare or any other provider.*
 *NOTE: You must update the compose/ssl_production/nginx/domain_ssl_private_key.key file with the file generated for your domain. You can generate it from Cloudflare or any other provider.*
 
-FIX-URGENT: Standardize default values and mention in README.md for easy replace all.
+Default values come from env files; change accordingly.
 
 For the following environment variables, values must match.
 ```
@@ -52,9 +52,3 @@ SQL_DATABASE=product_name_db
 SQL_USER=product_name_db_user
 SQL_PASSWORD=product#name#db#user#password
 ```
-
-TODO-NORMAL: Improve documentation (README.md).
-TODO-NORMAL: Improve documentation (comments/docstring).
-TODO-NORMAL: Minimize HTML/CSS/JS. 
-TODO-NORMAL: Use minified CSS/JS versions in sample pages.
-TODO-CASUAL: Build website based documentation.

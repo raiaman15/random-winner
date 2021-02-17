@@ -10,6 +10,8 @@ Werkzeug==1.0.1
 pyOpenSSL==20.0.1 
 django-extensions==3.1.0
 pyotp==2.4.1
+django-otp==1.0.2
+qrcode==6.1
 numpy==1.20.0
 pandas==1.2.1
 python-stdnum==1.15

@@ -7,6 +7,8 @@ django-crispy-forms==1.10.0
 django-braces==1.14.0
 environs==9.3.0
 pyotp==2.4.1
+django-otp==1.0.2
+qrcode==6.1
 numpy==1.20.0
 pandas==1.2.1
 python-stdnum==1.15

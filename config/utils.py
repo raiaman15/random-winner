@@ -18,7 +18,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 key = settings.TXTLCL_KEY
-sender = 'Infroid Shiksha API'
+sender = ''  # Leave unless approved by DLT & TXTLCL max 6 alphanumeric
 
 
 def short_url(url, apikey=key):
@@ -32,8 +32,6 @@ def short_url(url, apikey=key):
 
 
 def send_sms(apikey, numbers, sender, message):
-    """ #TODO-URGENT: Send the OPT to contact number via SMS """
-
     if settings.DEBUG:
         return print(message)
 

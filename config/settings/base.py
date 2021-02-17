@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     # Third-party
+    'django_otp',
+    'django_otp.plugins.otp_totp',
     'crispy_forms',
     'allauth',
     'allauth.account',
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 TEMPLATES = [
@@ -196,7 +199,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 
 def ACCOUNT_USER_DISPLAY(user):
-    """ # FIX-NORMAL: ACCOUNT_USER_DISPLAY (if needed) """
     return user.username if user.username else user.email
 
 
@@ -209,7 +211,7 @@ CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_null',)
 # Django Q config
 Q_CLUSTER = {
     'name': PRODUCT_NAME,
-    'workers': 2,
+    'workers': 1,
     'timeout': 90,
     'retry': 120,
     'label': 'Django Q',
