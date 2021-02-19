@@ -240,11 +240,28 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
-        if request.POST.get('is_willing_master') == 'on':
-            messages.success(
-                self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
-
-        return super(ProfileApplyPoolmasterView, self).post(request, *args, **kwargs)
+        user = request.user
+        if user.firstname or user.lastname:
+            if user.identity_verified:
+                if user.aadhaar_number or user.pan_number:
+                    if user.contact_verified:
+                        if request.POST.get('is_willing_master') == 'on':
+                            messages.success(
+                                self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
+                            return super(ProfileApplyPoolmasterView, self).post(request, *args, **kwargs)
+                    else:
+                        messages.error(self.request, 'Your contact number is unverified!')
+                        return redirect('profile_verification_sms')
+                else:
+                    messages.error(self.request, 'Your profile is incomplete!')
+                    return redirect('profile_detail')
+            else:
+                messages.error(self.request, 'Your profile is unverified!')
+                return redirect('profile_identity_proof_upload')
+        else:
+            messages.error(self.request, 'Your profile is incomplete!')
+            return redirect('profile_name')
+        return redirect('status')
 
 
 ##############################################################################

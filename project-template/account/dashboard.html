@@ -481,7 +481,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card bg-black collapsed-card">
+                    <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
 
@@ -492,23 +492,35 @@
                             </div>
                             <!-- /.card-tools -->
                         </div>
-                        <div class="card-body" style="display: none;">
+                        <div class="card-body">
                             {% if user.is_willing_master %}
                             <p class="h5">
                                 You have already applied! Someone from team {{PRODUCT_NAME}} will
                                 reach out to you shortly.
                             </p>
                             {% else %}
-                            <p class="h5">Your profile must be completely verified. Additionally all your details must
-                                be updated before you apply to become a PoolMaster.
-                            </p>
                             {% if user.first_name or user.lastname %}
                             {% if user.identity_verified %}
                             {% if user.aadhaar_number or user.pan_number %}
+                            {% if user.contact_verified %}
+                            <p class="h5">
+                                It seems like you have filled all necessary details and your profile is verified. You
+                                are eligible to apply for Pool Master.
+                            </p>
                             <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
                                 PoolMaster</a>
                             {% else %}
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Additional
+                            <p class="h5">
+                                Please verify your contact number.
+                            </p>
+                            <a href="{% url 'profile_verification_sms' %}" class="btn btn-secondary">Verify Contact
+                                Number</a>
+                            {% endif %}
+                            {% else %}
+                            <p class="h5">
+                                Please fill all the necessary details.
+                            </p>
+                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Necessary
                                 Details</a>
                             {% endif %}
                             {% else %}
