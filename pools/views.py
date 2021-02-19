@@ -203,9 +203,8 @@ class AutomaticSpinScheduleView(View):
         if now > start and now < end:
             pools = Pool.objects.all()
             for pool in pools:
-                pool.spin()
                 try:
-
+                    pool.spin()
                     spinned_count += 1
                 except Exception as e:
                     failed_count += 1

@@ -124,7 +124,7 @@ class Pool(models.Model):
             getcontext().prec = 3
             getcontext().rounding = ROUND_DOWN
             incentive = (Decimal(0.05)*self.investment)*month  # 5% of investment per month
-            master_incentive = Decimal(0.05)*self.investment # 5% of investment amount
+            master_incentive = Decimal(0.05)*self.investment  # 5% of investment amount
         if self.is_member(user):
             itu = InvestmentTransaction(
                 type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)

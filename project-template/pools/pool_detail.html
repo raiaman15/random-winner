@@ -115,8 +115,13 @@
                                 <!-- /.col -->
                                 <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
                                     <div class="description-block">
+                                        {% if not pool.activated %}
                                         <h5 class="description-header">{{pool.get_member_remaining}}</h5>
                                         <span class="description-text">MEMBERS REMAINING</span>
+                                        {% else %}
+                                        <h5 class="description-header">{{pool.get_member_remaining}}</h5>
+                                        <span class="description-text">CYCLES SPINNED</span>
+                                        {% endif %}
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
@@ -233,6 +238,7 @@
                         </div>
                     </div>
 
+                    {% if not pool.activated %}
                     {% ifequal pool.master.username user.username %}
                     {% if user|has_group:"master" %}
                     <div class="card bg-black">
@@ -295,6 +301,7 @@
                     </div>
                     {% endif %}
                     {% endifequal %}
+                    {% endif %}
                 </section>
                 <!-- right col -->
             </div>
