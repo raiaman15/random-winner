@@ -124,19 +124,20 @@ class Pool(models.Model):
             getcontext().prec = 3
             getcontext().rounding = ROUND_DOWN
             incentive = (Decimal(0.05)*self.investment)*month  # 5% of investment per month
+            master_incentive = Decimal(0.05)*self.investment # 5% of investment amount
         if self.is_member(user):
             itu = InvestmentTransaction(
                 type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
             itu.save()
             itm = InvestmentTransaction(
-                type_of_transaction='D', amount=self.investment + incentive, user=self.master, pool=self)
+                type_of_transaction='D', amount=master_incentive, user=self.master, pool=self)
             itm.save()
             self.members.remove(user)
             itu.verified, itm.verified = True, True
             itu.save()
             itm.save()
             # SMS & e-Mail Notification of Spinning
-            send_email_pool_winner(email=user.email, pool_id=self.id)
+            send_email_pool_winner(email_id=user.email, pool_id=self.id)
             send_sms_pool_winner(number=user.username, pool_id=self.id)
             # Refresh User's Balance
             user.refresh_balance_investment()

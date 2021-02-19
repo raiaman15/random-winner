@@ -81,13 +81,14 @@ class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     login_url = 'account_login'
     group_required = [u"member", u"master"]
 
-    def get(self, request, *args, **kwargs):
-        pool = get_object_or_404(self.model, id=self.kwargs['pk'])
-        if pool.is_member(request.user) or pool.is_master(request.user):
-            return super(PoolDetailView, self).get(request, *args, **kwargs)
-        else:
-            messages.error(request, 'You cannot access details. You can only join the pool. Reason: The pool is not yours')
-            return redirect('pool_list')
+    # def get(self, request, *args, **kwargs):
+    #     # pool = get_object_or_404(self.model, id=self.kwargs['pk'])
+    #     # if pool.is_member(request.user) or pool.is_master(request.user):
+    #     #     return super(PoolDetailView, self).get(request, *args, **kwargs)
+    #     # else:
+    #     #     messages.error(request, 'You cannot access details. You can only join the pool. Reason: The pool is not yours')
+    #     #     return redirect('pool_list')
+    #     return super(PoolDetailView, self).get(request, *args, **kwargs)
 
 
 class PoolSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -175,7 +176,7 @@ class AutomaticActivateScheduleView(View):
     def get(self, request):
         now = timezone.now()
         start = timezone.now().replace(day=2, hour=00, minute=00)
-        end = timezone.now().replace(day=10, hour=23, minute=59)
+        end = timezone.now().replace(day=28, hour=23, minute=59)
         activated_count = 0
         failed_count = 0
         if now > start and now < end:
@@ -196,7 +197,7 @@ class AutomaticSpinScheduleView(View):
         # active_pool_count = Pool.objects.exclude(activated__isnull=True).count()
         now = timezone.now()
         start = timezone.now().replace(day=1, hour=00, minute=00)
-        end = timezone.now().replace(day=21, hour=00, minute=00)
+        end = timezone.now().replace(day=28, hour=00, minute=00)
         spinned_count = 0
         failed_count = 0
         if now > start and now < end:
