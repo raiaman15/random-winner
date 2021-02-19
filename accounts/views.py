@@ -241,7 +241,7 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        if user.firstname or user.lastname:
+        if user.first_name or user.last_name:
             if user.identity_verified:
                 if user.aadhaar_number or user.pan_number:
                     if user.contact_verified:
