@@ -169,8 +169,8 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
 class AutomaticActivateScheduleView(View):
     def get(self, request):
         now = timezone.now()
-        start = timezone.now().replace(date=2, hour=00, minute=00)
-        end = timezone.now().replace(date=10, hour=23, minute=59)
+        start = timezone.now().replace(day=2, hour=00, minute=00)
+        end = timezone.now().replace(day=10, hour=23, minute=59)
         activated_count = 0
         failed_count = 0
         if now > start and now < end:
@@ -188,19 +188,20 @@ class AutomaticActivateScheduleView(View):
 
 class AutomaticSpinScheduleView(View):
     def get(self, request):
-        active_pool_count = Pool.objects.exclude(activated__isnull=True).exclude(activated__exact='').count()
+        # active_pool_count = Pool.objects.exclude(activated__isnull=True).count()
         now = timezone.now()
-        start = timezone.now().replace(date=1, hour=00, minute=00)
-        end = timezone.now().replace(date=2, hour=00, minute=00)
+        start = timezone.now().replace(day=1, hour=00, minute=00)
+        end = timezone.now().replace(day=20, hour=00, minute=00)
         spinned_count = 0
         failed_count = 0
         if now > start and now < end:
             pools = Pool.objects.all()
             for pool in pools:
+                pool.spin()
                 try:
-                    pool.spin()
+
                     spinned_count += 1
                 except Exception as e:
                     failed_count += 1
 
-        return HttpResponse(f'{activated_count} Pools Spinned. {failed_count} Pools Failed Spinning.')
+        return HttpResponse(f'{spinned_count} Pools Spinned. {failed_count} Pools Failed Spinning.')

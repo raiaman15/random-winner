@@ -85,12 +85,14 @@
                     <div class="card card-widget widget-user shadow">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
                         <div class="widget-user-header bg-danger">
-                            <h3 class="widget-user-username font-weight-bold">{{ pool.name }}
+                            <h3 class="widget-user-username font-weight-bold">
+                                {{ pool.name }}
                             </h3>
                             <small class="widget-user-desc">
                                 Created {{ pool.created | naturaltime }}
                             </small>
                         </div>
+
                         <a href="{% url 'profile_picture' %}">
                             <div class="widget-user-image">
                                 {% if user.picture %}
@@ -145,6 +147,17 @@
                         </div>
                     </div>
 
+                    {% if user not in pool.members %}
+                    <form method="post" action="{% url 'pool_join' %}">
+                        {% csrf_token %}
+                        <input class="d-none" name="pool" value="{{pool.id}}">
+                        <input class="d-none" id="accept_reject" name="accept_reject" value="">
+                        <input type="submit" class="btn btn-block btn-danger" onclick="accepting()"
+                            value=" JOIN THE POOL">
+                        <br />
+                    </form>
+                    {% endif %}
+
                     <div class="card bg-black">
                         <div class="card-header">
                             <h3 class="card-title">Pool Roulette</h3>
@@ -152,7 +165,9 @@
                             <div class="card-tools">
                                 <span class="btn btn-tool">
                                     <i class="fas fa-clock"></i>
-                                    {{ view.timezone.now|naturaltime }}
+                                    {% if pool.activated %}
+                                    Activated {{ pool.activated | naturaltime }}
+                                    {% endif %}
                                 </span>
                             </div>
                             <!-- /.card-tools -->
@@ -160,11 +175,11 @@
                         <!-- /.card-header -->
                         <div class="card-body pb-5" style="display: block;">
                             <div class="roulette text-center">
-                                <div class="wheel spin text-center">
+                                <!-- <div class="wheel spin text-center">
                                     <div class="arrow text-center">
                                     </div>
                                     <img src="https://i.imgur.com/N01W3Ks.png" style="max-width: 80vw;">
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -295,7 +310,7 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<script>
+<!-- <script>
     perfecthalf = ((1 / 37) * 360) / 2;
 
     let currentLength = perfecthalf;
@@ -325,5 +340,14 @@
     $(document).ready(function () {
         $(".spin").click();
     })
+</script> -->
+<script>
+    function accepting() {
+        if (confirm('Are you sure you want to join this Pool? Money will be deducted from your balance.')) {
+            $("#accept_reject").val("Accept")
+        } else {
+            return false;
+        }
+    }
 </script>
 {% endblock javascripts %}

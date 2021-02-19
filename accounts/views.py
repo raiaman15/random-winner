@@ -51,7 +51,7 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('profile_verification_option')
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
-            elif not (user.first_name or user.lastname):
+            elif not (user.first_name or user.last_name):
                 return redirect('profile_name')
             else:
                 return redirect('dashboard')
@@ -62,7 +62,7 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('profile_verification_sms')
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
-            elif not (user.first_name or user.lastname):
+            elif not (user.first_name or user.last_name):
                 return redirect('profile_name')
             else:
                 return redirect('dashboard')

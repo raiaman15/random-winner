@@ -1,5 +1,6 @@
 import pyotp
 import random
+from decimal import *
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -100,9 +101,9 @@ class Pool(models.Model):
         if not self.activate:
             raise ValueError('The pool is still not active. Wait for other members to join!')
         else:
-            lower_limit, upper_limit = 1, self.get_member_count()+1
+            lower_limit, upper_limit = 1, self.get_member_count()
             selected = random.randint(lower_limit, upper_limit)
-            user = self.members[selected]
+            user = self.members.all()[selected-1]
             winner = PoolWinner(pool=self, user=user)
             winner.save()
             self.exit(user)
@@ -117,7 +118,7 @@ class Pool(models.Model):
             yd = now.year - self.activated.year
             md = now.month - self.activated.month
             month = int((yd * 12) + md)
-            incentive = (0.05*self.investment)*month  # 5% of investment per month
+            incentive = (Decimal(0.05)*self.investment)*month  # 5% of investment per month
         if self.is_member(user):
             itu = InvestmentTransaction(
                 type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
@@ -193,7 +194,7 @@ class PoolWinner(models.Model):
 
     def save(self):
         t = timezone.now()
-        prefix = self.pool.id
+        prefix = str(self.pool.id)
         yy, mm = t.strftime("%Y"), t.strftime("%m")
         self.codename = prefix+yy+mm
 

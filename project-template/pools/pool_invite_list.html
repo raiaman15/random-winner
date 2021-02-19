@@ -84,8 +84,7 @@
                                                 <form method="post" action="{% url 'pool_join' %}">
                                                     {% csrf_token %}
                                                     <input class="d-none" name="pool" value="{{pool_invite.pool.id}}">
-                                                    <input class="d-none" id="accept_reject" name="accept_reject"
-                                                        value="">
+                                                    <input class="d-none" id="accept_reject" name="accept_reject" value="">
                                                     <input type="submit" class="btn btn-sm btn-success"
                                                         onclick="accepting()" value="Accept">
                                                     <input type="submit" class="btn btn-sm btn-danger"

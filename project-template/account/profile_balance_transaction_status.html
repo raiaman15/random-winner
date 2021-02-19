@@ -64,6 +64,7 @@
                             {{transaction.order_id}}<br />
                             {{transaction.type_of_transaction}}<br />
                             {{transaction.amount}}<br />
+                            Redirecting to Home Page in 20 seconds...
                             {% if transaction.verified %}
                             <div class="invoice p-3 mb-3">
                                 <!-- title row -->
@@ -241,6 +242,6 @@
 <script>
     window.setTimeout(function () {
         window.location.href = "{% url 'status' %}";
-    }, 5000);
+    }, 20000);
 </script>
 {% endblock javascripts %}
