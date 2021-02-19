@@ -148,12 +148,12 @@ class BalanceTransaction(models.Model):
         validators=[validate_balance_type_of_transaction]
     )
     amount = models.DecimalField(
-        null=False, blank=False, max_digits=7, decimal_places=2,
+        null=False, blank=False, max_digits=9, decimal_places=2,
         validators=[validate_amount],
         help_text="The amount in INR to be added (Taxes will be added on this amount)"
     )
     tax = models.DecimalField(
-        null=False, blank=False, max_digits=7, decimal_places=2,
+        null=False, blank=False, max_digits=9, decimal_places=2,
         validators=[validate_amount]
     )
     verified = models.BooleanField(default=False, editable=True)

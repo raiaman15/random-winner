@@ -170,7 +170,7 @@ def send_sms_pool_winner(number, pool_id):
     print(response)
 
 
-def send_email_pool_winner(email, pool_id):
+def send_email_pool_winner(email_id, pool_id):
     """
     response = send_email_pool_invite('7007488735', '7007488734', '132435')
 
@@ -190,10 +190,11 @@ def send_email_pool_winner(email, pool_id):
     message = '\n'.join(lines)
 
     response = send_mail(
-        'BitBoomer | Pool Invitation Recieved! ',   # Subject
-        message,                                    # Body
-        [email],                                    # To | From in settings.py
-        fail_silently=True,                         # For troubleshoot, set False
+        subject='BitBoomer | You Won the Spin! ',
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[email_id],
+        fail_silently=True,
     )
 
     print(bool(response), message)

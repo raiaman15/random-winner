@@ -61,10 +61,14 @@
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
                         <div class="card-body">
-                            {{transaction.order_id}}<br />
-                            {{transaction.type_of_transaction}}<br />
-                            {{transaction.amount}}<br />
+                            <div class="text-sm">
+                                ID: <b>{{transaction.order_id}}</b>
+                                <span class="text-sm float-right">
+                                    <i class="fas fa-clock"></i> {{transaction.created|naturaltime}}
+                                </span>
+                            </div>
                             Redirecting to Home Page in 20 seconds...
+                            <hr />
                             {% if transaction.verified %}
                             <div class="invoice p-3 mb-3">
                                 <!-- title row -->
@@ -198,12 +202,10 @@
                                 <div class="row no-print">
                                     <div class="col-12">
                                         <a href="invoice-print.html" rel="noopener" target="_blank"
-                                            class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                                        <button type="button" class="btn btn-success float-right"><i
-                                                class="far fa-credit-card"></i> Email Invoice
-                                        </button>
+                                            class="btn btn-default" onclick="window.print();">
+                                            <i class="fas fa-print"></i> Print</a>
                                         <button type="button" class="btn btn-primary float-right"
-                                            style="margin-right: 5px;">
+                                            style="margin-right: 5px;" onclick="window.print();">
                                             <i class="fas fa-download"></i> Download PDF
                                         </button>
                                     </div>
@@ -241,7 +243,7 @@
 {% block javascripts %}
 <script>
     window.setTimeout(function () {
-        window.location.href = "{% url 'status' %}";
+        window.location.href = "{% url 'profile_balance_transaction_list' %}";
     }, 20000);
 </script>
 {% endblock javascripts %}

@@ -93,17 +93,16 @@
                             </small>
                         </div>
 
-                        <a href="{% url 'profile_picture' %}">
-                            <div class="widget-user-image">
-                                {% if user.picture %}
-                                <img src="{{ pool.master.picture.url }}" class="img-circle elevation-2"
-                                    style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
-                                {% else %}
-                                <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
-                                    alt="User Image">
-                                {% endif %}
-                            </div>
-                        </a>
+
+                        <div class="widget-user-image">
+                            {% if user.picture %}
+                            <img src="{{ pool.master.picture.url }}" class="img-circle elevation-2"
+                                style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
+                            {% else %}
+                            <img src="{% static 'project/img/pool-logo.jpg' %}" class="img-circle elevation-1"
+                                alt="User Image">
+                            {% endif %}
+                        </div>
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">

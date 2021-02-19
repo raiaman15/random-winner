@@ -269,9 +269,12 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
 ##############################################################################
 
 class AccountResetPasswordWithOTPView(FormView):
-    username = None
+    # username = None
     template_name = 'account/password_reset_with_otp.html'
     form_class = AccountResetPasswordWithOTPViewForm
+
+    def __init__(self):
+        self.username = None
 
     def post(self, request, *args, **kwargs):
         validate_username(request.POST.get("username"))
@@ -309,10 +312,13 @@ class AccountResetPasswordWithOTPView(FormView):
 
 
 class AccountResetPasswordWithOTPConfirmView(FormView):
-    username = None
+    # username = None
     template_name = 'account/password_reset_with_otp_confirm.html'
     form_class = AccountResetPasswordWithOTPConfirmViewForm
     success_url = reverse_lazy('status')
+
+    def __init__(self):
+        self.username = None
 
     def get(self, request, *args, **kwargs):
         attempt = int(request.session['password_reset_attempt'])+1
@@ -703,10 +709,13 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
 
 
 class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin, FormView):
-    profile = None
+    # profile = None
     template_name = 'account/manager_profile_approve_poolmaster.html'
     form_class = ManagerProfileApprovePoolmasterViewForm
     group_required = u"manager"
+
+    def __init__(self):
+        self.profile = None
 
     def get(self, request, *args, **kwargs):
         self.profile = get_object_or_404(CustomUser, pk=self.kwargs['pk'])
@@ -776,3 +785,18 @@ class ManagerSupportTicketUpdateView(LoginRequiredMixin, GroupRequiredMixin, Upd
 
     def get_success_url(self):
         return reverse_lazy('manager_support_ticket_update', kwargs={'pk': self.kwargs['pk']})
+
+
+class ManagerManagePoolView(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = InvestmentTransaction
+    context_object_name = 'payments'
+    paginate_by = 100
+    template_name = 'account/manager_pool_manage.html'
+    login_url = 'account_login'
+    group_required = u"manager"
+
+    def get_queryset(self):
+        now = timezone.now()
+        yy = now.year
+        mm = now.month
+        return self.model.objects.filter(created__year=yy, created__month=mm, type_of_transaction='D').all()

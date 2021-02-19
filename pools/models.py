@@ -1,3 +1,4 @@
+from django.db.models.fields import NullBooleanField
 import pyotp
 import random
 from decimal import *
@@ -5,7 +6,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from django_q.models import Schedule
 from config.validators import validate_username, validate_investment, validate_name, validate_number, validate_amount, validate_pool_size
 from config.utils import send_sms_pool_invite, send_email_pool_invite, send_sms_platform_invite, send_email_pool_winner, send_sms_pool_winner
 from accounts.models import InvestmentTransaction
@@ -107,6 +107,9 @@ class Pool(models.Model):
             winner = PoolWinner(pool=self, user=user)
             winner.save()
             self.exit(user)
+        if self.get_member_count() == 0:
+            self.activated = None
+            self.save()
 
     def exit(self, user):
         """ Initiates a Transaction to Join the Pool """
@@ -118,6 +121,8 @@ class Pool(models.Model):
             yd = now.year - self.activated.year
             md = now.month - self.activated.month
             month = int((yd * 12) + md)
+            getcontext().prec = 3
+            getcontext().rounding = ROUND_DOWN
             incentive = (Decimal(0.05)*self.investment)*month  # 5% of investment per month
         if self.is_member(user):
             itu = InvestmentTransaction(
@@ -127,10 +132,6 @@ class Pool(models.Model):
                 type_of_transaction='D', amount=self.investment + incentive, user=self.master, pool=self)
             itm.save()
             self.members.remove(user)
-            itu = InvestmentTransaction.objects.filter(
-                type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
-            itm = InvestmentTransaction.objects.filter(
-                type_of_transaction='D', amount=self.investment + incentive, user=self.master, pool=self)
             itu.verified, itm.verified = True, True
             itu.save()
             itm.save()

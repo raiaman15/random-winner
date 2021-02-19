@@ -42,6 +42,7 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 class PoolListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pool
     context_object_name = 'pool_list'
+    paginate_by = 100
     template_name = 'pools/pool_list.html'
     login_url = 'account_login'
     group_required = [u"member", u"master"]
@@ -50,6 +51,7 @@ class PoolListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 class PoolMembershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pool
     context_object_name = 'pool_list'
+    paginate_by = 100
     template_name = 'pools/pool_list.html'
     login_url = 'account_login'
     group_required = [u"member", u"master"]
@@ -62,6 +64,7 @@ class PoolMembershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 class PoolMastershipListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pool
     context_object_name = 'pool_list'
+    paginate_by = 100
     template_name = 'pools/pool_list.html'
     login_url = 'account_login'
     group_required = [u"member", u"master"]
@@ -90,6 +93,7 @@ class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
 class PoolSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pool
     context_object_name = 'pool_list'
+    paginate_by = 100
     template_name = 'pools/pool_list.html'
     group_required = [u"member", u"master", u"manager"]
 
@@ -123,6 +127,7 @@ class PoolInviteCreateView(LoginRequiredMixin, GroupRequiredMixin, View):
 class PoolInviteListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = PoolInvite
     context_object_name = 'pool_invite_list'
+    paginate_by = 100
     template_name = 'pools/pool_invite_list.html'
     login_url = 'account_login'
     group_required = [u"member", u"master"]
@@ -191,7 +196,7 @@ class AutomaticSpinScheduleView(View):
         # active_pool_count = Pool.objects.exclude(activated__isnull=True).count()
         now = timezone.now()
         start = timezone.now().replace(day=1, hour=00, minute=00)
-        end = timezone.now().replace(day=20, hour=00, minute=00)
+        end = timezone.now().replace(day=21, hour=00, minute=00)
         spinned_count = 0
         failed_count = 0
         if now > start and now < end:

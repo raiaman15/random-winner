@@ -168,7 +168,7 @@
         <li class="nav-header">SUPPORT TICKETS</li>
         <li class="nav-item">
           <a href="{% url 'manager_financial_support_ticket_list' %}"
-            class="nav-link {% if 'users' in request.path %}active{% endif %}">
+            class="nav-link {% if 'manager/support-ticket/financial' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-comments-dollar"></i>
             <p>
               Finance Related
@@ -177,7 +177,7 @@
         </li>
         <li class="nav-item">
           <a href="{% url 'manager_application_support_ticket_list' %}"
-            class="nav-link {% if 'users' in request.path %}active{% endif %}">
+            class="nav-link {% if 'manager/support-ticket/application' in request.path %}active{% endif %}">
             <i class="nav-icon fas fa-ticket-alt"></i>
             <p>
               Application Related
@@ -187,13 +187,13 @@
         {% endif %}
 
         {% if user|has_group:"manager" %}
-        <li class="nav-header">MANUAL SPIN</li>
+        <li class="nav-header">MANUAL POOL MANAGEMENT</li>
         <li class="nav-item">
-          <a href="{% url 'manager_financial_support_ticket_list' %}"
-            class="nav-link {% if 'users' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-sync-alt"></i>
+          <a href="{% url 'manager_manage_pool' %}"
+            class="nav-link {% if 'manage/pool/manage' in request.path %}active{% endif %}">
+            <i class="nav-icon fab fa-galactic-republic"></i>
             <p>
-              Spin Details
+              Manage Pool
             </p>
           </a>
         </li>
