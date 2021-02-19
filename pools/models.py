@@ -12,7 +12,7 @@ from accounts.models import InvestmentTransaction
 
 class Pool(models.Model):
     codename = models.CharField(
-        'Pool Codename', blank=False, unique=True, max_length=250,
+        'Pool Codename', blank=False, unique=True, max_length=20,
         help_text='Codename for the Pool'
     )
     name = models.CharField(
@@ -186,13 +186,16 @@ class PoolInvite(models.Model):
 
 
 class PoolWinner(models.Model):
+    codename = models.CharField(blank=False, unique=True, max_length=20)
     pool = models.ForeignKey('pools.Pool', on_delete=models.PROTECT)
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def save(self):
+        t = timezone.now()
+        prefix = self.pool.id
+        yy, mm = t.strftime("%Y"), t.strftime("%m")
+        self.codename = prefix+yy+mm
+
         self.full_clean()
-        if PoolWinner.objects.filter(pool=self.pool, user=self.user).exists():
-            raise ValueError('The user is already out of Pool!')
-        else:
-            return super(PoolWinner, self).save()
+        return super(PoolWinner, self).save()

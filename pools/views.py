@@ -168,24 +168,39 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
 # Automatic Schedule: Activate Pools, Spin, Exit PoolMember
 class AutomaticActivateScheduleView(View):
     def get(self, request):
-        pools = Pool.objects.all()
+        now = timezone.now()
+        start = timezone.now().replace(date=2, hour=00, minute=00)
+        end = timezone.now().replace(date=10, hour=23, minute=59)
         activated_count = 0
-        for pool in pools:
-            if not pool.activated:
-                pool.activate()
-                activated_count += 1
+        failed_count = 0
+        if now > start and now < end:
+            pools = Pool.objects.all()
+            for pool in pools:
+                if not pool.activated:
+                    try:
+                        pool.activate()
+                        activated_count += 1
+                    except Exception as e:
+                        failed_count += 1
 
-        return HttpResponse(f'{activated_count} Pools Activated')
+        return HttpResponse(f'{activated_count} Pools Activated. {failed_count} Pools Failed Activation.')
 
 
 class AutomaticSpinScheduleView(View):
     def get(self, request):
-        pools = Pool.objects.all()
-        activated_count = 0
-        if timezone.now() < timezone.now().replace(date=1, hour=00, minute=00):
+        active_pool_count = Pool.objects.exclude(activated__isnull=True).exclude(activated__exact='').count()
+        now = timezone.now()
+        start = timezone.now().replace(date=1, hour=00, minute=00)
+        end = timezone.now().replace(date=2, hour=00, minute=00)
+        spinned_count = 0
+        failed_count = 0
+        if now > start and now < end:
+            pools = Pool.objects.all()
             for pool in pools:
-                if not pool.activated:
-                    pool.activate()
-                    activated_count += 1
+                try:
+                    pool.spin()
+                    spinned_count += 1
+                except Exception as e:
+                    failed_count += 1
 
-        return HttpResponse(f'{activated_count} Pools Activated')
+        return HttpResponse(f'{activated_count} Pools Spinned. {failed_count} Pools Failed Spinning.')

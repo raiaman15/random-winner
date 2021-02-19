@@ -199,7 +199,9 @@ def send_email_pool_winner(email, pool_id):
     print(bool(response), message)
 
 
-def print_hello():
-    return reverse_lazy('')
-    print("hello")
+def automate_activation():
+    return reverse_lazy('automatic_activate_pool')
 
+
+def automate_spin():
+    return reverse_lazy('automatic_spin_pool')
