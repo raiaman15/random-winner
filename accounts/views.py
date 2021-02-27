@@ -22,6 +22,7 @@ from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDet
 from .forms import (ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm,
                     AccountResetPasswordWithOTPConfirmViewForm, ManagerProfileApprovePoolmasterViewForm)
 from config.validators import validate_username
+from config.messages import response_messages
 from pools.models import PoolInvite
 
 
@@ -51,8 +52,8 @@ class UserStatusView(LoginRequiredMixin, View):
                 return redirect('profile_verification_option')
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
-            elif not (user.first_name or user.last_name):
-                return redirect('profile_name')
+            elif not (user.aadhaar_number and user.pan_number) and (user.first_name or user.last_name):
+                return redirect('profile_detail')
             else:
                 return redirect('dashboard')
 
@@ -63,7 +64,7 @@ class UserStatusView(LoginRequiredMixin, View):
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
             elif not (user.first_name or user.last_name):
-                return redirect('profile_name')
+                return redirect('profile_detail')
             else:
                 return redirect('dashboard')
 
@@ -82,14 +83,14 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.contact_verified:
-            messages.success(request, 'You have already verified!')
+            messages.success(request, response_messages['profile_sms_verification_already_verified'])
             return redirect('status')
 
         elif ContactNumberOTP.objects.filter(username=user.username).exists():
             td = timezone.now() - timedelta(minutes=5)
             attempts = ContactNumberOTP.objects.filter(username=self.request.user.username, created__gte=td)
             if len(attempts) > 2:
-                messages.warning(request, '3+ OTP attempts in 5 minutes! Please try again in 5 minutes.')
+                messages.warning(request, response_messages['profile_sms_verification_attempt_exceeded'])
             else:
                 user.generate_otp()
                 messages.success(request, f'OTP sent to your contact number {user.username}!')

@@ -147,14 +147,20 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
         accept_reject = str(request.POST.get('accept_reject'))
         pool_id = int(request.POST.get('pool'))
         pool = get_object_or_404(Pool, id=pool_id)
-        self.request.user.refresh_balance_investment()
 
         if accept_reject in ('Accept', 'Reject'):
             if accept_reject == 'Accept':
+                self.request.user.refresh_balance_investment()
                 if pool.investment > self.request.user.balance_amount:
                     remaining_amount = pool.investment - self.request.user.balance_amount
                     messages.warning(request, f'Please add ₹ {remaining_amount} to your account.')
                     return redirect('profile_balance_transaction_create')
+                if not self.user.billing_address:
+                    messages.warning(request, f'Please add a valid Billing Address for your account.')
+                    return redirect('profile_billing_address_create')
+                if not self.user.bank_account_detail:
+                    messages.warning(request, f'Please add your Bank Account Details to recieve the return / refund.')
+                    return redirect('profile_bank_account_detail_create')
                 try:
                     pool.join(request.user)
                     messages.success(request, f'You have joined the pool - {pool.name}')
