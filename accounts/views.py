@@ -93,10 +93,11 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
                 messages.warning(request, response_messages['profile_sms_verification_attempt_exceeded'])
             else:
                 user.generate_otp()
-                messages.success(request, f'OTP sent to your contact number {user.username}!')
+                messages.success(
+                    request, f'Please verify the OTP sent to your registered contact number {user.username}!')
         else:
             user.generate_otp()
-            messages.success(request, f'OTP sent to your contact number {user.username}!')
+            messages.success(request, f'Please verify the OTP sent to your registered contact number {user.username}!')
 
         return super(ProfileVerificationSMSView, self).get(request, *args, **kwargs)
 
@@ -106,7 +107,7 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
     def post(self, request):
         user = request.user
         if user.contact_verified:
-            messages.success(request, 'You have already verified!')
+            messages.success(request, response_messages['profile_sms_verification_already_verified'])
             return redirect('status')
 
         if ContactNumberOTP.objects.filter(username=self.request.user.username).exists():
@@ -120,11 +121,10 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
             if token_valid:
                 request.user.contact_verified = True
                 request.user.save()
-                messages.success(request, 'Contact Number Verified!')
+                messages.success(request, response_messages['profile_sms_verification_successful'])
                 ContactNumberOTP.objects.filter(username=user.username).delete()
             else:
-                messages.error(
-                    request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
+                messages.error(request, response_messages['profile_sms_verification_incorrect_otp'])
                 return redirect('profile_verification_sms')
         return redirect('status')
 
@@ -151,8 +151,7 @@ class ProfileIdentityProofUploadView(LoginRequiredMixin, UpdateView):
         return super(ProfileIdentityProofUploadView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
-        messages.success(
-            self.request, 'Identity Proof Uploaded Successfully! Our Team will verify it soon.')
+        messages.success(self.request, response_messages['profile_identity_proof_upload_successful'])
         return reverse_lazy('profile_name')
 
 
@@ -165,8 +164,7 @@ class ProfileDashboardView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = request.user
         if not user.identity_verified:
-            messages.error(
-                self.request, 'Identity Proof Not Verified Yet! You won\'t be able to perform any operation until verification.')
+            messages.error(self.request, response_messages['profile_identity_proof_under_review'])
 
         return super(ProfileDashboardView, self).get(request, *args, **kwargs)
 
@@ -198,8 +196,7 @@ class ProfileDetailView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
-        messages.success(
-            self.request, 'Details Updated Successfully.')
+        messages.success(self.request, response_messages['profile_detail_update_successful'])
 
         return super(ProfileDetailView, self).post(request, *args, **kwargs)
 
@@ -247,20 +244,19 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
                 if user.aadhaar_number or user.pan_number:
                     if user.contact_verified:
                         if request.POST.get('is_willing_master') == 'on':
-                            messages.success(
-                                self.request, 'Successfully Applied for PoolMaster. Our Team will reach out to you soon.')
+                            messages.success(self.request, response_messages['profile_apply_poolmaster_successful'])
                             return super(ProfileApplyPoolmasterView, self).post(request, *args, **kwargs)
                     else:
-                        messages.error(self.request, 'Your contact number is unverified!')
+                        messages.error(self.request, response_messages['profile_contact_number_unverified'])
                         return redirect('profile_verification_sms')
                 else:
-                    messages.error(self.request, 'Your profile is incomplete!')
+                    messages.error(self.request, response_messages['profile_details_incomplete'])
                     return redirect('profile_detail')
             else:
-                messages.error(self.request, 'Your profile is unverified!')
+                messages.error(self.request, response_messages['profile_identity_proof_unverified'])
                 return redirect('profile_identity_proof_upload')
         else:
-            messages.error(self.request, 'Your profile is incomplete!')
+            messages.error(self.request, response_messages['profile_details_incomplete'])
             return redirect('profile_name')
         return redirect('status')
 
@@ -289,8 +285,7 @@ class AccountResetPasswordWithOTPView(FormView):
                 attempts = ContactNumberOTP.objects.filter(
                     username=self.username, created__gte=td)
                 if len(attempts) > 2:
-                    messages.warning(
-                        request, '3+ OTP attempts in 5 minutes! Please try again in 5 minutes.')
+                    messages.warning(request, response_messages['profile_password_reset_attempt_exceeded'])
                 else:
                     request.session['username'] = self.username
                     request.session['password_reset_attempt'] = 0
@@ -325,8 +320,7 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
         attempt = int(request.session['password_reset_attempt'])+1
         request.session['password_reset_attempt'] = attempt+1
         if attempt > 2:
-            messages.error(
-                request, 'Too many attempts. Please try again later!')
+            messages.error(request, response_messages['profile_password_reset_attempt_exceeded'])
             return redirect('status')
         self.username = request.session['username']
         return super(AccountResetPasswordWithOTPConfirmView, self).get(request, *args, **kwargs)
@@ -351,7 +345,7 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
 
         else:
             messages.error(
-                request, 'Incorrect OPT. Please type correct OTP or try again in 5 minutes.')
+                request, response_messages['profile_password_reset_incorrect_otp'])
             return redirect('profile_verification_sms')
         return super(AccountResetPasswordWithOTPConfirmView, self).post(request, *args, **kwargs)
 

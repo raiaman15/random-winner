@@ -9,6 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
+from config.messages import response_messages
 
 
 class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -32,7 +33,7 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         # hh = t.strftime("%H")
         # mm = t.strftime("%M")
         if Pool.objects.filter(codename=prefix+yy+mm+dd).exists():
-            messages.error(self.request, 'You can create a maximum of one pool per day!')
+            messages.error(self.request, response_messages['pool_creation_limit_exceeded'])
             return super(PoolCreateView, self).get(self.request)
         else:
             form.instance.codename = prefix+yy+mm+dd  # +hh+mm
@@ -81,6 +82,7 @@ class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     login_url = 'account_login'
     group_required = [u"member", u"master"]
 
+    # Pool Details visible to owners only
     # def get(self, request, *args, **kwargs):
     #     # pool = get_object_or_404(self.model, id=self.kwargs['pk'])
     #     # if pool.is_member(request.user) or pool.is_master(request.user):
@@ -119,9 +121,9 @@ class PoolInviteCreateView(LoginRequiredMixin, GroupRequiredMixin, View):
                 try:
                     pool.invite(username)
                     invited.append(username)
-                except:
-                    messages.error(request, f'{username} Invitation Failed!')
-            messages.success(request, f'{", ".join(invited)} Invitation Sent Successfully')
+                except Exception as e:
+                    messages.error(request, f'Unable to invite {username}! Error: {e}')
+            messages.success(request, f'Invitations to {", ".join(invited)} sent successfully')
         return redirect('status')
 
 
@@ -156,10 +158,10 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
                     messages.warning(request, f'Please add ₹ {remaining_amount} to your account.')
                     return redirect('profile_balance_transaction_create')
                 if not self.user.billing_address:
-                    messages.warning(request, f'Please add a valid Billing Address for your account.')
+                    messages.warning(request, response_messages['profile_billing_address_incomplete'])
                     return redirect('profile_billing_address_create')
                 if not self.user.bank_account_detail:
-                    messages.warning(request, f'Please add your Bank Account Details to recieve the return / refund.')
+                    messages.warning(request, response_messages['profile_bank_account_detail_incomplete'])
                     return redirect('profile_bank_account_detail_create')
                 try:
                     pool.join(request.user)
