@@ -14,4 +14,5 @@ urlpatterns = [
     # List All Manager Related Functionality
     path('HZR0N2B4PPUSLXLY9FWC/', pools_views.AutomaticActivateScheduleView.as_view(), name='automatic_activate_pool'),
     path('VIY8ZUGF7SIUI32DDBKP/', pools_views.AutomaticSpinScheduleView.as_view(), name='automatic_spin_pool'),
+    path('4ANJ9575MZMOPCRVLWIK/', pools_views.PoolStatisticsView.as_view(), name='pool_statistics'),
 ]

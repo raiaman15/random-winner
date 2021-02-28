@@ -88,8 +88,8 @@
                     <div class="card bg-black elevation-2">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-rupee-sign"></i>
-                                Month's Payment Release
+                                <i class="fas fa-refresh"></i>
+                                Current Month's Spin Summary
                             </h3>
                         </div><!-- /.card-header -->
                         <!-- Ongoing Live Class -->
@@ -100,8 +100,7 @@
                                         <tr>
                                             <th>POOL</th>
                                             <th>USER</th>
-                                            <th>BANK DETAILS</th>
-                                            <th>AMOUNT</th>
+                                            <th>AMOUNT WON</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -115,11 +114,6 @@
                                             <td>
                                                 {{ payment.user.first_name }} {{ payment.user.last_name }}
                                                 ({{ payment.user.username }})
-                                            </td>
-                                            <td>
-                                                {{ payment.user.bank_account_detail.bank_name }}<br />
-                                                {{ payment.user.bank_account_detail.account_number }}<br />
-                                                {{ payment.user.bank_account_detail.ifsc_code }}<br />
                                             </td>
                                             <td>{{ payment.amount }}</td>
                                         </tr>

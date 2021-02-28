@@ -24,13 +24,6 @@ def validate_username(value):
         )
 
 
-def validate_otp(value):
-    """ Validates OTP 6 digit number """
-    if value < 100000 or value > 999999:
-        raise ValidationError(
-            ('The OTP is not valid. It must be 6 digit number.'))
-
-
 def validate_amount(value):
     """ Validates the amount (of transaction/balance/investment) """
     if value < 0:

@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
 from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username,
-                               validate_amount, validate_otp, validate_balance_type_of_transaction,
+                               validate_amount, validate_balance_type_of_transaction,
                                validate_investment_type_of_transaction, validate_support_ticket_type_of_ticket, validate_message)
 from config.utils import send_otp
 from django.db.models import Q
