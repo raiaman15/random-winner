@@ -103,18 +103,6 @@ class CustomUser(AbstractUser):
         self.investment_amount = nia
         return super(CustomUser, self).save()
 
-    def initiate_deposit(self, amount):
-        # Refresh User's Balance
-        self.refresh_balance_investment()
-        # If they have sufficient balance
-        if self.groups(name='member').exists():
-            pass
-
-    def initiate_withdrawal(self, amount):
-        if self.groups(name='member').exists():
-            pass
-            # TODO-NORMAL: Raise request for admin.
-
     def get_absolute_url(self):
         return reverse('manager_profile_detail', args=[str(self.id)])
 
@@ -133,11 +121,10 @@ class ContactNumberOTP(models.Model):
 class BalanceTransaction(models.Model):
     TRANSACTION_TYPE = (
         ('C', 'Credit'),
-        ('D', 'Debit')
-
+        ('D', 'Debit'),
     )
     # Payment Gateway's Reference ID fro Credit otherwise System Generated
-    order_id = models.CharField(max_length=250, blank=False)
+    order_id = models.CharField(max_length=250, blank=False, unique=True)
     payment_id = models.CharField(max_length=250, blank=True)  # Payment Gateway's Payment ID
     payment_signature = models.CharField(max_length=250, blank=True)  # Payment Gateway's Signature
     user = models.ForeignKey(

@@ -19,3 +19,4 @@ response_messages['profile_password_reset_incorrect_otp'] = 'You have provided a
 response_messages['pool_creation_limit_exceeded'] = 'You have exceeded the limit of pool creation. You can create only 1 pool per day!'
 response_messages['profile_billing_address_incomplete'] = 'You have not provided your billing address. Kindly provide your valid billing address to proceed further.'
 response_messages['profile_bank_account_detail_incomplete'] = 'You have not provided your bank account details. Kindly provide your valid bank account details to proceed further.'
+response_messages['profile_account_balance_low'] = 'You do not have sufficient account balance.'

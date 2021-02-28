@@ -448,7 +448,7 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
 class ProfileCreditBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
-    template_name = 'account/profile_balance_credit_transaction_create.html'
+    template_name = 'account/profile_balance_transaction_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
     group_required = u"member"
@@ -458,7 +458,8 @@ class ProfileCreditBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateVie
         form.instance.user = self.request.user
         getcontext().prec = 3
         getcontext().rounding = ROUND_UP
-        form.instance.tax = Decimal(0.18)*form.instance.amount  # Adding 18% GST
+        form.instance.amount = abs(form.instance.amount)
+        form.instance.tax = abs(Decimal(0.18)*form.instance.amount)  # Adding 18% GST
         # Initiate RazorPay Transaction
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
         order_status = None
@@ -562,7 +563,7 @@ class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Det
 
 class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
-    template_name = 'account/profile_balance_credit_transaction_create.html'
+    template_name = 'account/profile_balance_transaction_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
     group_required = u"member"
@@ -572,26 +573,36 @@ class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView
         form.instance.user = self.request.user
         getcontext().prec = 3
         getcontext().rounding = ROUND_UP
-        form.instance.tax = Decimal(0.0)*form.instance.amount  # Adding 0% Processing Fee
-        # Initiate RazorPay Transaction
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
-        order_status = None
-        try:
-            response = client.order.create(
-                dict(amount=round((form.instance.amount+form.instance.tax)*100), currency='INR')
-            )  # RazorPay Transactions are in Paise; Added GST
-            order_id = response['id']
-            order_status = response['status']
-        except Exception as e:
-            messages.error(self.request, f'Error Occurred: {e}')
-            return redirect('profile_balance_credit_transaction_create')
-        # Saving order_id in DB
-        if order_status == 'created':
-            form.instance.order_id = order_id
-            return super(ProfileCreditBalanceView, self).form_valid(form)
+        form.instance.amount = abs(form.instance.amount)
+        form.instance.tax = abs(Decimal(0.0)*form.instance.amount)  # Adding 0% Processing Fee
+        self.request.user.refresh_balance_investment()
+        if form.instance.amount <= self.request.user.balance_amount:
+            if self.request.user.billing_address and self.request.user.bank_account_detail:
+                # Initiate Withdrawal Transaction
+                prefix = self.request.user.username
+                t = timezone.now()
+                yy = t.strftime("%Y")
+                mm = t.strftime("%m")
+                dd = t.strftime("%d")
+                hh = t.strftime("%H")
+                # A Member can create only 1 withdrawal request per hour
+                # mm = t.strftime("%M")
+
+                form.instance.order_id = 'DEBIT'+prefix+yy+mm+dd+hh     # +mm
+                try:
+                    return super(ProfileCreditBalanceView, self).form_valid(form)
+                except Exception as e:
+                    messages.error(self.request, f'Error Occurred: {e}')
+                    return redirect('profile_balance_debit_transaction_create')
+            else:
+                messages.error(self.request, response_messages['profile_bank_account_detail_incomplete'])
+                return redirect('profile_bank_account_detail_create')
+        else:
+            messages.error(self.request, response_messages['profile_account_balance_low'])
+            return redirect('profile_balance_debit_transaction_create')
 
     def get_success_url(self):
-        return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': self.object.id})
+        return reverse_lazy('profile_balance_transaction_list')
 
 
 ##############################################################################
