@@ -156,7 +156,7 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
                 if pool.investment > self.request.user.balance_amount:
                     remaining_amount = pool.investment - self.request.user.balance_amount
                     messages.warning(request, f'Please add ₹ {remaining_amount} to your account.')
-                    return redirect('profile_balance_transaction_create')
+                    return redirect('profile_balance_credit_transaction_create')
                 if not self.user.billing_address:
                     messages.warning(request, response_messages['profile_billing_address_incomplete'])
                     return redirect('profile_billing_address_create')

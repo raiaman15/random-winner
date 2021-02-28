@@ -446,9 +446,9 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 # Payment Specific Views (Add Balance)
 ##############################################################################
 
-class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class ProfileCreditBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
-    template_name = 'account/profile_balance_transaction_create.html'
+    template_name = 'account/profile_balance_credit_transaction_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
     group_required = u"member"
@@ -470,17 +470,17 @@ class ProfileAddBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
             order_status = response['status']
         except Exception as e:
             messages.error(self.request, f'Error Occurred: {e}')
-            return redirect('profile_balance_transaction_create')
+            return redirect('profile_balance_credit_transaction_create')
         # Saving order_id in DB
         if order_status == 'created':
             form.instance.order_id = order_id
-            return super(ProfileAddBalanceView, self).form_valid(form)
+            return super(ProfileCreditBalanceView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': self.object.id})
 
 
-class ProfileAddBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+class ProfileCreditBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = BalanceTransaction
     context_object_name = 'transaction'
     template_name = 'account/profile_balance_transaction_confirm.html'
@@ -491,10 +491,10 @@ class ProfileAddBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, Detai
         balance_transaction_id = self.kwargs['pk']
         balance_transaction = get_object_or_404(BalanceTransaction, id=balance_transaction_id)
         if balance_transaction in request.user.balance_transaction.all():
-            return super(ProfileAddBalanceConfirmView, self).get(request, *args, **kwargs)
+            return super(ProfileCreditBalanceConfirmView, self).get(request, *args, **kwargs)
         else:
             messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
-            return redirect('profile_balance_transaction_create')
+            return redirect('profile_balance_credit_transaction_create')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -502,7 +502,7 @@ class ProfileAddBalanceConfirmView(LoginRequiredMixin, GroupRequiredMixin, Detai
         return context
 
 
-class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = BalanceTransaction
     context_object_name = 'transaction'
     template_name = 'account/profile_balance_transaction_status.html'
@@ -511,7 +511,7 @@ class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Detail
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(ProfileAddBalanceStatusView, self).dispatch(request, *args, **kwargs)
+        return super(ProfileCreditBalanceStatusView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         messages.error(request, 'Invalid Request')
@@ -550,7 +550,7 @@ class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Detail
             except Exception as e:
                 messages.error(request, f'Payment Failed: {e}')
                 return redirect('profile_balance_transaction_list')
-            return super(ProfileAddBalanceStatusView, self).get(request, * args, **kwargs)
+            return super(ProfileCreditBalanceStatusView, self).get(request, * args, **kwargs)
         else:
             messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
             return redirect('profile_balance_transaction_status')
@@ -558,6 +558,41 @@ class ProfileAddBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Detail
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = BalanceTransaction
+    template_name = 'account/profile_balance_credit_transaction_create.html'
+    fields = ['amount', ]
+    login_url = 'account_login'
+    group_required = u"member"
+
+    def form_valid(self, form):
+        form.instance.type_of_transaction = 'D'
+        form.instance.user = self.request.user
+        getcontext().prec = 3
+        getcontext().rounding = ROUND_UP
+        form.instance.tax = Decimal(0.0)*form.instance.amount  # Adding 0% Processing Fee
+        # Initiate RazorPay Transaction
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+        order_status = None
+        try:
+            response = client.order.create(
+                dict(amount=round((form.instance.amount+form.instance.tax)*100), currency='INR')
+            )  # RazorPay Transactions are in Paise; Added GST
+            order_id = response['id']
+            order_status = response['status']
+        except Exception as e:
+            messages.error(self.request, f'Error Occurred: {e}')
+            return redirect('profile_balance_credit_transaction_create')
+        # Saving order_id in DB
+        if order_status == 'created':
+            form.instance.order_id = order_id
+            return super(ProfileCreditBalanceView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_balance_transaction_confirm', kwargs={'pk': self.object.id})
+
 
 ##############################################################################
 # Support Ticket Specific Views

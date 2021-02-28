@@ -6,9 +6,8 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username,
-                               validate_amount, validate_balance_type_of_transaction,
-                               validate_investment_type_of_transaction, validate_support_ticket_type_of_ticket, validate_message)
+from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username, validate_amount,
+                               validate_balance_type_of_transaction, validate_investment_type_of_transaction, validate_support_ticket_type_of_ticket, validate_message)
 from config.utils import send_otp
 from django.db.models import Q
 from decimal import Decimal
@@ -137,7 +136,8 @@ class BalanceTransaction(models.Model):
         ('D', 'Debit')
 
     )
-    order_id = models.CharField(max_length=250, blank=False)  # Payment Gateway's Reference ID
+    # Payment Gateway's Reference ID fro Credit otherwise System Generated
+    order_id = models.CharField(max_length=250, blank=False)
     payment_id = models.CharField(max_length=250, blank=True)  # Payment Gateway's Payment ID
     payment_signature = models.CharField(max_length=250, blank=True)  # Payment Gateway's Signature
     user = models.ForeignKey(

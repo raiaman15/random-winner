@@ -34,12 +34,15 @@ urlpatterns = [
          name='profile_balance_transaction_list'),
     path('profile/investment-transaction/', accounts_views.ProfileInvestmentTransactionListView.as_view(),
          name='profile_investment_transaction_list'),
-    # Profile Add Balance
-    path('profile/balance/add/', accounts_views.ProfileAddBalanceView.as_view(), name='profile_balance_transaction_create'),
-    path('profile/balance/add/confirm/<int:pk>/', accounts_views.ProfileAddBalanceConfirmView.as_view(),
+    # Profile Credit, Debit Balance
+    path('profile/balance/credit/', accounts_views.ProfileCreditBalanceView.as_view(),
+         name='profile_balance_credit_transaction_create'),
+    path('profile/balance/credit/confirm/<int:pk>/', accounts_views.ProfileCreditBalanceConfirmView.as_view(),
          name='profile_balance_transaction_confirm'),
-    path('profile/balance/add/status/<int:pk>/', accounts_views.ProfileAddBalanceStatusView.as_view(),
+    path('profile/balance/credit/status/<int:pk>/', accounts_views.ProfileCreditBalanceStatusView.as_view(),
          name='profile_balance_transaction_status'),
+    path('profile/balance/debit/', accounts_views.ProfileCreditBalanceView.as_view(),
+         name='profile_balance_debit_transaction_create'),
     # Support Ticket Specific Routes
     path('profile/support-ticket/create', accounts_views.ProfileSupportTicketCreateView.as_view(),
          name='profile_support_ticket_create'),
