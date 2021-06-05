@@ -1,11 +1,11 @@
 # Verify at http://yaml-online-parser.appspot.com/
 version: "3.8"
-   
+
 services:
-  
+
   nginx:
     container_name: nginx
-    build: 
+    build:
       context: .
       dockerfile: ./compose/production/nginx/Dockerfile
     volumes:
@@ -15,7 +15,7 @@ services:
       - 80:80 # HOST:CONTAINER
     depends_on:
       - django_production
-  
+
   django_production:
     restart: unless-stopped
     container_name: django_production
@@ -32,7 +32,7 @@ services:
       - ./.envs/.production/.django
     depends_on:
       - postgres_production
-  
+
   postgres_production:
     container_name: postgres_production
     image: postgres

@@ -15,170 +15,171 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">My Dashboard</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">My Dashboard</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">My Dashboard</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">My Dashboard</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-6 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card card-widget widget-user shadow">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header bg-white">
-                            <h3 class="widget-user-username font-weight-bold">{{user.first_name}} {{user.last_name}}
-                            </h3>
-                            <h5 class="widget-user-desc">
-                                {% if user|has_group:"manager" %}
-                                MANAGER - <i class="fas fa-check-circle text-primary"></i>
-                                {% endif %}
-                                {% if user|has_group:"master" %}
-                                MASTER - <i class="fas fa-check-circle text-primary"></i>
-                                {% endif %}
-                                {% if user.identity_verified and user.contact_verified %}
-                                MEMBER - <i class="fas fa-check-circle text-primary"></i>
-                                {% else %}
-                                MEMBER - <i class="fas fa-times-circle text-danger"></i>
-                                {% endif %}
-                            </h5>
-                        </div>
-                        <a href="{% url 'profile_picture' %}">
-                            <div class="widget-user-image">
-                                {% if user.picture %}
-                                <img src="{{ user.picture.url }}" class="img-circle elevation-2"
-                                    style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
-                                {% else %}
-                                <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
-                                    alt="User Image">
-                                {% endif %}
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Left col -->
+                    <section class="col-lg-6 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card card-widget widget-user shadow">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div class="widget-user-header bg-white">
+                                <h3 class="widget-user-username font-weight-bold">{{ user.first_name }} {{ user.last_name }}
+                                </h3>
+                                <h5 class="widget-user-desc">
+                                    {% if user|has_group:"manager" %}
+                                        MANAGER - <i class="fas fa-check-circle text-primary"></i>
+                                    {% endif %}
+                                    {% if user|has_group:"master" %}
+                                        MASTER - <i class="fas fa-check-circle text-primary"></i>
+                                    {% endif %}
+                                    {% if user.identity_verified and user.contact_verified %}
+                                        MEMBER - <i class="fas fa-check-circle text-primary"></i>
+                                    {% else %}
+                                        MEMBER - <i class="fas fa-times-circle text-danger"></i>
+                                    {% endif %}
+                                </h5>
                             </div>
-                        </a>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
-                                    <div class="description-block">
-                                        <h5 class="description-header">{{user.balance_amount}}</h5>
-                                        <span class="description-text">BALANCE AMOUNT</span>
-                                    </div>
-                                    <!-- /.description-block -->
+                            <a href="{% url 'profile_picture' %}">
+                                <div class="widget-user-image">
+                                    {% if user.picture %}
+                                        <img src="{{ user.picture.url }}" class="img-circle elevation-2"
+                                             style="height:6rem; width:6rem;"
+                                             alt="{{ user.first_name }} {{ user.last_name }} Image">
+                                    {% else %}
+                                        <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1"
+                                             alt="User Image">
+                                    {% endif %}
                                 </div>
-                                <!-- /.col -->
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
-                                    <div class="description-block">
-                                        <h5 class="description-header">{{user.member_of_pool.count}}</h5>
-                                        <span class="description-text">MEMBER OF POOLS</span>
+                            </a>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-bottom">
+                                        <div class="description-block">
+                                            <h5 class="description-header">{{ user.balance_amount }}</h5>
+                                            <span class="description-text">BALANCE AMOUNT</span>
+                                        </div>
+                                        <!-- /.description-block -->
                                     </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                {% if user|has_group:"master" %}
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
-                                    <div class="description-block">
-                                        <h5 class="description-header">{{user.member_of_pool.count}}</h5>
-                                        <span class="description-text">MASTER OF POOLS</span>
+                                    <!-- /.col -->
+                                    <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-bottom">
+                                        <div class="description-block">
+                                            <h5 class="description-header">{{ user.member_of_pool.count }}</h5>
+                                            <span class="description-text">MEMBER OF POOLS</span>
+                                        </div>
+                                        <!-- /.description-block -->
                                     </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                {% endif %}
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-bottom">
-                                    <div class="description-block">
-                                        <h5 class="description-header">{{user.investment_amount}}</h5>
-                                        <span class="description-text">INVESTMENT AMOUNT</span>
+                                    <!-- /.col -->
+                                    {% if user|has_group:"master" %}
+                                        <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-bottom">
+                                            <div class="description-block">
+                                                <h5 class="description-header">{{ user.member_of_pool.count }}</h5>
+                                                <span class="description-text">MASTER OF POOLS</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    {% endif %}
+                                    <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-bottom">
+                                        <div class="description-block">
+                                            <h5 class="description-header">{{ user.investment_amount }}</h5>
+                                            <span class="description-text">INVESTMENT AMOUNT</span>
+                                        </div>
+                                        <!-- /.description-block -->
                                     </div>
-                                    <!-- /.description-block -->
+                                    <!-- /.col -->
                                 </div>
-                                <!-- /.col -->
+                                <!-- /.row -->
                             </div>
-                            <!-- /.row -->
                         </div>
-                    </div>
 
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">Profile Details</h3>
+                        <div class="card bg-black">
+                            <div class="card-header">
+                                <h3 class="card-title">Profile Details</h3>
 
-                            <div class="card-tools">
-                                <a href="{% url 'profile_detail' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-edit"></i> EDIT PROFILE
-                                </a>
+                                <div class="card-tools">
+                                    <a href="{% url 'profile_detail' %}" type="button" class="btn btn-tool">
+                                        <i class="fas fa-edit"></i> EDIT PROFILE
+                                    </a>
+                                </div>
+                                <!-- /.card-tools -->
                             </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body" style="display: block;">
-                            <table class="table">
-                                <thead>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <td width="50%">Email ID</td>
-                                        <td>{{user.email}}</td>
+                                        <td>{{ user.email }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr>
                                         <td>First Name</td>
-                                        <td>{{user.first_name}}</td>
+                                        <td>{{ user.first_name }}</td>
                                     </tr>
                                     <tr>
                                         <td>Last Name</td>
-                                        <td>{{user.last_name}}</td>
+                                        <td>{{ user.last_name }}</td>
                                     </tr>
                                     <tr>
                                         <td>Contact Number</td>
-                                        <td>{{user.username}}</td>
+                                        <td>{{ user.username }}</td>
                                     </tr>
                                     <tr>
                                         <td>Aadhaar Number</td>
-                                        <td>{{user.aadhaar_number}}</td>
+                                        <td>{{ user.aadhaar_number }}</td>
                                     </tr>
                                     <tr>
                                         <td>PAN Number</td>
-                                        <td>{{user.pan_number}}</td>
+                                        <td>{{ user.pan_number }}</td>
                                     </tr>
                                     <tr>
                                         <td>Identity Proof</td>
                                         <td>
                                             {% if user.identity_proof and user.identity_verified %}
-                                            <a href="{{ user.identity_proof.url }}">
-                                                <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
-                                            </a>
+                                                <a href="{{ user.identity_proof.url }}">
+                                                    <img src="{{ user.identity_proof.url }}"
+                                                         alt="{{ user.identity_proof.url }}" style="max-width: 33%;">
+                                                </a>
                                             {% elif user.identity_proof and user.identity_reject_reason %}
-                                            REJECTED | <a href="{%url 'profile_identity_proof_upload' %}">Retry</a>
-                                            <br />
-                                            Last Rejection Reason: {{ user.identity_reject_reason }}
+                                                REJECTED | <a href="{% url 'profile_identity_proof_upload' %}">Retry</a>
+                                                <br/>
+                                                Last Rejection Reason: {{ user.identity_reject_reason }}
                                             {% elif user.identity_proof %}
-                                            <a href="{{ user.identity_proof.url }}">
-                                                <img src="{{ user.identity_proof.url }}"
-                                                    alt="{{user.identity_proof.url}}" style="max-width: 33%;">
-                                            </a>
-                                            <span class="text-danger">
+                                                <a href="{{ user.identity_proof.url }}">
+                                                    <img src="{{ user.identity_proof.url }}"
+                                                         alt="{{ user.identity_proof.url }}" style="max-width: 33%;">
+                                                </a>
+                                                <span class="text-danger">
                                                 VERIFICATION PENDING FROM
-                                                {{PRODUCT_NAME|upper}}
+                                                {{ PRODUCT_NAME|upper }}
                                             </span>
                                             {% else %}
-                                            <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
-                                                href="{%url 'profile_identity_proof_upload' %}">Upload</a> <br />
+                                                <span class="text-danger">DOCUMENT NOT UPLOADED</span> | <a
+                                                    href="{% url 'profile_identity_proof_upload' %}">Upload</a> <br/>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -187,9 +188,9 @@
                                         <td>Identity Verified</td>
                                         <td>
                                             {% if user.identity_verified %}
-                                            <i class="fas fa-check-circle text-primary"></i>
+                                                <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i>
+                                                <i class="fas fa-times-circle text-danger"></i>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -197,355 +198,368 @@
                                         <td>Contact Verified</td>
                                         <td>
                                             {% if user.contact_verified %}
-                                            <i class="fas fa-check-circle text-primary"></i>
+                                                <i class="fas fa-check-circle text-primary"></i>
                                             {% else %}
-                                            <i class="fas fa-times-circle text-danger"></i> |
-                                            <a href="{% url 'profile_verification_sms' %}">VERIFY NOW</a>
+                                                <i class="fas fa-times-circle text-danger"></i> |
+                                                <a href="{% url 'profile_verification_sms' %}">VERIFY NOW</a>
                                             {% endif %}
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card-body -->
-                    </div>
 
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">Profile Billing Address</h3>
-                            {% if user.billing_address %}
-                            <div class="card-tools">
-                                <a href="{% url 'profile_billing_address_update' user.id %}" type="button"
-                                    class="btn btn-tool">
-                                    <i class="fas fa-refresh"></i> UPDATE
-                                </a>
+                        <div class="card bg-black">
+                            <div class="card-header">
+                                <h3 class="card-title">Profile Billing Address</h3>
+                                {% if user.billing_address %}
+                                    <div class="card-tools">
+                                        <a href="{% url 'profile_billing_address_update' user.id %}" type="button"
+                                           class="btn btn-tool">
+                                            <i class="fas fa-refresh"></i> UPDATE
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="card-tools">
+                                        <a href="{% url 'profile_billing_address_create' %}" type="button"
+                                           class="btn btn-tool">
+                                            <i class="fas fa-plus"></i> ADD
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                <!-- /.card-tools -->
                             </div>
-                            {% else %}
-                            <div class="card-tools">
-                                <a href="{% url 'profile_billing_address_create' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-plus"></i> ADD
-                                </a>
-                            </div>
-                            {% endif %}
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body" style="display: block;">
-                            <table class="table">
-                                <thead>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <td width="30%">Full Name</td>
-                                        <td>{{user.billing_address.name}}</td>
+                                        <td>{{ user.billing_address.name }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr>
                                         <td>Address Line 1</td>
-                                        <td>{{user.billing_address.address1}}</td>
+                                        <td>{{ user.billing_address.address1 }}</td>
                                     </tr>
                                     <tr>
                                         <td>Address Line 2</td>
-                                        <td>{{user.billing_address.address2}}</td>
+                                        <td>{{ user.billing_address.address2 }}</td>
                                     </tr>
                                     <tr>
                                         <td>Zip / Postal Code</td>
-                                        <td>{{user.billing_address.zip_code}}</td>
+                                        <td>{{ user.billing_address.zip_code }}</td>
                                     </tr>
                                     <tr>
                                         <td>City</td>
-                                        <td>{{user.billing_address.city}}</td>
+                                        <td>{{ user.billing_address.city }}</td>
                                     </tr>
                                     <tr>
                                         <td>State</td>
-                                        <td>{{user.billing_address.state}}</td>
+                                        <td>{{ user.billing_address.state }}</td>
                                     </tr>
                                     <tr>
                                         <td>Country</td>
-                                        <td>{{user.billing_address.country}}</td>
+                                        <td>{{ user.billing_address.country }}</td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer text-center text-danger">
+                                {% if user.billing_address %}
+                                {% else %}
+                                    There is no Billing Address associated with your Profile.
+                                    Please add a new Billing Address for future transactions.
+                                    <br/>
+                                    <a href="{% url 'profile_billing_address_create' %}" type="button"
+                                       class="btn btn-sm btn-secondary">
+                                        Add Billing Address
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer text-center text-danger">
-                            {% if user.billing_address %}
-                            {% else %}
-                            There is no Billing Address associated with your Profile.
-                            Please add a new Billing Address for future transactions.
-                            <br />
-                            <a href="{% url 'profile_billing_address_create' %}" type="button"
-                                class="btn btn-sm btn-secondary">
-                                Add Billing Address
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
 
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">Profile Bank Account Detail</h3>
-                            {% if user.bank_account_detail %}
-                            <div class="card-tools">
-                                <a href="{% url 'profile_bank_account_detail_update' user.id %}" type="button"
-                                    class="btn btn-tool">
-                                    <i class="fas fa-refresh"></i> UPDATE
-                                </a>
+                        <div class="card bg-black">
+                            <div class="card-header">
+                                <h3 class="card-title">Profile Bank Account Detail</h3>
+                                {% if user.bank_account_detail %}
+                                    <div class="card-tools">
+                                        <a href="{% url 'profile_bank_account_detail_update' user.id %}" type="button"
+                                           class="btn btn-tool">
+                                            <i class="fas fa-refresh"></i> UPDATE
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="card-tools">
+                                        <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
+                                           class="btn btn-tool">
+                                            <i class="fas fa-plus"></i> ADD
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                <!-- /.card-tools -->
                             </div>
-                            {% else %}
-                            <div class="card-tools">
-                                <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
-                                    class="btn btn-tool">
-                                    <i class="fas fa-plus"></i> ADD
-                                </a>
-                            </div>
-                            {% endif %}
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body" style="display: block;">
-                            <table class="table">
-                                <thead>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <td width="30%">Bank Name</td>
-                                        <td>{{user.bank_account_detail.bank_name}}</td>
+                                        <td>{{ user.bank_account_detail.bank_name }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr>
                                         <td>Account Number</td>
-                                        <td>{{user.bank_account_detail.account_number}}</td>
+                                        <td>{{ user.bank_account_detail.account_number }}</td>
                                     </tr>
                                     <tr>
                                         <td>IFSC Code</td>
-                                        <td>{{user.bank_account_detail.ifsc_code}}</td>
+                                        <td>{{ user.bank_account_detail.ifsc_code }}</td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer text-center text-danger">
-                            {% if user.bank_account_detail %}
-                            {% else %}
-                            There is no Bank Account Detail associated with your Profile.
-                            Please add Bank Account Detail for recieving the returns.
-                            <br />
-                            <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
-                                class="btn btn-sm btn-secondary">
-                                Add Bank Account Detail
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </section>
-                <!-- /.Left col -->
-
-                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-6 connectedSortable text-center">
-                    {% if user|has_group:"member" %}
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="nav-icon fab fa-galactic-republic"></i>
-                                My Membership Pools
-                            </h3>
-                            <div class="card-tools">
-                                <a href="{% url 'pool_list' %}" type="button" class="btn btn-tool">
-                                    <i class="fas fa-globe-asia"></i> MORE POOLS
-                                </a>
+                                    </tbody>
+                                </table>
                             </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            {% if user.member_of_pool.all %}
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>SIZE</th>
-                                        <th>FILLED</th>
-                                        <th>INVESTMENT</th>
-                                        <th>POOLMASTER</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for pool in user.member_of_pool.all %}
-                                    <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                        <td>{{pool.size}}</td>
-                                        <td>{{pool.members.count}}</td>
-                                        <td>{{pool.investment|intcomma}}</td>
-                                        <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            {% else %}
-                            <div class="text-center p-4 text-lg">
-                                <a href="{% url 'pool_list' %}">
-                                    Explore Global Pools <i class="fas fa-globe-asia fa-4x"></i> Start Joining...
-                                </a>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer">
-                            {% if not user.member_of_pool.count %}
-                            Join some pools to start Membership
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title"><strong>Wanna become Member of Pools?</strong></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <div class="card-body" style="display: block;">
-                            <p class="h5">
-                                Pools will get activated once your profile is verified.<br /> Meanwhile, you can update
-                                profile and add billing address to speed up the process.
-                            </p>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer" style="display:block;">
-                            <a href="{% url 'profile_billing_address_create' %}" class="btn btn-secondary">ADD BILLING
-                                ADDRESS</a>
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">UPDATE PROFILE DETAILS</a>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if user|has_group:"master" %}
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="nav-icon fas fa-hat-cowboy"></i>
-                                My Mastership Pools
-                            </h3>
-                            <div class="card-tools">
-                                <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
-                                    <i class="nav-icon fas fa-plus"></i>
-                                    CREATE POOL
-                                </a>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            {% if user.master_of_pool.all %}
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>SIZE</th>
-                                        <th>FILLED</th>
-                                        <th>INVESTMENT</th>
-                                    </tr>
-                                </thead>
-                                {% if user.master_of_pool.all %}
-                                <tbody>
-                                    {% for pool in user.master_of_pool.all %}
-                                    <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                        <td>{{pool.size}}</td>
-                                        <td>{{pool.members.count}}</td>
-                                        <td>
-                                            {% widthratio pool.investment 1 pool.members.count %}
-                                            ({{pool.investment|intcomma}} / Member)
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
+                            <!-- /.card-body -->
+                            <div class="card-footer text-center text-danger">
+                                {% if user.bank_account_detail %}
+                                {% else %}
+                                    There is no Bank Account Detail associated with your Profile.
+                                    Please add Bank Account Detail for recieving the returns.
+                                    <br/>
+                                    <a href="{% url 'profile_bank_account_detail_create' %}" type="button"
+                                       class="btn btn-sm btn-secondary">
+                                        Add Bank Account Detail
+                                    </a>
                                 {% endif %}
-                            </table>
-                            {% else %}
-                            <div class="text-center p-4 text-lg">
-                                <a href="{% url 'pool_create' %}">
-                                    Create a Pool <i class="fas fa-hat-cowboy fa-4x"></i> Be a PoolMaster...
-                                </a>
                             </div>
-                            {% endif %}
                         </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer">
-                            {% if not user.master_of_pool.count %}
-                            Create some pools to start Mastership
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
+                    </section>
+                    <!-- /.Left col -->
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                    <!-- Right col (We are only adding the ID to make the widgets sortable)-->
+                    <section class="col-lg-6 connectedSortable text-center">
+                        {% if user|has_group:"member" %}
+                            <div class="card bg-black">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="nav-icon fab fa-galactic-republic"></i>
+                                        My Membership Pools
+                                    </h3>
+                                    <div class="card-tools">
+                                        <a href="{% url 'pool_list' %}" type="button" class="btn btn-tool">
+                                            <i class="fas fa-globe-asia"></i> MORE POOLS
+                                        </a>
+                                    </div>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0">
+                                    {% if user.member_of_pool.all %}
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>NAME</th>
+                                                <th>SIZE</th>
+                                                <th>FILLED</th>
+                                                <th>INVESTMENT</th>
+                                                <th>POOLMASTER</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for pool in user.member_of_pool.all %}
+                                                <tr>
+                                                    <td><a href="{% url 'pool_detail' pool.id %}">{{ pool.name }}</a>
+                                                    </td>
+                                                    <td>{{ pool.size }}</td>
+                                                    <td>{{ pool.members.count }}</td>
+                                                    <td>{{ pool.investment|intcomma }}</td>
+                                                    <td>{{ pool.master.first_name }} {{ pool.master.last_name }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <div class="text-center p-4 text-lg">
+                                            <a href="{% url 'pool_list' %}">
+                                                Explore Global Pools <i class="fas fa-globe-asia fa-4x"></i> Start
+                                                Joining...
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    {% if not user.member_of_pool.count %}
+                                        Join some pools to start Membership
+                                    {% endif %}
+                                </div>
                             </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <div class="card-body">
-                            {% if user.is_willing_master %}
-                            <p class="h5">
-                                You have already applied! Someone from team {{PRODUCT_NAME}} will
-                                reach out to you shortly.
-                            </p>
-                            {% else %}
-                            {% if user.first_name or user.last_name %}
-                            {% if user.identity_verified %}
-                            {% if user.aadhaar_number or user.pan_number %}
-                            {% if user.contact_verified %}
-                            <p class="h5">
-                                It seems like you have filled all necessary details and your profile is verified. You
-                                are eligible to apply for Pool Master.
-                            </p>
-                            <a href="{% url 'profile_apply_poolmaster' %}" class="btn btn-secondary">Apply for
-                                PoolMaster</a>
-                            {% else %}
-                            <p class="h5">
-                                Please verify your contact number.
-                            </p>
-                            <a href="{% url 'profile_verification_sms' %}" class="btn btn-secondary">Verify Contact
-                                Number</a>
-                            {% endif %}
-                            {% else %}
-                            <p class="h5">
-                                Please fill all the necessary details.
-                            </p>
-                            <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update Necessary
-                                Details</a>
-                            {% endif %}
-                            {% else %}
-                            Identity Proof Verification is pending.
-                            <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
-                            {% endif %}
-                            {% else %}
-                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your Name</a>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    {% endif %}
+                        {% else %}
+                            <div class="card bg-black">
+                                <div class="card-header">
+                                    <h3 class="card-title"><strong>Wanna become Member of Pools?</strong></h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <div class="card-body" style="display: block;">
+                                    <p class="h5">
+                                        Pools will get activated once your profile is verified.<br/> Meanwhile, you can
+                                        update
+                                        profile and add billing address to speed up the process.
+                                    </p>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer" style="display:block;">
+                                    <a href="{% url 'profile_billing_address_create' %}" class="btn btn-secondary">ADD
+                                        BILLING
+                                        ADDRESS</a>
+                                    <a href="{% url 'profile_detail' %}" class="btn btn-secondary">UPDATE PROFILE
+                                        DETAILS</a>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if user|has_group:"master" %}
+                            <div class="card bg-black">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="nav-icon fas fa-hat-cowboy"></i>
+                                        My Mastership Pools
+                                    </h3>
+                                    <div class="card-tools">
+                                        <a href="{% url 'pool_create' %}" type="button" class="btn btn-tool">
+                                            <i class="nav-icon fas fa-plus"></i>
+                                            CREATE POOL
+                                        </a>
+                                    </div>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0">
+                                    {% if user.master_of_pool.all %}
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>NAME</th>
+                                                <th>SIZE</th>
+                                                <th>FILLED</th>
+                                                <th>INVESTMENT</th>
+                                            </tr>
+                                            </thead>
+                                            {% if user.master_of_pool.all %}
+                                                <tbody>
+                                                {% for pool in user.master_of_pool.all %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{% url 'pool_detail' pool.id %}">{{ pool.name }}</a>
+                                                        </td>
+                                                        <td>{{ pool.size }}</td>
+                                                        <td>{{ pool.members.count }}</td>
+                                                        <td>
+                                                            {% widthratio pool.investment 1 pool.members.count %}
+                                                            ({{ pool.investment|intcomma }} / Member)
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            {% endif %}
+                                        </table>
+                                    {% else %}
+                                        <div class="text-center p-4 text-lg">
+                                            <a href="{% url 'pool_create' %}">
+                                                Create a Pool <i class="fas fa-hat-cowboy fa-4x"></i> Be a PoolMaster...
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    {% if not user.master_of_pool.count %}
+                                        Create some pools to start Mastership
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card bg-black">
+                                <div class="card-header">
+                                    <h3 class="card-title"><strong>Wanna become Master of Pools?</strong></h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <!-- /.card-tools -->
+                                </div>
+                                <div class="card-body">
+                                    {% if user.is_willing_master %}
+                                        <p class="h5">
+                                            You have already applied! Someone from team {{ PRODUCT_NAME }} will
+                                            reach out to you shortly.
+                                        </p>
+                                    {% else %}
+                                        {% if user.first_name or user.last_name %}
+                                            {% if user.identity_verified %}
+                                                {% if user.aadhaar_number or user.pan_number %}
+                                                    {% if user.contact_verified %}
+                                                        <p class="h5">
+                                                            It seems like you have filled all necessary details and your
+                                                            profile is verified. You
+                                                            are eligible to apply for Pool Master.
+                                                        </p>
+                                                        <a href="{% url 'profile_apply_poolmaster' %}"
+                                                           class="btn btn-secondary">Apply for
+                                                            PoolMaster</a>
+                                                    {% else %}
+                                                        <p class="h5">
+                                                            Please verify your contact number.
+                                                        </p>
+                                                        <a href="{% url 'profile_verification_sms' %}"
+                                                           class="btn btn-secondary">Verify Contact
+                                                            Number</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <p class="h5">
+                                                        Please fill all the necessary details.
+                                                    </p>
+                                                    <a href="{% url 'profile_detail' %}" class="btn btn-secondary">Update
+                                                        Necessary
+                                                        Details</a>
+                                                {% endif %}
+                                            {% else %}
+                                                Identity Proof Verification is pending.
+                                                <a href="{% url 'profile_identity_proof_upload' %}">More Info.</a>
+                                            {% endif %}
+                                        {% else %}
+                                            <a href="{% url 'profile_name' %}" class="btn btn-secondary">Update Your
+                                                Name</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        {% endif %}
 
 
-                </section>
-                <!-- right col -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+                    </section>
+                    <!-- right col -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
-</div>
+    </div>
 
 {% endblock content %}
 

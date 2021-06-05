@@ -14,61 +14,62 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Pool Invitations</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Pool Invitations</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Pool Invitations</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Pool Invitations</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Section -->
-                <section class="col-lg-12 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fab fa-galactic-republic"></i>
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Section -->
+                    <section class="col-lg-12 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fab fa-galactic-republic"></i>
+                                </h3>
 
-                            <div class="card-tools">
-                                <!-- SEARCH FORM -->
-                                <form action="{% url 'pool_search_results' %}" class="form-inline ml-3">
-                                    <div class="input-group input-group-sm">
-                                        <input class="form-control form-control-navbar bg-black border" type="search"
-                                            placeholder="Pool Search" aria-label="Pool Search" name="q">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-navbar bg-secondary" type="submit">
-                                                <i class="fas fa-search"></i>
-                                            </button>
+                                <div class="card-tools">
+                                    <!-- SEARCH FORM -->
+                                    <form action="{% url 'pool_search_results' %}" class="form-inline ml-3">
+                                        <div class="input-group input-group-sm">
+                                            <input class="form-control form-control-navbar bg-black border"
+                                                   type="search"
+                                                   placeholder="Pool Search" aria-label="Pool Search" name="q">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-navbar bg-secondary" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
 
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="card-body table-responsive p-0">
-                                <table class="table">
-                                    <thead>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>ACCEPT/REJECT</th>
                                             <th>POOL NAME</th>
@@ -76,46 +77,50 @@
                                             <th>FILLED</th>
                                             <th>INVESTMENT</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for pool_invite in pool_invite_list %}
-                                        <tr>
-                                            <td>
-                                                <form method="post" action="{% url 'pool_join' %}">
-                                                    {% csrf_token %}
-                                                    <input class="d-none" name="pool" value="{{pool_invite.pool.id}}">
-                                                    <input class="d-none" id="accept_reject" name="accept_reject" value="">
-                                                    <input type="submit" class="btn btn-sm btn-success"
-                                                        onclick="accepting()" value="Accept">
-                                                    <input type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="rejecting()" value="Reject">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <a href="{% url 'pool_detail' pool_invite.pool.id %}">
-                                                    {{pool_invite.pool.name}}
-                                                </a>
-                                            </td>
-                                            <td>{{pool_invite.pool.master.first_name}}
-                                                {{pool_invite.pool.master.last_name}}</td>
-                                            <td>{{pool_invite.pool.members.count}} / {{pool_invite.pool.size}}</td>
-                                            <td>{{pool_invite.pool.investment|intcomma}}</td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <form method="post" action="{% url 'pool_join' %}">
+                                                        {% csrf_token %}
+                                                        <input class="d-none" name="pool"
+                                                               value="{{ pool_invite.pool.id }}">
+                                                        <input class="d-none" id="accept_reject" name="accept_reject"
+                                                               value="">
+                                                        <input type="submit" class="btn btn-sm btn-success"
+                                                               onclick="accepting()" value="Accept">
+                                                        <input type="submit" class="btn btn-sm btn-danger"
+                                                               onclick="rejecting()" value="Reject">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'pool_detail' pool_invite.pool.id %}">
+                                                        {{ pool_invite.pool.name }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ pool_invite.pool.master.first_name }}
+                                                    {{ pool_invite.pool.master.last_name }}</td>
+                                                <td>{{ pool_invite.pool.members.count }}
+                                                    / {{ pool_invite.pool.size }}</td>
+                                                <td>{{ pool_invite.pool.investment|intcomma }}</td>
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            <div class="pagination">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div><!-- /.card-body -->
+                            <!-- Pagination -->
+                            <div class="card-footer text-center">
+                                <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
-                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        <a class="btn btn-sm btn-primary" href="?page=1">
                                         &laquo; First
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.previous_page_number }}">
                                         Previous
                                     </a>
                                     {% endif %}
@@ -125,45 +130,47 @@
                                     </span>
 
                                     {% if page_obj.has_next %}
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
                                         Next
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.paginator.num_pages }}">
                                         Last &raquo;
                                     </a>
                                     {% endif %}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card -->
-                </section>
-                <!-- /.Section -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+                            <!-- /.card -->
+                    </section>
+                    <!-- /.Section -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
-</div>
+    </div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<script>
-    function accepting() {
-        if (confirm('Are you sure you want to accept the Pool Invitation & Join the Pool?')) {
-            $("#accept_reject").val("Accept")
-        } else {
-            return false;
+    <script>
+        function accepting() {
+            if (confirm('Are you sure you want to accept the Pool Invitation & Join the Pool?')) {
+                $("#accept_reject").val("Accept")
+            } else {
+                return false;
+            }
         }
-    }
-    function rejecting() {
-        if (confirm('Are you sure you want to reject the Pool Invitation?')) {
-            $("#accept_reject").val("Reject")
-        } else {
-            return false;
+
+        function rejecting() {
+            if (confirm('Are you sure you want to reject the Pool Invitation?')) {
+                $("#accept_reject").val("Reject")
+            } else {
+                return false;
+            }
         }
-    }
-</script>
+    </script>
 {% endblock javascripts %}

@@ -21,354 +21,354 @@
 </head>
 
 <body>
-    <!-- ##### Preloader ##### -->
-    <div id="preloader">
-        <i class="circle-preloader"></i>
-    </div>
+<!-- ##### Preloader ##### -->
+<div id="preloader">
+    <i class="circle-preloader"></i>
+</div>
 
-    <!-- ##### Header Area Start ##### -->
-    <header class="header-area">
+<!-- ##### Header Area Start ##### -->
+<header class="header-area">
 
-        <!-- Top Header Area -->
+    <!-- Top Header Area -->
 
 
-        <!-- Navbar Area -->
-        <div class="cryptos-main-menu">
-            <div class="classy-nav-container breakpoint-off">
-                <div class="container">
+    <!-- Navbar Area -->
+    <div class="cryptos-main-menu">
+        <div class="classy-nav-container breakpoint-off">
+            <div class="container">
+                <!-- Menu -->
+                <nav class="classy-navbar justify-content-between" id="cryptosNav">
+                    <!-- Logo -->
+                    <a class="nav-brand" href="index.html">
+                        BitBoomer
+                    </a>
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    </div>
+
                     <!-- Menu -->
-                    <nav class="classy-navbar justify-content-between" id="cryptosNav">
-                        <!-- Logo -->
-                        <a class="nav-brand" href="index.html">
-                            BitBoomer
-                        </a>
-                        <!-- Navbar Toggler -->
-                        <div class="classy-navbar-toggler">
-                            <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    <div class="classy-menu">
+
+                        <!-- close btn -->
+                        <div class="classycloseIcon">
+                            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                         </div>
+                        <!-- Nav Start -->
+                        <div class="classynav">
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
 
-                        <!-- Menu -->
-                        <div class="classy-menu">
-
-                            <!-- close btn -->
-                            <div class="classycloseIcon">
-                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
-                            </div>
-                            <!-- Nav Start -->
-                            <div class="classynav">
-                                <ul>
-                                    <li><a href="index.html">Home</a></li>
-
-                                    {% if user.is_authenticated %}
-                                    <li><a href="#">{{user.first_name}}</a>
+                                {% if user.is_authenticated %}
+                                    <li><a href="#">{{ user.first_name }}</a>
                                         <ul class="dropdown">
                                             <li><a href="{% url 'status' %}">Dashboard</a></li>
                                             <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
                                         </ul>
                                     </li>
-                                    {% else %}
+                                {% else %}
                                     <li><a href="{% url 'account_login' %}">Sign In</a></li>
                                     <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
-                                    {% endif %}
-                                </ul>
-                                <!-- Newsletter Form -->
-                            </div>
-                            <!-- Nav End -->
+                                {% endif %}
+                            </ul>
+                            <!-- Newsletter Form -->
                         </div>
-                    </nav>
-                </div>
+                        <!-- Nav End -->
+                    </div>
+                </nav>
             </div>
         </div>
-    </header>
-    <!-- ##### Header Area End ##### -->
+    </div>
+</header>
+<!-- ##### Header Area End ##### -->
 
-    <!-- ##### Hero Area Start ##### -->
-    <section class="hero-area">
-        <div class="hero-slides ">
-            <!-- Single Hero Slide -->
-            <div class="single-hero-slide">
-                <div class="container ">
-                    <div class="row pt-3 align-items-center">
-                        <div class="col-12 col-md-7">
-                            <div class="hero-slides-content">
-                                <h2 class="wow fadeInUp" data-delay="100ms">
-                                    Take a step into the world of
-                                    <span>Exponential Returns</span>
-                                </h2>
-                                <h6 class="wow fadeInUp" data-delay="400ms">
-                                    The cryptocurrency based investments that guarentees return of upto 5% per month!
-                                </h6>
-                                <a href="{% url 'account_signup' %}" class="btn cryptos-btn wow fadeInUp"
-                                    data-delay="700ms">Join the Party</a>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-5">
-                            <div class="hero-slides-thumb wow rollIn " data-delay="1000ms">
-                                <img src="{% static 'product/img/bg-img/bg-2.png' %}" alt="">
-                            </div>
+<!-- ##### Hero Area Start ##### -->
+<section class="hero-area">
+    <div class="hero-slides ">
+        <!-- Single Hero Slide -->
+        <div class="single-hero-slide">
+            <div class="container ">
+                <div class="row pt-3 align-items-center">
+                    <div class="col-12 col-md-7">
+                        <div class="hero-slides-content">
+                            <h2 class="wow fadeInUp" data-delay="100ms">
+                                Take a step into the world of
+                                <span>Exponential Returns</span>
+                            </h2>
+                            <h6 class="wow fadeInUp" data-delay="400ms">
+                                The cryptocurrency based investments that guarentees return of upto 5% per month!
+                            </h6>
+                            <a href="{% url 'account_signup' %}" class="btn cryptos-btn wow fadeInUp"
+                               data-delay="700ms">Join the Party</a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ##### Hero Area End ##### -->
-
-    <!-- ##### Course Area Start ##### -->
-    <div class="cryptos-feature-area section-padding-100-0">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="section-heading text-center mx-auto">
-                        <h3>Let’s <br><span>grow</span> together</h3>
-                        <p>
-                            You can opt in for roles like Pool Member and Pool Master and even contribute in our growth
-                            efforts.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Single Course Area -->
-                <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
-                    <div class="single-feature-area mb-5 text-center">
-                        <img src="{% static 'product/img/bg-img/bit.png' %}" alt="">
-                        <h3>Fast &amp; Easy</h3>
-                        <p>
-                            You don't need to spend much time. All you need is to join a Pool and start recieving
-                            returns!
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Single Course Area -->
-                <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
-                    <div class="single-feature-area active mb-5 text-center">
-                        <img src="{% static 'product/img/bg-img/bit1 (1).png' %}" alt="">
-                        <h3>No strigs attached</h3>
-                        <p>
-                            You are free to invest as per your convenience. You can leave the platform after recieving
-                            your returns.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Single Course Area -->
-                <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
-                    <div class="single-feature-area mb-5 text-center">
-                        <img src="{% static 'product/img/bg-img/bit1 (2).png' %}" alt="">
-                        <h3>No Commisions</h3>
-                        <p>
-                            We don't take any commission in the process.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Single Course Area -->
-                <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
-                    <div class="single-feature-area mb-5 text-center">
-                        <img src="{% static 'product/img/bg-img/bit2.png' %}" alt="">
-                        <h3>100% Reliable</h3>
-                        <p>
-                            With over 100 Pools already running (with 2,00,000 return last month itself!) your
-                            investment is safe!
-                        </p>
-                        <!-- <a href="#" class="btn cryptos-btn">Read More</a> -->
+                    <div class="col-12 col-md-5">
+                        <div class="hero-slides-thumb wow rollIn " data-delay="1000ms">
+                            <img src="{% static 'product/img/bg-img/bg-2.png' %}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ##### Course Area End ##### -->
+</section>
+<!-- ##### Hero Area End ##### -->
 
-    <!-- ##### About Area Start ##### -->
-    <section class="cryptos-about-area">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 col-md-6">
-                    <div class="about-thumbnail mb-5 wow fadeInLeft" data-wow-duration="2s" data-wow-delay=".3s">
-                        <img src="{% static 'product/img/bg-img/bt.png' %}" alt="">
+<!-- ##### Course Area Start ##### -->
+<div class="cryptos-feature-area section-padding-100-0">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading text-center mx-auto">
+                    <h3>Let’s <br><span>grow</span> together</h3>
+                    <p>
+                        You can opt in for roles like Pool Member and Pool Master and even contribute in our growth
+                        efforts.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Single Course Area -->
+            <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
+                <div class="single-feature-area mb-5 text-center">
+                    <img src="{% static 'product/img/bg-img/bit.png' %}" alt="">
+                    <h3>Fast &amp; Easy</h3>
+                    <p>
+                        You don't need to spend much time. All you need is to join a Pool and start recieving
+                        returns!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Single Course Area -->
+            <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
+                <div class="single-feature-area active mb-5 text-center">
+                    <img src="{% static 'product/img/bg-img/bit1 (1).png' %}" alt="">
+                    <h3>No strigs attached</h3>
+                    <p>
+                        You are free to invest as per your convenience. You can leave the platform after recieving
+                        your returns.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Single Course Area -->
+            <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
+                <div class="single-feature-area mb-5 text-center">
+                    <img src="{% static 'product/img/bg-img/bit1 (2).png' %}" alt="">
+                    <h3>No Commisions</h3>
+                    <p>
+                        We don't take any commission in the process.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Single Course Area -->
+            <div class="col-12 col-md-6 col-xl-3 wow bounceInUp " data-wow-duration="1s" data-wow-delay=".1s">
+                <div class="single-feature-area mb-5 text-center">
+                    <img src="{% static 'product/img/bg-img/bit2.png' %}" alt="">
+                    <h3>100% Reliable</h3>
+                    <p>
+                        With over 100 Pools already running (with 2,00,000 return last month itself!) your
+                        investment is safe!
+                    </p>
+                    <!-- <a href="#" class="btn cryptos-btn">Read More</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Course Area End ##### -->
+
+<!-- ##### About Area Start ##### -->
+<section class="cryptos-about-area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6">
+                <div class="about-thumbnail mb-5 wow fadeInLeft" data-wow-duration="2s" data-wow-delay=".3s">
+                    <img src="{% static 'product/img/bg-img/bt.png' %}" alt="">
+                </div>
+            </div>
+            <div class="col-12 col-md-6 ">
+                <div class="about-content mb-5 wow fadeInRight" data-wow-duration="2s" data-wow-delay=".3s">
+                    <div class="section-heading">
+                        <h3>Let’s <br><span>invest and grow</span> together!</h3>
+                        <h5>
+
+                        </h5>
+                        <p>
+
+                        </p>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 ">
-                    <div class="about-content mb-5 wow fadeInRight" data-wow-duration="2s" data-wow-delay=".3s">
-                        <div class="section-heading">
-                            <h3>Let’s <br><span>invest and grow</span> together!</h3>
-                            <h5>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### About Area End ##### -->
 
-                            </h5>
-                            <p>
+<!-- ##### Currency Area Start ##### -->
+<section class="currency-calculator-area section-padding-100 bg-img bg-overlay"
+         style="background-image: url({% static 'product/img/bg-img/bg-2.jpg' %});">
+    <div class="container">
+        <div class="row">
 
-                            </p>
+            <div class="col-md-12 wow fadeInUp">
+                <h1 class="text-center text-white">Testimonials</h1>
+                <p class="text-center text-white"></p>
+                <div class="testimonials">
+                    <div id="carousel1" class="owl-carousel">
+                        <div class="item">
+                            <div class="card text-center">
+                                <img src="{% static 'product/img/bg-img/parent (1).jpg' %}" class="card-img-top"/>
+                                <div class="card-body">
+                                    <h5>Vaibhav Shrivastava</br>
+
+                                    </h5>
+                                    <p class="card-text text-white">Fantastic school! The teachers are Professional,
+                                        caring and
+                                        well organized. The admissions process was outstanding, they
+                                        really care and truly want the best for your child</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card text-center">
+                                <img src="{% static 'product/img/bg-img/parent (2).jpg' %}" class="card-img-top"/>
+                                <div class="card-body">
+                                    <h5>Vikram Singh</br>
+
+                                    </h5>
+                                    <p class="card-text text-white">My Daughter is always happy whenever it is her
+                                        class time.
+                                        I attribute this to the exemplary teaching and community feel
+                                        of the school. A great and caring school.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card text-center">
+                                <img src="{% static 'product/img/bg-img/parent (3).jpg' %}" class="card-img-top"/>
+                                <div class="card-body">
+                                    <h5>Aman Rai</br>
+
+                                    </h5>
+                                    <p class="card-text text-white">This school has helped me in raising my
+                                        children. The
+                                        teachers are really good and dedicated, I will always be grateful
+                                        to this wonderful school.</p>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- ##### About Area End ##### -->
 
-    <!-- ##### Currency Area Start ##### -->
-    <section class="currency-calculator-area section-padding-100 bg-img bg-overlay"
-        style="background-image: url({% static 'product/img/bg-img/bg-2.jpg' %});">
+    </div>
+</section>
+<!-- ##### Currency Area End ##### -->
+
+<!-- ##### Footer Area Start ##### -->
+<footer class="footer-area">
+    <!-- Main Footer Area -->
+    <div class="main-footer-area section-padding-100-0 bg-img bg-overlay"
+         style="background-image: url({% static 'product/img/bg-img/bg-1.jpg' %});">
         <div class="container">
             <div class="row">
 
-                <div class="col-md-12 wow fadeInUp">
-                    <h1 class="text-center text-white">Testimonials</h1>
-                    <p class="text-center text-white"></p>
-                    <div class="testimonials">
-                        <div id="carousel1" class="owl-carousel">
-                            <div class="item">
-                                <div class="card text-center">
-                                    <img src="{% static 'product/img/bg-img/parent (1).jpg' %}" class="card-img-top" />
-                                    <div class="card-body">
-                                        <h5>Vaibhav Shrivastava</br>
-
-                                        </h5>
-                                        <p class="card-text text-white">Fantastic school! The teachers are Professional,
-                                            caring and
-                                            well organized. The admissions process was outstanding, they
-                                            really care and truly want the best for your child</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="card text-center">
-                                    <img src="{% static 'product/img/bg-img/parent (2).jpg' %}" class="card-img-top" />
-                                    <div class="card-body">
-                                        <h5>Vikram Singh</br>
-
-                                        </h5>
-                                        <p class="card-text text-white">My Daughter is always happy whenever it is her
-                                            class time.
-                                            I attribute this to the exemplary teaching and community feel
-                                            of the school. A great and caring school.</p>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="card text-center">
-                                    <img src="{% static 'product/img/bg-img/parent (3).jpg' %}" class="card-img-top" />
-                                    <div class="card-body">
-                                        <h5>Aman Rai</br>
-
-                                        </h5>
-                                        <p class="card-text text-white">This school has helped me in raising my
-                                            children. The
-                                            teachers are really good and dedicated, I will always be grateful
-                                            to this wonderful school.</p>
-
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Footer Widget Area -->
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="footer-widget mb-5">
+                        <div class="widget-title footer-brand">
+                            BitBoomer
+                        </div>
+                        <p>
+                            We help individuals and companies grow by wisely investing in Crypto Currency. We even
+                            simplify the process for individuals with little or no knowledge about the investment or
+                            cryptocurrency!
+                        </p>
+                        <div class="footer-social-info">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-dribbble"></i></a>
+                            <a href="#"><i class="fa fa-behance"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-    </section>
-    <!-- ##### Currency Area End ##### -->
-
-    <!-- ##### Footer Area Start ##### -->
-    <footer class="footer-area">
-        <!-- Main Footer Area -->
-        <div class="main-footer-area section-padding-100-0 bg-img bg-overlay"
-            style="background-image: url({% static 'product/img/bg-img/bg-1.jpg' %});">
-            <div class="container">
-                <div class="row">
-
-                    <!-- Footer Widget Area -->
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="footer-widget mb-5">
-                            <div class="widget-title footer-brand">
-                                BitBoomer
-                            </div>
-                            <p>
-                                We help individuals and companies grow by wisely investing in Crypto Currency. We even
-                                simplify the process for individuals with little or no knowledge about the investment or
-                                cryptocurrency!
-                            </p>
-                            <div class="footer-social-info">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-dribbble"></i></a>
-                                <a href="#"><i class="fa fa-behance"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                            </div>
+                <!-- Footer Widget Area -->
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="footer-widget mb-5">
+                        <div class="widget-title">
+                            <h6>Contact Us</h6>
                         </div>
-                    </div>
-
-                    <!-- Footer Widget Area -->
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="footer-widget mb-5">
-                            <div class="widget-title">
-                                <h6>Contact Us</h6>
-                            </div>
-                            <p>
-                                A108 Adam Street <br>
-                                New York, NY 535022<br>
-                                United States <br>
-                                <strong>Phone:</strong> +1 5589 55488 55<br>
-                                <strong>Email:</strong> info@example.com<br>
-                            </p>
-
-
-                        </div>
-
-                    </div>
-
-                    <!-- Footer Widget Area -->
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="footer-widget mb-5">
-                            <div class="widget-title">
-                                <h6>Quick Links</h6>
-                            </div>
-                            <nav>
-                                <ul class="useful-links  justify-content-between ">
-                                    <li><a href="{% url 'product_page' %}">Home</a></li>
-                                    <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
-                                    <li><a href="{% url 'account_login' %}">Login</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 col-12 pb-3 ">
-                        <p class="text-center text-white  ">© Copyright {% now "Y" %} ,
-                            All Rights Reserved
-                            |<a rel="nofollow" href="{% url 'company_page' %}"><strong
-                                    class="text-white ml-1">{{PRODUCT_NAME}}</strong> </a>
+                        <p>
+                            A108 Adam Street <br>
+                            New York, NY 535022<br>
+                            United States <br>
+                            <strong>Phone:</strong> +1 5589 55488 55<br>
+                            <strong>Email:</strong> info@example.com<br>
                         </p>
 
+
                     </div>
+
+                </div>
+
+                <!-- Footer Widget Area -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="footer-widget mb-5">
+                        <div class="widget-title">
+                            <h6>Quick Links</h6>
+                        </div>
+                        <nav>
+                            <ul class="useful-links  justify-content-between ">
+                                <li><a href="{% url 'product_page' %}">Home</a></li>
+                                <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
+                                <li><a href="{% url 'account_login' %}">Login</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-12 pb-3 ">
+                    <p class="text-center text-white  ">© Copyright {% now "Y" %} ,
+                        All Rights Reserved
+                        |<a rel="nofollow" href="{% url 'company_page' %}"><strong
+                                class="text-white ml-1">{{ PRODUCT_NAME }}</strong> </a>
+                    </p>
+
                 </div>
             </div>
         </div>
-        <!-- Bottom Footer Area -->
+    </div>
+    <!-- Bottom Footer Area -->
 
-    </footer>
-    <!-- ##### Footer Area Start ##### -->
+</footer>
+<!-- ##### Footer Area Start ##### -->
 
-    <!-- ##### All Javascript Script ##### -->
-    <!-- jQuery-2.2.4 js -->
-    <script src="{% static 'product/js/jquery/jquery-2.2.4.min.js' %}"></script>
-    <!-- Popper js -->
-    <script src="{% static 'product/js/bootstrap/popper.min.js' %}"></script>
-    <!-- Bootstrap js -->
-    <script src="{% static 'product/js/bootstrap/bootstrap.min.js' %}"></script>
-    <!-- All Plugins js -->
-    <script src="{% static 'product/js/plugins/plugins.js' %}"></script>
-    <!-- Active js -->
-    <script src="{% static 'product/js/active.js' %}"></script>
-    <script src="{% static 'product/js/wow.js' %}"></script>
-    <script>
-        new WOW().init();
-    </script>
+<!-- ##### All Javascript Script ##### -->
+<!-- jQuery-2.2.4 js -->
+<script src="{% static 'product/js/jquery/jquery-2.2.4.min.js' %}"></script>
+<!-- Popper js -->
+<script src="{% static 'product/js/bootstrap/popper.min.js' %}"></script>
+<!-- Bootstrap js -->
+<script src="{% static 'product/js/bootstrap/bootstrap.min.js' %}"></script>
+<!-- All Plugins js -->
+<script src="{% static 'product/js/plugins/plugins.js' %}"></script>
+<!-- Active js -->
+<script src="{% static 'product/js/active.js' %}"></script>
+<script src="{% static 'product/js/wow.js' %}"></script>
+<script>
+    new WOW().init();
+</script>
 </body>
 
 </html>

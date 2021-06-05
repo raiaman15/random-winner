@@ -14,148 +14,151 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Approve Master</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Approve Master</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Approve Master</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Approve Master</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-6 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-id-card"></i>
-                                Approve as Master
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Left col -->
+                    <section class="col-lg-6 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-id-card"></i>
+                                    Approve as Master
+                                </h3>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Minimize">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
 
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            {% if view.profile.identity_proof %}
-                            <div class="text-center">
-                                <img src="{{ view.profile.identity_proof.url }}" style="max-width: 50%;"><br />
-                                <small>
-                                    Submitted Identity Proof
-                                    {% if view.profile.first_name or view.profile.last_name %}
-                                    by <b>{{view.profile.first_name}} {{view.profile.last_name}}</b>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                {% if view.profile.identity_proof %}
+                                    <div class="text-center">
+                                        <img src="{{ view.profile.identity_proof.url }}" style="max-width: 50%;"><br/>
+                                        <small>
+                                            Submitted Identity Proof
+                                            {% if view.profile.first_name or view.profile.last_name %}
+                                                by <b>{{ view.profile.first_name }} {{ view.profile.last_name }}</b>
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    <hr/>
+                                    {% if view.profile.aadhaar_number or view.profile.pan_number %}
+                                        <div class="text-center">
+                                            <table width=100%>
+                                                <tr>
+                                                    <th>CONTACT NUMBER</th>
+                                                    <th>
+                                                        {% if view.profile.email %}
+                                                            EMAIL ADDRESS
+                                                        {% endif %}
+                                                    </th>
+                                                    <th>AADHAAR NUMBER</th>
+                                                    <th>PAN NUMBER</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="tel:{{ view.profile.username }}">{{ view.profile.username }}</a>
+                                                    </td>
+                                                    <td>
+                                                        {% if view.profile.email %}
+                                                            <a href="mailto:{{ view.profile.email }}">{{ view.profile.email }}</a>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a target="_blank" href="https://resident.uidai.gov.in/verify">
+                                                            {{ view.profile.aadhaar_number }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a target="_blank"
+                                                           href="https://www1.incometaxindiaefiling.gov.in/e-FilingGS/Services/VerifyYourPanDeatils.html?lang=eng">
+                                                            {{ view.profile.pan_number }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     {% endif %}
-                                </small>
-                            </div>
-                            <hr />
-                            {% if view.profile.aadhaar_number or view.profile.pan_number %}
-                            <div class="text-center">
-                                <table width=100%>
-                                    <tr>
-                                        <th>CONTACT NUMBER</th>
-                                        <th>
-                                            {% if view.profile.email %}
-                                            EMAIL ADDRESS
-                                            {% endif %}
-                                        </th>
-                                        <th>AADHAAR NUMBER</th>
-                                        <th>PAN NUMBER</th>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="tel:{{view.profile.username}}">{{view.profile.username}}</a></td>
-                                        <td>
-                                            {% if view.profile.email %}
-                                            <a href="mailto:{{view.profile.email}}">{{view.profile.email}}</a>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <a target="_blank" href="https://resident.uidai.gov.in/verify">
-                                                {{view.profile.aadhaar_number}}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a target="_blank"
-                                                href="https://www1.incometaxindiaefiling.gov.in/e-FilingGS/Services/VerifyYourPanDeatils.html?lang=eng">
-                                                {{view.profile.pan_number}}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+
+                                    <hr/>
+
+                                    Do you really want to approve this profile as Master (PoolMaster)?
+
+                                {% endif %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form | crispy }}
+                                    <input type="submit" class="btn btn-secondary" value="APPROVE">
+                                    <a href="{% url 'manager_profile_willing_master_list' %}"
+                                       class="btn btn-secondary">CANCEL</a>
+                                </form>
+                            </div><!-- /.card-body -->
+                            <!-- Help Text -->
+                            {% if messages %}
+                                <div class="row card-footer text-center pb-0">
+                                    <div class="col-sm-12 text-center">
+                                        {% for message in messages %}
+                                            <p>{{ message }}</p>
+                                        {% endfor %}
+                                    </div><!-- /.col -->
+                                </div>
                             {% endif %}
-
-                            <hr />
-
-                            Do you really want to approve this profile as Master (PoolMaster)?
-
-                            {% endif %}
-                            <form method="post">
-                                {% csrf_token %}
-                                {{ form | crispy }}
-                                <input type="submit" class="btn btn-secondary" value="APPROVE">
-                                <a href="{% url 'manager_profile_willing_master_list' %}"
-                                    class="btn btn-secondary">CANCEL</a>
-                            </form>
-                        </div><!-- /.card-body -->
-                        <!-- Help Text -->
-                        {% if messages %}
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12 text-center">
-                                {% for message in messages %}
-                                <p>{{ message }}</p>
-                                {% endfor %}
-                            </div><!-- /.col -->
+                            <!-- /.Help Text -->
                         </div>
-                        {% endif %}
-                        <!-- /.Help Text -->
-                    </div>
-                    <!-- /.card -->
-                </section>
-                <!-- /.Left col -->
-                <!-- Right col -->
-                <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
-                </section>
-                <!-- right col -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-</div>
+                        <!-- /.card -->
+                    </section>
+                    <!-- /.Left col -->
+                    <!-- Right col -->
+                    <section class="col-lg-6 connectedSortable text-center">
+                        <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
+                    </section>
+                    <!-- right col -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<script>
-    $('#id_identity_verified').bind("change", function (event) {
-        if ($('#id_identity_verified').is(':checked')) {
-            $('#div_id_identity_reject_reason').hide()
-        } else {
-            $('#div_id_identity_reject_reason').show()
-        }
-    });
-</script>
+    <script>
+        $('#id_identity_verified').bind("change", function (event) {
+            if ($('#id_identity_verified').is(':checked')) {
+                $('#div_id_identity_reject_reason').hide()
+            } else {
+                $('#div_id_identity_reject_reason').show()
+            }
+        });
+    </script>
 {% endblock javascripts %}

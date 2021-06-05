@@ -111,19 +111,19 @@ def validate_aadhaar_number(value):
     if len(number) != 12:
         raise ValidationError(
             '%(value)s is not a valid Aadhaar Number. It must be 12 digit long!',
-            params={'value': value},)
+            params={'value': value}, )
 
     if not aadhaar_re.match(number):
         raise ValidationError(
             '%(value)s is not a valid Aadhaar Number. Type the XXXX XXXX XXXX formatted number from your Aadhaar Card! (without spaces)',
-            params={'value': value},)
+            params={'value': value}, )
 
     try:
         verhoeff.validate(number)
     except Exception:
         raise ValidationError(
             '%(value)s is not your valid Aadhaar Number. Type the XXXX XXXX XXXX formatted number from your Aadhaar Card! (without spaces)',
-            params={'value': value},)
+            params={'value': value}, )
 
 
 def validate_pan_number(value):
@@ -154,7 +154,7 @@ def validate_pan_number(value):
     if len(number) != 10:
         raise ValidationError(
             '%(value)s is not a valid PAN Number. It must be 10 digit long!',
-            params={'value': value},)
+            params={'value': value}, )
 
     if not _pan_re.match(number):
         raise ValidationError(

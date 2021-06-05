@@ -12,17 +12,17 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-<style>
-    .roulette {
-        display: block;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    <style>
+        .roulette {
+            display: block;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
         .wheel img {
             transition: transform 10s cubic-bezier(0.3, 1, 0.7, 1),
-                10s filter cubic-bezier(0.1, 1, 0.8, 1),
-                10s -webkit-filter cubic-bezier(0.1, 1, 0.8, 1);
+            10s filter cubic-bezier(0.1, 1, 0.8, 1),
+            10s -webkit-filter cubic-bezier(0.1, 1, 0.8, 1);
             will-change: transform;
             border-radius: 50%;
             box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
@@ -42,171 +42,174 @@
             border-radius: 0.35em;
         }
 
-        .arrow:after {}
-    }
+        .arrow:after {
+        }
 
-    .spin {
-        cursor: crosshair;
-    }
-</style>
+        }
+
+        .spin {
+            cursor: crosshair;
+        }
+    </style>
 {% endblock stylesheets %}
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">{{ pool.name }}</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'pool_list' %}">Pools</a></li>
-                        <li class="breadcrumb-item active">{{ pool.name }}</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">{{ pool.name }}</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'pool_list' %}">Pools</a></li>
+                            <li class="breadcrumb-item active">{{ pool.name }}</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-6 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card card-widget widget-user shadow">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header bg-danger">
-                            <h3 class="widget-user-username font-weight-bold">
-                                {{ pool.name }}
-                            </h3>
-                            <small class="widget-user-desc">
-                                Created {{ pool.created | naturaltime }}
-                            </small>
-                        </div>
-
-
-                        <div class="widget-user-image">
-                            {% if user.picture %}
-                            <img src="{{ pool.master.picture.url }}" class="img-circle elevation-2"
-                                style="height:6rem; width:6rem;" alt="{{user.first_name}} {{user.last_name}} Image">
-                            {% else %}
-                            <img src="{% static 'project/img/pool-logo.jpg' %}" class="img-circle elevation-1"
-                                alt="User Image">
-                            {% endif %}
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">{{pool.get_member_count}}</h5>
-                                        <span class="description-text">MEMBERS IN POOLS</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
-                                    <div class="description-block">
-                                        {% if not pool.activated %}
-                                        <h5 class="description-header">{{pool.get_member_remaining}}</h5>
-                                        <span class="description-text">MEMBERS REMAINING</span>
-                                        {% else %}
-                                        <h5 class="description-header">{{pool.get_member_remaining}}</h5>
-                                        <span class="description-text">CYCLES SPINNED</span>
-                                        {% endif %}
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                {% if user|has_group:"master" %}
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%} border-right">
-                                    <div class="description-block">
-                                        <h5 class="description-header">
-                                            {{ pool.master.first_name }} {{ pool.master.last_name }}
-                                        </h5>
-                                        <span class="description-text">MASTER OF POOLS</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                {% endif %}
-                                <div class="col-sm-{% if user|has_group:'master' %}3{%else%}4{%endif%}">
-                                    <div class="description-block">
-                                        <h5 class="description-header">{{ pool.investment }}</h5>
-                                        <span class="description-text">POOL INVESTMENT</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Left col -->
+                    <section class="col-lg-6 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card card-widget widget-user shadow">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div class="widget-user-header bg-danger">
+                                <h3 class="widget-user-username font-weight-bold">
+                                    {{ pool.name }}
+                                </h3>
+                                <small class="widget-user-desc">
+                                    Created {{ pool.created | naturaltime }}
+                                </small>
                             </div>
-                            <!-- /.row -->
+
+
+                            <div class="widget-user-image">
+                                {% if user.picture %}
+                                    <img src="{{ pool.master.picture.url }}" class="img-circle elevation-2"
+                                         style="height:6rem; width:6rem;"
+                                         alt="{{ user.first_name }} {{ user.last_name }} Image">
+                                {% else %}
+                                    <img src="{% static 'project/img/pool-logo.jpg' %}" class="img-circle elevation-1"
+                                         alt="User Image">
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-right">
+                                        <div class="description-block">
+                                            <h5 class="description-header">{{ pool.get_member_count }}</h5>
+                                            <span class="description-text">MEMBERS IN POOLS</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-right">
+                                        <div class="description-block">
+                                            {% if not pool.activated %}
+                                                <h5 class="description-header">{{ pool.get_member_remaining }}</h5>
+                                                <span class="description-text">MEMBERS REMAINING</span>
+                                            {% else %}
+                                                <h5 class="description-header">{{ pool.get_member_remaining }}</h5>
+                                                <span class="description-text">CYCLES SPINNED</span>
+                                            {% endif %}
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    {% if user|has_group:"master" %}
+                                        <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %} border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">
+                                                    {{ pool.master.first_name }} {{ pool.master.last_name }}
+                                                </h5>
+                                                <span class="description-text">MASTER OF POOLS</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    {% endif %}
+                                    <div class="col-sm-{% if user|has_group:'master' %}3{% else %}4{% endif %}">
+                                        <div class="description-block">
+                                            <h5 class="description-header">{{ pool.investment }}</h5>
+                                            <span class="description-text">POOL INVESTMENT</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
                         </div>
-                    </div>
 
-                    {% if user not in pool.members %}
-                    <form method="post" action="{% url 'pool_join' %}">
-                        {% csrf_token %}
-                        <input class="d-none" name="pool" value="{{pool.id}}">
-                        <input class="d-none" id="accept_reject" name="accept_reject" value="">
-                        <input type="submit" class="btn btn-block btn-danger" onclick="accepting()"
-                            value=" JOIN THE POOL">
-                        <br />
-                    </form>
-                    {% endif %}
+                        {% if user not in pool.members %}
+                            <form method="post" action="{% url 'pool_join' %}">
+                                {% csrf_token %}
+                                <input class="d-none" name="pool" value="{{ pool.id }}">
+                                <input class="d-none" id="accept_reject" name="accept_reject" value="">
+                                <input type="submit" class="btn btn-block btn-danger" onclick="accepting()"
+                                       value=" JOIN THE POOL">
+                                <br/>
+                            </form>
+                        {% endif %}
 
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">Pool Roulette</h3>
+                        <div class="card bg-black">
+                            <div class="card-header">
+                                <h3 class="card-title">Pool Roulette</h3>
 
-                            <div class="card-tools">
+                                <div class="card-tools">
                                 <span class="btn btn-tool">
                                     <i class="fas fa-clock"></i>
                                     {% if pool.activated %}
-                                    Activated {{ pool.activated | naturaltime }}
+                                        Activated {{ pool.activated | naturaltime }}
                                     {% endif %}
                                 </span>
+                                </div>
+                                <!-- /.card-tools -->
                             </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body pb-5" style="display: block;">
-                            <div class="roulette text-center">
-                                <!-- <div class="wheel spin text-center">
-                                    <div class="arrow text-center">
-                                    </div>
-                                    <img src="https://i.imgur.com/N01W3Ks.png" style="max-width: 80vw;">
-                                </div> -->
+                            <!-- /.card-header -->
+                            <div class="card-body pb-5" style="display: block;">
+                                <div class="roulette text-center">
+                                    <!-- <div class="wheel spin text-center">
+                                        <div class="arrow text-center">
+                                        </div>
+                                        <img src="https://i.imgur.com/N01W3Ks.png" style="max-width: 80vw;">
+                                    </div> -->
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                Past Winners
                             </div>
                         </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer">
-                            Past Winners
-                        </div>
-                    </div>
-                </section>
-                <!-- /.Left col -->
-                <!-- Right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-6 connectedSortable text-center">
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="nav-icon fab fa-galactic-republic"></i>
-                                Pool Membership
-                            </h3>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table">
-                                <thead>
+                    </section>
+                    <!-- /.Left col -->
+                    <!-- Right col (We are only adding the ID to make the widgets sortable)-->
+                    <section class="col-lg-6 connectedSortable text-center">
+                        <div class="card bg-black">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="nav-icon fab fa-galactic-republic"></i>
+                                    Pool Membership
+                                </h3>
+                                <!-- /.card-tools -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th>NAME</th>
                                         <th>SIZE</th>
@@ -214,146 +217,148 @@
                                         <th>INVESTMENT</th>
                                         <th>POOLMASTER</th>
                                     </tr>
-                                </thead>
-                                {% if user.member_of_pool.all %}
-                                <tbody>
-                                    {% for pool in user.member_of_pool.all %}
-                                    <tr>
-                                        <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                        <td>{{pool.size}}</td>
-                                        <td>{{pool.members.count}}</td>
-                                        <td>{{pool.investment|intcomma}}</td>
-                                        <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
+                                    </thead>
+                                    {% if user.member_of_pool.all %}
+                                        <tbody>
+                                        {% for pool in user.member_of_pool.all %}
+                                            <tr>
+                                                <td><a href="{% url 'pool_detail' pool.id %}">{{ pool.name }}</a></td>
+                                                <td>{{ pool.size }}</td>
+                                                <td>{{ pool.members.count }}</td>
+                                                <td>{{ pool.investment|intcomma }}</td>
+                                                <td>{{ pool.master.first_name }} {{ pool.master.last_name }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    {% endif %}
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer text-center">
+                                {% if not pool.get_member_count %}
+                                    The pool seems lonely! Invite members to start...
                                 {% endif %}
-                            </table>
+                            </div>
                         </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer text-center">
-                            {% if not pool.get_member_count %}
-                            The pool seems lonely! Invite members to start...
-                            {% endif %}
-                        </div>
-                    </div>
 
-                    {% if not pool.activated %}
-                    {% ifequal pool.master.username user.username %}
-                    {% if user|has_group:"master" %}
-                    <div class="card bg-black">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="nav-icon far fa-envelope-open"></i>
-                                Invite Members to Pool
-                            </h3>
-                            <!-- /.card-tools -->
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Contact Number</th>
-                                        <th>Invitation Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                {% if pool.invitations.count %}
-                                <tbody>
-                                    {% for invitation in pool.invitations.all %}
-                                    <tr>
-                                        <td>{{invitation.username}}</td>
-                                        <td>{{invitation.created|naturaltime}}</td>
-                                        <td>
-                                            {% if invitation.accepted %}
-                                            Accepted
-                                            {% else %}
-                                            Pending
+                        {% if not pool.activated %}
+                            {% ifequal pool.master.username user.username %}
+                                {% if user|has_group:"master" %}
+                                    <div class="card bg-black">
+                                        <div class="card-header">
+                                            <h3 class="card-title">
+                                                <i class="nav-icon far fa-envelope-open"></i>
+                                                Invite Members to Pool
+                                            </h3>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body table-responsive p-0">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>Contact Number</th>
+                                                    <th>Invitation Time</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                                </thead>
+                                                {% if pool.invitations.count %}
+                                                    <tbody>
+                                                    {% for invitation in pool.invitations.all %}
+                                                        <tr>
+                                                            <td>{{ invitation.username }}</td>
+                                                            <td>{{ invitation.created|naturaltime }}</td>
+                                                            <td>
+                                                                {% if invitation.accepted %}
+                                                                    Accepted
+                                                                {% else %}
+                                                                    Pending
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                        <div class="card-footer text-center">
+                                            {% if pool.get_member_remaining %}
+                                                <form method="post" action="{% url 'pool_invite_create' %}">
+                                                    <div class="form-group">
+                                                        {% csrf_token %}
+                                                        <input class="d-none" name="pool" value="{{ pool.id }}">
+                                                        <label>Invite More Members to your Pool?
+                                                            <small>
+                                                                (Consumed {{ pool.invitations.count }}
+                                                                of {{ pool.size }} Invitations)
+                                                            </small>
+                                                        </label>
+                                                        <textarea class="form-control bg-black" rows="2"
+                                                                  name="contact_numbers"
+                                                                  placeholder="Comma separated 10 digit contact number. Example: 9999999999, 9999999998, 9999999997"></textarea>
+
+                                                    </div>
+                                                    <input class="btn btn-secondary" type="submit" value="Invite">
+                                                </form>
                                             {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
+                                        </div>
+                                    </div>
                                 {% endif %}
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer text-center">
-                            {% if pool.get_member_remaining %}
-                            <form method="post" action="{% url 'pool_invite_create' %}">
-                                <div class="form-group">
-                                    {% csrf_token %}
-                                    <input class="d-none" name="pool" value="{{pool.id}}">
-                                    <label>Invite More Members to your Pool?
-                                        <small>
-                                            (Consumed {{pool.invitations.count}} of {{pool.size}} Invitations)
-                                        </small>
-                                    </label>
-                                    <textarea class="form-control bg-black" rows="2" name="contact_numbers"
-                                        placeholder="Comma separated 10 digit contact number. Example: 9999999999, 9999999998, 9999999997"></textarea>
+                            {% endifequal %}
+                        {% endif %}
+                    </section>
+                    <!-- right col -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
-                                </div>
-                                <input class="btn btn-secondary" type="submit" value="Invite">
-                            </form>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endifequal %}
-                    {% endif %}
-                </section>
-                <!-- right col -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-
-</div>
+    </div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<!-- <script>
-    perfecthalf = ((1 / 37) * 360) / 2;
+    <!-- <script>
+        perfecthalf = ((1 / 37) * 360) / 2;
 
-    let currentLength = perfecthalf;
+        let currentLength = perfecthalf;
 
-    $(".wheel img").css("transform", "rotate(" + perfecthalf + "deg)");
+        $(".wheel img").css("transform", "rotate(" + perfecthalf + "deg)");
 
-    $(".spin").click(() => {
-        //$(".wheel img").css("filter", "blur(8px)");
+        $(".spin").click(() => {
+            //$(".wheel img").css("filter", "blur(8px)");
 
-        spininterval = getRandomInt(0, 37) * (360 / 37) + getRandomInt(3, 4) * 360;
-        currentLength += spininterval;
+            spininterval = getRandomInt(0, 37) * (360 / 37) + getRandomInt(3, 4) * 360;
+            currentLength += spininterval;
 
-        numofsecs = spininterval;
+            numofsecs = spininterval;
 
-        console.log(currentLength);
-        $(".wheel img").css("transform", "rotate(" + currentLength + "deg)");
+            console.log(currentLength);
+            $(".wheel img").css("transform", "rotate(" + currentLength + "deg)");
 
-        setTimeout(function () {
-            $(".wheel img").css("filter", "blur(0px)");
-        }, numofsecs);
-    });
+            setTimeout(function () {
+                $(".wheel img").css("filter", "blur(0px)");
+            }, numofsecs);
+        });
 
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    $(document).ready(function () {
-        $(".spin").click();
-    })
-</script> -->
-<script>
-    function accepting() {
-        if (confirm('Are you sure you want to join this Pool? Money will be deducted from your balance.')) {
-            $("#accept_reject").val("Accept")
-        } else {
-            return false;
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-    }
-</script>
+
+        $(document).ready(function () {
+            $(".spin").click();
+        })
+    </script> -->
+    <script>
+        function accepting() {
+            if (confirm('Are you sure you want to join this Pool? Money will be deducted from your balance.')) {
+                $("#accept_reject").val("Accept")
+            } else {
+                return false;
+            }
+        }
+    </script>
 {% endblock javascripts %}

@@ -14,113 +14,114 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Balance Transaction List</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Balance Transaction List</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Balance Transaction List</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Balance Transaction List</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Section -->
-                <section class="col-lg-12 connectedSortable">
-                    <!-- Meta Information -->
-                    <div class="row">
-                        <div class="col-lg-12 col-12">
-                            <!-- small box -->
-                            <div class="small-box bg-secondary">
-                                <div class="inner">
-                                    <h3>₹ {{user.balance_amount|intcomma}}</h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Section -->
+                    <section class="col-lg-12 connectedSortable">
+                        <!-- Meta Information -->
+                        <div class="row">
+                            <div class="col-lg-12 col-12">
+                                <!-- small box -->
+                                <div class="small-box bg-secondary">
+                                    <div class="inner">
+                                        <h3>₹ {{ user.balance_amount|intcomma }}</h3>
 
-                                    <p>My Balance Amount</p>
+                                        <p>My Balance Amount</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <a href="{% url 'profile_balance_credit_transaction_create' %}"
+                                       class="small-box-footer">
+                                        Add Balance Amount
+                                        <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
-                                <div class="icon">
-                                    <i class="fas fa-wallet"></i>
-                                </div>
-                                <a href="{% url 'profile_balance_credit_transaction_create' %}"
-                                    class="small-box-footer">
-                                    Add Balance Amount
-                                    <i class="fas fa-arrow-circle-right"></i>
-                                </a>
                             </div>
+                            <!-- ./col -->
                         </div>
-                        <!-- ./col -->
-                    </div>
-                    <!-- /Meta Information -->
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-wallet"></i>
-                            </h3>
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="card-body table-responsive p-0">
-                                <table class="table">
-                                    <thead>
+                        <!-- /Meta Information -->
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-wallet"></i>
+                                </h3>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>TIME</th>
                                             <th>TYPE</th>
                                             <th>AMOUNT</th>
                                             <th>STATUS</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for transaction in transactions %}
-                                        <tr>
-                                            <td>{{transaction.created|naturaltime}}</td>
-                                            {% ifequal transaction.type_of_transaction "C" %}
-                                            <td>Credit</td>
-                                            <td class="text-success">₹ {{transaction.amount|intcomma}}</td>
-                                            {% else %}
-                                            <td>Debit</td>
-                                            <td class="text-danger">₹ {{transaction.amount|intcomma}}</td>
-                                            {% endifequal %}
-                                            {% if transaction.verified %}
-                                            <td class="text-success">PAYMENT SUCCEEDED</td>
-                                            {% else %}
-                                            <td class="text-danger">
-                                                PAYMENT FAILED &nbsp;
-                                                <a href="{% url 'profile_balance_transaction_confirm' transaction.id %}"
-                                                    class="btn btn-xs btn-danger">
-                                                    <i class="fas fa-sync-alt"></i> RETRY
-                                                </a>
-                                            </td>
-                                            {% endif %}
-                                        </tr>
+                                            <tr>
+                                                <td>{{ transaction.created|naturaltime }}</td>
+                                                {% ifequal transaction.type_of_transaction "C" %}
+                                                    <td>Credit</td>
+                                                    <td class="text-success">₹ {{ transaction.amount|intcomma }}</td>
+                                                {% else %}
+                                                    <td>Debit</td>
+                                                    <td class="text-danger">₹ {{ transaction.amount|intcomma }}</td>
+                                                {% endifequal %}
+                                                {% if transaction.verified %}
+                                                    <td class="text-success">PAYMENT SUCCEEDED</td>
+                                                {% else %}
+                                                    <td class="text-danger">
+                                                        PAYMENT FAILED &nbsp;
+                                                        <a href="{% url 'profile_balance_transaction_confirm' transaction.id %}"
+                                                           class="btn btn-xs btn-danger">
+                                                            <i class="fas fa-sync-alt"></i> RETRY
+                                                        </a>
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            <div class="pagination">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div><!-- /.card-body -->
+                            <!-- Pagination -->
+                            <div class="card-footer text-center">
+                                <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
-                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        <a class="btn btn-sm btn-primary" href="?page=1">
                                         &laquo; First
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.previous_page_number }}">
                                         Previous
                                     </a>
                                     {% endif %}
@@ -130,26 +131,27 @@
                                     </span>
 
                                     {% if page_obj.has_next %}
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
                                         Next
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.paginator.num_pages }}">
                                         Last &raquo;
                                     </a>
                                     {% endif %}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card -->
-                </section>
-                <!-- /.Section -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+                            <!-- /.card -->
+                    </section>
+                    <!-- /.Section -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
-</div>
+    </div>
 
 {% endblock content %}
 

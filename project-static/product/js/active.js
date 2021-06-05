@@ -16,7 +16,7 @@
     }
 
     // :: 3.0 Sliders Active Code
-   
+
 
     // :: 4.0 Gallery Active Code
     if ($.fn.magnificPopup) {
@@ -45,7 +45,7 @@
     if (browserWindow.width() > 767) {
         new WOW().init();
     }
-    
+
     // :: 8.0 prevent default a click
     $('a[href="#"]').click(function ($) {
         $.preventDefault()
@@ -53,10 +53,10 @@
 
 })(jQuery);
 
- // year 
-      var date = new Date().getFullYear();
+// year
+var date = new Date().getFullYear();
 $(".year").append(date);
-    
+
 
 var $owl = $('#carousel1');
 $owl.children().each(function (index) {

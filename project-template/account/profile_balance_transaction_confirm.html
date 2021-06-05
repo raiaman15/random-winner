@@ -11,131 +11,133 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-<!-- Cropper.js -->
-<link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Confirm Payment</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Confirm Payment</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Confirm Payment</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Confirm Payment</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-6 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-wallet"></i>
-                                Confirm Payment
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Left col -->
+                    <section class="col-lg-6 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-wallet"></i>
+                                    Confirm Payment
+                                </h3>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="text-sm">
-                                ID: <b>{{transaction.order_id}}</b>
-                                <span class="text-sm float-right">
-                                    <i class="fas fa-clock"></i> {{transaction.created|naturaltime}}
-                                </span>
-                            </div>
-                            <hr />
-                            <div class="text-center">
-                                You initiated a transaction of amount <b>₹
-                                    {{transaction.amount|add:transaction.tax}}</b> (with taxes). This
-                                amount will be debited from the payment method selected in later step.
-                            </div>
-                            <br />
-                            <form action="{% url 'profile_balance_transaction_status' transaction.id %}" method="POST">
-                                {% csrf_token %}
-                                <div class="text-center">
-                                    <button class="btn btn-secondary" id="rzp-button1">
-                                        Make Payment
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Minimize">
+                                        <i class="fas fa-minus"></i>
                                     </button>
                                 </div>
-                                <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-                                <script>
-                                    var options = {
-                                        "key": "{{transaction.key}}",
-                                        "amount": "{{transaction.amount|add:transaction.tax}}",
-                                        "currency": "INR",
-                                        "name": "{{PRODUCT_NAME}}",
-                                        "description": "Adding fund for {{user.username}}",
-                                        "image": "{% static 'logo.png' %}",
-                                        "order_id": "{{transaction.order_id}}",
-                                        "callback_url": "{% url 'profile_balance_transaction_status' transaction.id %}",
-                                        "prefill": {
-                                            "name": "{{user.first_name}} {{user.last_name}}",
-                                            "email": "{{user.email}}",
-                                            "contact": "{{user.username}}"
-                                        },
-                                        "notes": {
-                                            "address": "Razorpay Corporate Office"
-                                        },
-                                        "theme": {
-                                            "color": "#f7941d"
-                                        }
-                                    };
-                                    var rzp1 = new Razorpay(options);
-                                    document.getElementById('rzp-button1').onclick = function (e) {
-                                        rzp1.open();
-                                        e.preventDefault();
-                                    }
-                                </script>
-                            </form>
 
-                        </div><!-- /.card-body -->
-                        <!-- Help Text -->
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12 text-center">
-                                <p>
-                                    Click <a href="{% url 'status' %}">here</a> to go back.
-                                </p>
-                            </div><!-- /.col -->
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="text-sm">
+                                    ID: <b>{{ transaction.order_id }}</b>
+                                    <span class="text-sm float-right">
+                                    <i class="fas fa-clock"></i> {{ transaction.created|naturaltime }}
+                                </span>
+                                </div>
+                                <hr/>
+                                <div class="text-center">
+                                    You initiated a transaction of amount <b>₹
+                                    {{ transaction.amount|add:transaction.tax }}</b> (with taxes). This
+                                    amount will be debited from the payment method selected in later step.
+                                </div>
+                                <br/>
+                                <form action="{% url 'profile_balance_transaction_status' transaction.id %}"
+                                      method="POST">
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <button class="btn btn-secondary" id="rzp-button1">
+                                            Make Payment
+                                        </button>
+                                    </div>
+                                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                                    <script>
+                                        var options = {
+                                            "key": "{{transaction.key}}",
+                                            "amount": "{{transaction.amount|add:transaction.tax}}",
+                                            "currency": "INR",
+                                            "name": "{{PRODUCT_NAME}}",
+                                            "description": "Adding fund for {{user.username}}",
+                                            "image": "{% static 'logo.png' %}",
+                                            "order_id": "{{transaction.order_id}}",
+                                            "callback_url": "{% url 'profile_balance_transaction_status' transaction.id %}",
+                                            "prefill": {
+                                                "name": "{{user.first_name}} {{user.last_name}}",
+                                                "email": "{{user.email}}",
+                                                "contact": "{{user.username}}"
+                                            },
+                                            "notes": {
+                                                "address": "Razorpay Corporate Office"
+                                            },
+                                            "theme": {
+                                                "color": "#f7941d"
+                                            }
+                                        };
+                                        var rzp1 = new Razorpay(options);
+                                        document.getElementById('rzp-button1').onclick = function (e) {
+                                            rzp1.open();
+                                            e.preventDefault();
+                                        }
+                                    </script>
+                                </form>
+
+                            </div><!-- /.card-body -->
+                            <!-- Help Text -->
+                            <div class="row card-footer text-center pb-0">
+                                <div class="col-sm-12 text-center">
+                                    <p>
+                                        Click <a href="{% url 'status' %}">here</a> to go back.
+                                    </p>
+                                </div><!-- /.col -->
+                            </div>
+                            <!-- /.Help Text -->
                         </div>
-                        <!-- /.Help Text -->
-                    </div>
-                    <!-- /.card -->
-                </section>
-                <!-- /.Left col -->
-                <!-- Right col -->
-                <section class="col-lg-6 connectedSortable text-center">
-                </section>
-                <!-- right col -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-</div>
+                        <!-- /.card -->
+                    </section>
+                    <!-- /.Left col -->
+                    <!-- Right col -->
+                    <section class="col-lg-6 connectedSortable text-center">
+                    </section>
+                    <!-- right col -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
 
 {% endblock content %}
 

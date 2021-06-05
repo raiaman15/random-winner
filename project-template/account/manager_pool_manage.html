@@ -15,123 +15,125 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">
-                        Manage Pool
-                    </h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Manage Pool</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">
+                            Manage Pool
+                        </h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Manage Pool</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Section -->
-                <section class="col-lg-12 connectedSortable">
-                    <!-- Meta Information -->
-                    <div class="row">
-                        <div class="col-lg-6 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-secondary">
-                                <div class="inner">
-                                    <h3>TODO</h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Section -->
+                    <section class="col-lg-12 connectedSortable">
+                        <!-- Meta Information -->
+                        <div class="row">
+                            <div class="col-lg-6 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-secondary">
+                                    <div class="inner">
+                                        <h3>TODO</h3>
 
-                                    <p>Active Pools</p>
+                                        <p>Active Pools</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <a target="_blank" href="{% url 'automatic_activate_pool' %}"
+                                       class="small-box-footer">
+                                        Manually Activate All New Pools
+                                        <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
-                                <div class="icon">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <a target="_blank" href="{% url 'automatic_activate_pool' %}" class="small-box-footer">
-                                    Manually Activate All New Pools
-                                    <i class="fas fa-arrow-circle-right"></i>
-                                </a>
                             </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-6 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-secondary">
-                                <div class="inner">
-                                    <h3>TODO</h3>
+                            <!-- ./col -->
+                            <div class="col-lg-6 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-secondary">
+                                    <div class="inner">
+                                        <h3>TODO</h3>
 
-                                    <p>Spinning Pools</p>
+                                        <p>Spinning Pools</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-refresh"></i>
+                                    </div>
+                                    <a target="_blank" href="{% url 'automatic_spin_pool' %}" class="small-box-footer">
+                                        Manually Spin All Active Pools
+                                        <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
                                 </div>
-                                <div class="icon">
+                            </div>
+                            <!-- ./col -->
+                        </div>
+                        <!-- /Meta Information -->
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
                                     <i class="fas fa-refresh"></i>
-                                </div>
-                                <a target="_blank" href="{% url 'automatic_spin_pool' %}" class="small-box-footer">
-                                    Manually Spin All Active Pools
-                                    <i class="fas fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                    </div>
-                    <!-- /Meta Information -->
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-refresh"></i>
-                                Current Month's Spin Summary
-                            </h3>
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table">
-                                    <thead>
+                                    Current Month's Spin Summary
+                                </h3>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="card-body table-responsive p-0" style="height: 300px;">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>POOL</th>
                                             <th>USER</th>
                                             <th>AMOUNT WON</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for payment in payments %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url 'pool_detail' payment.pool.id %}">
-                                                    {{ payment.pool.name }}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                {{ payment.user.first_name }} {{ payment.user.last_name }}
-                                                ({{ payment.user.username }})
-                                            </td>
-                                            <td>{{ payment.amount }}</td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'pool_detail' payment.pool.id %}">
+                                                        {{ payment.pool.name }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {{ payment.user.first_name }} {{ payment.user.last_name }}
+                                                    ({{ payment.user.username }})
+                                                </td>
+                                                <td>{{ payment.amount }}</td>
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            <div class="pagination">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div><!-- /.card-body -->
+                            <!-- Pagination -->
+                            <div class="card-footer text-center">
+                                <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
-                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        <a class="btn btn-sm btn-primary" href="?page=1">
                                         &laquo; First
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.previous_page_number }}">
                                         Previous
                                     </a>
                                     {% endif %}
@@ -141,26 +143,27 @@
                                     </span>
 
                                     {% if page_obj.has_next %}
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
                                         Next
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.paginator.num_pages }}">
                                         Last &raquo;
                                     </a>
                                     {% endif %}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card -->
-                </section>
-                <!-- /.Section -->
+                            <!-- /.card -->
+                    </section>
+                    <!-- /.Section -->
+                </div>
+                <!-- /.row (main row) -->
             </div>
-            <!-- /.row (main row) -->
-        </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-</div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->

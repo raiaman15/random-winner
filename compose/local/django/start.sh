@@ -6,7 +6,7 @@ echo "FLUSHING DATABASE"
 python manage.py flush --no-input
 echo "DELETING EXISTING MIGRATION FILES"
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-find . -path "*/migrations/*.pyc"  -delete
+find . -path "*/migrations/*.pyc" -delete
 # /Personal Preference to start fresh - You may comment
 
 echo "MAKING MIGRATION FILES"

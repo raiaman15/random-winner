@@ -50,10 +50,12 @@ class UserStatusView(LoginRequiredMixin, View):
         if EmailAddress.objects.filter(user=user).exists() and not user.contact_verified:
             if EmailAddress.objects.filter(user=user, verified=False).exists():
                 return redirect('profile_verification_option')
+            elif not user.contact_verified:
+                return redirect('profile_verification_sms')
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
-            elif not (user.aadhaar_number and user.pan_number) and (user.first_name or user.last_name):
-                return redirect('profile_detail')
+            elif not (user.first_name or user.last_name):
+                return redirect('profile_name')
             else:
                 return redirect('dashboard')
 
@@ -64,7 +66,7 @@ class UserStatusView(LoginRequiredMixin, View):
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
             elif not (user.first_name or user.last_name):
-                return redirect('profile_detail')
+                return redirect('profile_name')
             else:
                 return redirect('dashboard')
 
@@ -197,7 +199,6 @@ class ProfileDetailView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         messages.success(self.request, response_messages['profile_detail_update_successful'])
-
         return super(ProfileDetailView, self).post(request, *args, **kwargs)
 
 

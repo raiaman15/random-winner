@@ -57,7 +57,6 @@ class Command(BaseCommand):
 
 
 def grant_permission(group_name, model_name, permission_names):
-
     group, created = Group.objects.get_or_create(name=group_name)
     if created:
         print(f'+ Created new group: {group_name}')

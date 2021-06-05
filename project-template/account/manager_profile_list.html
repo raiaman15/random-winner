@@ -15,75 +15,76 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">
-                        List of
-                        {% if 'manager/profile/all' in request.path %}
-                        All Profiles
-                        {% elif 'manager/profile/member' in request.path %}
-                        Member Profiles
-                        {% elif 'manager/profile/master' in request.path %}
-                        Master Profiles
-                        {% elif 'manager/profile/willing/master' in request.path %}
-                        Willing Master Profiles
-                        {% elif 'manager/profile/unverified' in request.path %}
-                        Unverified Profiles
-                        {% endif %}
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">
+                            List of
+                            {% if 'manager/profile/all' in request.path %}
+                                All Profiles
+                            {% elif 'manager/profile/member' in request.path %}
+                                Member Profiles
+                            {% elif 'manager/profile/master' in request.path %}
+                                Master Profiles
+                            {% elif 'manager/profile/willing/master' in request.path %}
+                                Willing Master Profiles
+                            {% elif 'manager/profile/unverified' in request.path %}
+                                Unverified Profiles
+                            {% endif %}
 
-                    </h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Profiles</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+                        </h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Profiles</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Section -->
-                <section class="col-lg-12 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-users"></i>
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Section -->
+                    <section class="col-lg-12 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-users"></i>
+                                </h3>
 
-                            <div class="card-tools">
-                                <!-- SEARCH FORM -->
-                                <form action="{% url 'manager_profile_search' %}" class="form-inline ml-3">
-                                    <div class="input-group input-group-sm">
-                                        <input class="form-control form-control-navbar bg-black border" type="search"
-                                            placeholder="Profile Search" aria-label="Profile Search" name="q">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-navbar bg-secondary" type="submit">
-                                                <i class="fas fa-search"></i>
-                                            </button>
+                                <div class="card-tools">
+                                    <!-- SEARCH FORM -->
+                                    <form action="{% url 'manager_profile_search' %}" class="form-inline ml-3">
+                                        <div class="input-group input-group-sm">
+                                            <input class="form-control form-control-navbar bg-black border"
+                                                   type="search"
+                                                   placeholder="Profile Search" aria-label="Profile Search" name="q">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-navbar bg-secondary" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
 
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table">
-                                    <thead>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="card-body table-responsive p-0" style="height: 300px;">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>CONTACT DETAIL</th>
                                             <th>EMAIL</th>
@@ -93,65 +94,66 @@
                                             <th>IDENTITY VERIFIED</th>
                                             <th>IS POOLMASTER</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for profile in profiles %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url 'manager_profile_detail' profile.id %}">
-                                                    {{ profile.username }}
-                                                </a>
-                                            </td>
-                                            <td>{{ profile.email }}</td>
-                                            <td>{{ profile.first_name }}</td>
-                                            <td>{{ profile.last_name }}</td>
-                                            <td>
-                                                {% if profile.contact_verified %}
-                                                <i class="fas fa-check-circle text-primary"></i>
-                                                {% else %}
-                                                <i class="fas fa-times-circle text-danger"></i>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if profile.identity_verified %}
-                                                <i class="fas fa-check-circle text-primary"></i>
-                                                {% elif profile.identity_proof %}
-                                                <i class="fas fa-times-circle text-danger"></i> |
-                                                <a href="{% url 'manager_profile_verify_identity' profile.id %}">
-                                                    VERIFY
-                                                </a>
-                                                {% else %}
-                                                <i class="fas fa-times-circle text-danger"></i>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if profile|has_group:"master" %}
-                                                <i class="fas fa-check-circle text-primary"></i>
-                                                {% elif profile.is_willing_master %}
-                                                <i class="fas fa-times-circle text-danger"></i> |
-                                                <a href="{% url 'manager_profile_approve_poolmaster' profile.id %}">
-                                                    APPROVE AS MASTER
-                                                </a>
-                                                {% else %}
-                                                <i class="fas fa-times-circle text-danger"></i>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'manager_profile_detail' profile.id %}">
+                                                        {{ profile.username }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ profile.email }}</td>
+                                                <td>{{ profile.first_name }}</td>
+                                                <td>{{ profile.last_name }}</td>
+                                                <td>
+                                                    {% if profile.contact_verified %}
+                                                        <i class="fas fa-check-circle text-primary"></i>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-danger"></i>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if profile.identity_verified %}
+                                                        <i class="fas fa-check-circle text-primary"></i>
+                                                    {% elif profile.identity_proof %}
+                                                        <i class="fas fa-times-circle text-danger"></i> |
+                                                        <a href="{% url 'manager_profile_verify_identity' profile.id %}">
+                                                            VERIFY
+                                                        </a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-danger"></i>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if profile|has_group:"master" %}
+                                                        <i class="fas fa-check-circle text-primary"></i>
+                                                    {% elif profile.is_willing_master %}
+                                                        <i class="fas fa-times-circle text-danger"></i> |
+                                                        <a href="{% url 'manager_profile_approve_poolmaster' profile.id %}">
+                                                            APPROVE AS MASTER
+                                                        </a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-danger"></i>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            <div class="pagination">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div><!-- /.card-body -->
+                            <!-- Pagination -->
+                            <div class="card-footer text-center">
+                                <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
-                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        <a class="btn btn-sm btn-primary" href="?page=1">
                                         &laquo; First
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.previous_page_number }}">
                                         Previous
                                     </a>
                                     {% endif %}
@@ -161,26 +163,27 @@
                                     </span>
 
                                     {% if page_obj.has_next %}
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
                                         Next
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.paginator.num_pages }}">
                                         Last &raquo;
                                     </a>
                                     {% endif %}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card -->
-                </section>
-                <!-- /.Section -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+                            <!-- /.card -->
+                    </section>
+                    <!-- /.Section -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
-</div>
+    </div>
 
 {% endblock content %}
 

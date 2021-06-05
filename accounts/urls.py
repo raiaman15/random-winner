@@ -6,14 +6,16 @@ urlpatterns = [
     # Profile Verification Routes
     path('profile/verification/option/', accounts_views.ProfileVerificationOptionView.as_view(),
          name='profile_verification_option'),
-    path('profile/verification/sms/', accounts_views.ProfileVerificationSMSView.as_view(), name='profile_verification_sms'),
+    path('profile/verification/sms/', accounts_views.ProfileVerificationSMSView.as_view(),
+         name='profile_verification_sms'),
     path('profile/identity-proof/upload/', accounts_views.ProfileIdentityProofUploadView.as_view(),
          name='profile_identity_proof_upload'),
     # Profile Member Completion Routes
     path('profile/dashboard/', accounts_views.ProfileDashboardView.as_view(), name='dashboard'),
     path('profile/name/', accounts_views.ProfileNameView.as_view(), name='profile_name'),
     # Profile Master Completion Routes
-    path('profile/apply/poolmaster/', accounts_views.ProfileApplyPoolmasterView.as_view(), name='profile_apply_poolmaster'),
+    path('profile/apply/poolmaster/', accounts_views.ProfileApplyPoolmasterView.as_view(),
+         name='profile_apply_poolmaster'),
     path('profile/detail/', accounts_views.ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/picture/', accounts_views.ProfilePictureView.as_view(), name='profile_picture'),
     # Account Password Reset with OTP
@@ -48,7 +50,8 @@ urlpatterns = [
          name='profile_support_ticket_create'),
     path('profile/support-ticket/update/<int:pk>/',
          accounts_views.ProfileSupportTicketUpdateView.as_view(), name='profile_support_ticket_update'),
-    path('profile/support-ticket/all', accounts_views.ProfileSupportTicketListView.as_view(), name='profile_support_ticket_list'),
+    path('profile/support-ticket/all', accounts_views.ProfileSupportTicketListView.as_view(),
+         name='profile_support_ticket_list'),
     # Profile Manager Specific Routes
     path('manager/profile/all/', accounts_views.ManagerProfileListView.as_view(), name='manager_profile_list'),
     path('manager/profile/member/', accounts_views.ManagerProfileListPoolMemberView.as_view(),

@@ -11,249 +11,250 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-<!-- Cropper.js -->
-<link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="{% static 'project/plugins/cropper/cropper.min.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Profile Picture</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Profile Picture</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Profile Picture</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Profile Picture</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-6 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-id-card"></i>
-                                Update Profile Picture
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Left col -->
+                    <section class="col-lg-6 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-id-card"></i>
+                                    Update Profile Picture
+                                </h3>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
-                                    <i class="fas fa-minus"></i>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Minimize">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <form id="identity_form" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ form | crispy }}
+                                    <input type="submit" class="btn btn-secondary" value="Update Profile Picture"
+                                           onclick="return ValidateFile()">
+                                </form>
+                            </div><!-- /.card-body -->
+                            <!-- Help Text -->
+                            <div class="row card-footer text-center pb-0">
+                                <div class="col-sm-12 text-center">
+                                    <p>
+                                        Click <a href="{% url 'status' %}">here</a> to go back to Dashboard.
+                                    </p>
+                                </div><!-- /.col -->
+                            </div>
+                            <!-- /.Help Text -->
+                        </div>
+                        <!-- /.card -->
+                    </section>
+                    <!-- /.Left col -->
+                    <!-- Right col -->
+                    <section class="col-lg-6 connectedSortable text-center">
+                        <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
+                    </section>
+                    <!-- right col -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+
+        <!-- Modal Crop -->
+        <div class="modal fade" id="modalCrop" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content card-outline card-danger">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Crop Picture</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                            <div class="col-lg-8 col-md-8 col-sm-8 text-center">
+                                <img src="" id="image" style="max-width: 100%;">
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-center">The cropped photograph must contain your face.</div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default js-zoom-out">
+                                    <i class="fas fa-search-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-default js-zoom-in">
+                                    <i class="fas fa-search-plus"></i>
                                 </button>
                             </div>
-
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <form id="identity_form" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                {{ form | crispy }}
-                                <input type="submit" class="btn btn-secondary" value="Update Profile Picture"
-                                    onclick="return ValidateFile()">
-                            </form>
-                        </div><!-- /.card-body -->
-                        <!-- Help Text -->
-                        <div class="row card-footer text-center pb-0">
-                            <div class="col-sm-12 text-center">
-                                <p>
-                                    Click <a href="{% url 'status' %}">here</a> to go back to Dashboard.
-                                </p>
-                            </div><!-- /.col -->
+                            <button type="button" class="btn btn-default js-crop-and-upload">Crop & Upload</button>
                         </div>
-                        <!-- /.Help Text -->
                     </div>
-                    <!-- /.card -->
-                </section>
-                <!-- /.Left col -->
-                <!-- Right col -->
-                <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
-                </section>
-                <!-- right col -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-
-    <!-- Modal Crop -->
-    <div class="modal fade" id="modalCrop" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content card-outline card-danger">
-                <div class="modal-header">
-                    <h4 class="modal-title">Crop Picture</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <!-- /.modal-content -->
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-2"></div>
-                        <div class="col-lg-8 col-md-8 col-sm-8 text-center">
-                            <img src="" id="image" style="max-width: 100%;">
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center">The cropped photograph must contain your face.</div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default js-zoom-out">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-default js-zoom-in">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                        <button type="button" class="btn btn-default js-crop-and-upload">Crop & Upload</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
+                <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal-dialog -->
+            <!--/.Modal Crop-->
+
         </div>
-        <!--/.Modal Crop-->
-
     </div>
-</div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<!-- Cropper.js -->
-<script src="{% static 'project/plugins/cropper/cropper.min.js' %}"></script>
-<!-- Cropper-Jquery Wrapper -->
-<script src="{% static 'project/plugins/jquery-cropper/jquery-cropper.min.js' %}"></script>
+    <!-- Cropper.js -->
+    <script src="{% static 'project/plugins/cropper/cropper.min.js' %}"></script>
+    <!-- Cropper-Jquery Wrapper -->
+    <script src="{% static 'project/plugins/jquery-cropper/jquery-cropper.min.js' %}"></script>
 
-<script>
-    /* Client Side File Validation */
-    function ValidateFile(id) {
-        //Get reference of FileUpload.
-        var fileUpload = document.getElementById(id);
+    <script>
+        /* Client Side File Validation */
+        function ValidateFile(id) {
+            //Get reference of FileUpload.
+            var fileUpload = document.getElementById(id);
 
-        //Check whether the file is valid Image.
-        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.jpg|.png|.gif)$");
+            //Check whether the file is valid Image.
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.jpg|.png|.gif)$");
 
-        //Check whether the file size is less than 2 MB
-        if (fileUpload.files[0].size < 2048000000) {
-            if (regex.test(fileUpload.value.toLowerCase())) {
-                //Check whether HTML5 is supported.
-                if (typeof (fileUpload.files) != "undefined") {
-                    //Initiate the FileReader object.
-                    var reader = new FileReader();
-                    //Read the contents of Image File.
-                    reader.readAsDataURL(fileUpload.files[0]);
-                    reader.onload = function (e) {
-                        //Initiate the JavaScript Image object.
-                        var image = new Image();
+            //Check whether the file size is less than 2 MB
+            if (fileUpload.files[0].size < 2048000000) {
+                if (regex.test(fileUpload.value.toLowerCase())) {
+                    //Check whether HTML5 is supported.
+                    if (typeof (fileUpload.files) != "undefined") {
+                        //Initiate the FileReader object.
+                        var reader = new FileReader();
+                        //Read the contents of Image File.
+                        reader.readAsDataURL(fileUpload.files[0]);
+                        reader.onload = function (e) {
+                            //Initiate the JavaScript Image object.
+                            var image = new Image();
 
-                        //Set the Base64 string return from FileReader as source.
-                        image.src = e.target.result;
+                            //Set the Base64 string return from FileReader as source.
+                            image.src = e.target.result;
 
-                        //Validate the File Height and Width.
-                        image.onload = function () {
-                            var height = this.height;
-                            var width = this.width;
-                            if (height > 330 && width > 210) {
-                                // Preventing Direct Submit!
-                                return false;
-                            } else {
-                                alert("The image is not clear (too small). Please upload a higher resolution image!")
-                                location.reload()
-                                return false;
-                            }
-                        };
+                            //Validate the File Height and Width.
+                            image.onload = function () {
+                                var height = this.height;
+                                var width = this.width;
+                                if (height > 330 && width > 210) {
+                                    // Preventing Direct Submit!
+                                    return false;
+                                } else {
+                                    alert("The image is not clear (too small). Please upload a higher resolution image!")
+                                    location.reload()
+                                    return false;
+                                }
+                            };
 
+                        }
+                    } else {
+                        alert("This browser does not support HTML5.");
+                        location.reload();
+                        return false;
                     }
                 } else {
-                    alert("This browser does not support HTML5.");
+                    alert("Please select a valid Image file.");
                     location.reload();
                     return false;
                 }
             } else {
-                alert("Please select a valid Image file.");
+                alert("Please select an Image file less than 2 MB in size.");
                 location.reload();
                 return false;
             }
-        } else {
-            alert("Please select an Image file less than 2 MB in size.");
-            location.reload();
-            return false;
         }
-    }
 
-    $(function () {
-        /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
-        $("#id_picture").change(function () {
-            ValidateFile("id_picture")
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $("#image").attr("src", e.target.result);
-                    //
-                    $("#modalCrop").modal("show");
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        /* SCRIPTS TO HANDLE THE CROPPER BOX */
-        var $image = $("#image");
-        var cropBoxData;
-        var canvasData;
-        $("#modalCrop").on("shown.bs.modal", function () {
-            $image.cropper({
-                viewMode: 1,
-                aspectRatio: 1,
-                minCropBoxWidth: 200,
-                minCropBoxHeight: 200,
-                ready: function () {
-                    $image.cropper("setCanvasData", canvasData);
-                    $image.cropper("setCropBoxData", cropBoxData);
+        $(function () {
+            /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+            $("#id_picture").change(function () {
+                ValidateFile("id_picture")
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#image").attr("src", e.target.result);
+                        //
+                        $("#modalCrop").modal("show");
+                    }
+                    reader.readAsDataURL(this.files[0]);
                 }
             });
-        }).on("hidden.bs.modal", function () {
-            cropBoxData = $image.cropper("getCropBoxData");
-            canvasData = $image.cropper("getCanvasData");
-            $image.cropper("destroy");
-        });
 
-        $(".js-zoom-in").click(function () {
-            $image.cropper("zoom", 0.1);
-        });
+            /* SCRIPTS TO HANDLE THE CROPPER BOX */
+            var $image = $("#image");
+            var cropBoxData;
+            var canvasData;
+            $("#modalCrop").on("shown.bs.modal", function () {
+                $image.cropper({
+                    viewMode: 1,
+                    aspectRatio: 1,
+                    minCropBoxWidth: 200,
+                    minCropBoxHeight: 200,
+                    ready: function () {
+                        $image.cropper("setCanvasData", canvasData);
+                        $image.cropper("setCropBoxData", cropBoxData);
+                    }
+                });
+            }).on("hidden.bs.modal", function () {
+                cropBoxData = $image.cropper("getCropBoxData");
+                canvasData = $image.cropper("getCanvasData");
+                $image.cropper("destroy");
+            });
 
-        $(".js-zoom-out").click(function () {
-            $image.cropper("zoom", -0.1);
-        });
+            $(".js-zoom-in").click(function () {
+                $image.cropper("zoom", 0.1);
+            });
 
-        /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
-        $(".js-crop-and-upload").click(function () {
-            var cropData = $image.cropper("getData");
-            $("#id_x").val(cropData["x"]);
-            $("#id_y").val(cropData["y"]);
-            $("#id_height").val(cropData["height"]);
-            $("#id_width").val(cropData["width"]);
-            $("#identity_form").submit();
+            $(".js-zoom-out").click(function () {
+                $image.cropper("zoom", -0.1);
+            });
+
+            /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+            $(".js-crop-and-upload").click(function () {
+                var cropData = $image.cropper("getData");
+                $("#id_x").val(cropData["x"]);
+                $("#id_y").val(cropData["y"]);
+                $("#id_height").val(cropData["height"]);
+                $("#id_width").val(cropData["width"]);
+                $("#identity_form").submit();
+            });
         });
-    });
-</script>
+    </script>
 {% endblock javascripts %}

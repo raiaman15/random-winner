@@ -25,7 +25,8 @@ class Pool(models.Model):
         help_text='Pool size, i.e. maximum member count for the Pool'
     )
     investment = models.DecimalField(
-        'Pool Investment Amount', default=10000, max_digits=7, decimal_places=2, validators=[validate_investment], null=False, blank=False
+        'Pool Investment Amount', default=10000, max_digits=7, decimal_places=2, validators=[validate_investment],
+        null=False, blank=False
     )
     master = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name='master_of_pool', blank=False)
     members = models.ManyToManyField(get_user_model(), through="PoolMember", related_name='member_of_pool', blank=True)

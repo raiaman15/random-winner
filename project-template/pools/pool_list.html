@@ -14,61 +14,62 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Pool List</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Pool List</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Pool List</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Pool List</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Section -->
-                <section class="col-lg-12 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-globe-asia"></i>
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Section -->
+                    <section class="col-lg-12 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-globe-asia"></i>
+                                </h3>
 
-                            <div class="card-tools">
-                                <!-- SEARCH FORM -->
-                                <form action="{% url 'pool_search_results' %}" class="form-inline ml-3">
-                                    <div class="input-group input-group-sm">
-                                        <input class="form-control form-control-navbar bg-black border" type="search"
-                                            placeholder="Pool Search" aria-label="Pool Search" name="q">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-navbar bg-secondary" type="submit">
-                                                <i class="fas fa-search"></i>
-                                            </button>
+                                <div class="card-tools">
+                                    <!-- SEARCH FORM -->
+                                    <form action="{% url 'pool_search_results' %}" class="form-inline ml-3">
+                                        <div class="input-group input-group-sm">
+                                            <input class="form-control form-control-navbar bg-black border"
+                                                   type="search"
+                                                   placeholder="Pool Search" aria-label="Pool Search" name="q">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-navbar bg-secondary" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
 
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="card-body table-responsive p-0">
-                                <table class="table">
-                                    <thead>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>NAME</th>
                                             <th>SIZE</th>
@@ -77,45 +78,48 @@
                                             <th>POOLMASTER</th>
                                             <th>JOIN</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for pool in pool_list %}
-                                        <tr>
-                                            <td><a href="{% url 'pool_detail' pool.id %}">{{pool.name}}</a></td>
-                                            <td>{{pool.size}}</td>
-                                            <td>{{pool.members.count}}</td>
-                                            <td>{{pool.investment|intcomma}}</td>
-                                            <td>{{pool.master.first_name}} {{pool.master.last_name}}</td>
-                                            <td>
-                                                {% if user not in pool.members %}
-                                                <form id="{{pool.id}}" method="post" action="{% url 'pool_join' %}">
-                                                    {% csrf_token %}
-                                                    <input class="d-none" name="pool" value="{{pool.id}}">
-                                                    <input class="d-none" id="accept_reject" name="accept_reject"
-                                                        value="">
-                                                    <input type="submit" class="btn btn-sm btn-success"
-                                                        onclick="joining()" value="Join">
-                                                </form>
-                                                {% else %}
-                                                Joined <i class="fas fa-check-circle text-success"></i>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td><a href="{% url 'pool_detail' pool.id %}">{{ pool.name }}</a></td>
+                                                <td>{{ pool.size }}</td>
+                                                <td>{{ pool.members.count }}</td>
+                                                <td>{{ pool.investment|intcomma }}</td>
+                                                <td>{{ pool.master.first_name }} {{ pool.master.last_name }}</td>
+                                                <td>
+                                                    {% if user not in pool.members %}
+                                                        <form id="{{ pool.id }}" method="post"
+                                                              action="{% url 'pool_join' %}">
+                                                            {% csrf_token %}
+                                                            <input class="d-none" name="pool" value="{{ pool.id }}">
+                                                            <input class="d-none" id="accept_reject"
+                                                                   name="accept_reject"
+                                                                   value="">
+                                                            <input type="submit" class="btn btn-sm btn-success"
+                                                                   onclick="joining()" value="Join">
+                                                        </form>
+                                                    {% else %}
+                                                        Joined <i class="fas fa-check-circle text-success"></i>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            <div class="pagination">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div><!-- /.card-body -->
+                            <!-- Pagination -->
+                            <div class="card-footer text-center">
+                                <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
-                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        <a class="btn btn-sm btn-primary" href="?page=1">
                                         &laquo; First
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.previous_page_number }}">
                                         Previous
                                     </a>
                                     {% endif %}
@@ -125,37 +129,38 @@
                                     </span>
 
                                     {% if page_obj.has_next %}
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
                                         Next
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.paginator.num_pages }}">
                                         Last &raquo;
                                     </a>
                                     {% endif %}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card -->
-                </section>
-                <!-- /.Section -->
+                            <!-- /.card -->
+                    </section>
+                    <!-- /.Section -->
+                </div>
+                <!-- /.row (main row) -->
             </div>
-            <!-- /.row (main row) -->
-        </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-</div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<script>
-    function joining() {
-        if (confirm('Are you sure you want to join this Pool? Money will be deducted from your balance.')) {
-            $("#accept_reject").val("Accept")
-        } else {
-            return false;
+    <script>
+        function joining() {
+            if (confirm('Are you sure you want to join this Pool? Money will be deducted from your balance.')) {
+                $("#accept_reject").val("Accept")
+            } else {
+                return false;
+            }
         }
-    }
-</script>
+    </script>
 {% endblock javascripts %}

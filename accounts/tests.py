@@ -31,7 +31,6 @@ class CustomUserTests(TestCase):
 
 
 class SignupTests(TestCase):
-
     username = 'newuser'
     email = 'newuser@email.com'
 

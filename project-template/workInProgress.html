@@ -12,40 +12,40 @@
 
 {% block content %}
 
-<div class="login-box">
+    <div class="login-box">
 
-    <div class="login-logo">
-        <a target="_blank" href=""><b>{{PRODUCT_NAME}}</b> <br /><span style="font-size: x-small;"> by
-                {{COMPANY_NAME}}</span></a>
-    </div>
-
-    <!-- /.login-logo -->
-    <div class="card">
-
-        <div class="card-body login-card-body">
-
-            <h5 class="login-box-msg">
-                Launching Soon
-            </h5>
-            <p class="login-box-msg">
-                This feature is unavailable in your region.
-                You can provide your input/idea to before it arrives.<br />
-                Please contact {{PRODUCT_NAME}} Support Team if you need further help.
-            </p>
-
-            <br />
-            <div class="text-center">
-                &copy;
-                <a target="_blank" href="{% url 'product_page' %}">{{PRODUCT_NAME}}</a>
-                - developed by <a target="_blank" rel="noopener noreferrer"
-                    href="{% url 'company_page' %}">{{COMPANY_NAME}}</a>.
-            </div>
-
+        <div class="login-logo">
+            <a target="_blank" href=""><b>{{ PRODUCT_NAME }}</b> <br/><span style="font-size: x-small;"> by
+                {{ COMPANY_NAME }}</span></a>
         </div>
-        <!-- /.login-card-body -->
-    </div>
 
-</div>
+        <!-- /.login-logo -->
+        <div class="card">
+
+            <div class="card-body login-card-body">
+
+                <h5 class="login-box-msg">
+                    Launching Soon
+                </h5>
+                <p class="login-box-msg">
+                    This feature is unavailable in your region.
+                    You can provide your input/idea to before it arrives.<br/>
+                    Please contact {{ PRODUCT_NAME }} Support Team if you need further help.
+                </p>
+
+                <br/>
+                <div class="text-center">
+                    &copy;
+                    <a target="_blank" href="{% url 'product_page' %}">{{ PRODUCT_NAME }}</a>
+                    - developed by <a target="_blank" rel="noopener noreferrer"
+                                      href="{% url 'company_page' %}">{{ COMPANY_NAME }}</a>.
+                </div>
+
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+
+    </div>
 
 {% endblock content %}
 

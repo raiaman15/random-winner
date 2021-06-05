@@ -15,57 +15,57 @@
 
 {% block content %}
 
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">
-                        List of
-                        {% if 'manager/support-ticket/financial' in request.path %}
-                        Support Tickets Related to Finance
-                        {% elif 'manager/support-ticket/application' in request.path %}
-                        Support Ticket Related to Application
-                        {% endif %}
-                    </h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Support Tickets</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">
+                            List of
+                            {% if 'manager/support-ticket/financial' in request.path %}
+                                Support Tickets Related to Finance
+                            {% elif 'manager/support-ticket/application' in request.path %}
+                                Support Ticket Related to Application
+                            {% endif %}
+                        </h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{% url 'status' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Support Tickets</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Section -->
-                <section class="col-lg-12 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card bg-black elevation-2">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-users"></i>
-                            </h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Section -->
+                    <section class="col-lg-12 connectedSortable">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card bg-black elevation-2">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-users"></i>
+                                </h3>
 
-                            <div class="card-tools">
+                                <div class="card-tools">
 
-                            </div>
+                                </div>
 
-                        </div><!-- /.card-header -->
-                        <!-- Ongoing Live Class -->
-                        <div class="card-body">
-                            <div class="card-body table-responsive p-0" style="height: 300px;">
-                                <table class="table">
-                                    <thead>
+                            </div><!-- /.card-header -->
+                            <!-- Ongoing Live Class -->
+                            <div class="card-body">
+                                <div class="card-body table-responsive p-0" style="height: 300px;">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>TICKET ID</th>
                                             <th>CREATED</th>
@@ -73,46 +73,47 @@
                                             <th>ISSUE</th>
                                             <th>STATUS</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for ticket in tickets %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url 'manager_support_ticket_update' ticket.id %}">
-                                                    {{ ticket.id }}
-                                                </a>
-                                            </td>
-                                            <td>{{ ticket.created }}</td>
-                                            <td>
-                                                <a href="{% url 'manager_profile_detail' ticket.user.id %}">
-                                                    {{ticket.user.first_name}} {{ticket.user.last_name}}
-                                                    ({{ ticket.user.username }})
-                                                </a>
-                                            </td>
-                                            <td>{{ ticket.user_message|truncatewords:10 }}</td>
-                                            <td>
-                                                {% if ticket.closed %}
-                                                <small class="text-success">RESOLVED</small>
-                                                {% else %}
-                                                <small class="text-danger">UNRESOLVED</small>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'manager_support_ticket_update' ticket.id %}">
+                                                        {{ ticket.id }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ ticket.created }}</td>
+                                                <td>
+                                                    <a href="{% url 'manager_profile_detail' ticket.user.id %}">
+                                                        {{ ticket.user.first_name }} {{ ticket.user.last_name }}
+                                                        ({{ ticket.user.username }})
+                                                    </a>
+                                                </td>
+                                                <td>{{ ticket.user_message|truncatewords:10 }}</td>
+                                                <td>
+                                                    {% if ticket.closed %}
+                                                        <small class="text-success">RESOLVED</small>
+                                                    {% else %}
+                                                        <small class="text-danger">UNRESOLVED</small>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div><!-- /.card-body -->
-                        <!-- Pagination -->
-                        <div class="card-footer text-center">
-                            <div class="pagination">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div><!-- /.card-body -->
+                            <!-- Pagination -->
+                            <div class="card-footer text-center">
+                                <div class="pagination">
                                 <span class="step-links">
                                     {% if page_obj.has_previous %}
-                                    <a class="btn btn-sm btn-primary" href="?page=1">
+                                        <a class="btn btn-sm btn-primary" href="?page=1">
                                         &laquo; First
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.previous_page_number }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.previous_page_number }}">
                                         Previous
                                     </a>
                                     {% endif %}
@@ -122,26 +123,27 @@
                                     </span>
 
                                     {% if page_obj.has_next %}
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
+                                        <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">
                                         Next
                                     </a>
-                                    <a class="btn btn-sm btn-primary" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <a class="btn btn-sm btn-primary"
+                                           href="?page={{ page_obj.paginator.num_pages }}">
                                         Last &raquo;
                                     </a>
                                     {% endif %}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- /.card -->
-                </section>
-                <!-- /.Section -->
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+                            <!-- /.card -->
+                    </section>
+                    <!-- /.Section -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
-</div>
+    </div>
 
 {% endblock content %}
 

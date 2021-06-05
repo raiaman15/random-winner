@@ -3,50 +3,50 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="{% static 'project/favicon.ico' %}" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'project/favicon.ico' %}" type="image/x-icon">
 
-  <title>
-    {% block title %}{% endblock %}
-  </title>
+    <title>
+        {% block title %}{% endblock %}
+    </title>
 
-  <!-- Generic CSS goes HERE  -->
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet"
-    href="{% static 'project/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
-  <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="{% static 'project/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{% static 'project/css/adminlte.min.css' %}">
+    <!-- Generic CSS goes HERE  -->
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'project/plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet"
+          href="{% static 'project/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{% static 'project/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'project/css/adminlte.min.css' %}">
 
-  <!-- Specific Page CSS goes HERE  -->
-  {% block stylesheets %}{% endblock stylesheets %}
+    <!-- Specific Page CSS goes HERE  -->
+    {% block stylesheets %}{% endblock stylesheets %}
 
-  <!-- Dark Theme Patch -->
-  <style>
-    a.nav-link>p,
-    a.nav-link>i {
-      color: #212529;
-    }
+    <!-- Dark Theme Patch -->
+    <style>
+        a.nav-link > p,
+        a.nav-link > i {
+            color: #212529;
+        }
 
-    a.nav-link.active {
-      background: #0000001A;
-    }
-  </style>
+        a.nav-link.active {
+            background: #0000001A;
+        }
+    </style>
 
-  <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="{% static 'project/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{% static 'project/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
 
 </head>
 
 <body class="hold-transition {% block body_class %}{% endblock body_class %} sidebar-collapse dark-mode">
-  <div class="wrapper">
+<div class="wrapper">
 
     {% include 'includes/navigation.html' %}
 
@@ -58,52 +58,52 @@
 
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
+        <!-- Control sidebar content goes here -->
     </aside>
     <!-- /.control-sidebar -->
 
-  </div>
-  <!-- ./wrapper -->
+</div>
+<!-- ./wrapper -->
 
-  <!-- Generic JS goes HERE  -->
-  <!-- jQuery -->
-  <script src="{% static 'project/plugins/jquery/jquery.min.js' %}"></script>
-  <!-- jQuery UI 1.11.4 -->
-  <script src="{% static 'project/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
-  <!-- Bootstrap 4 -->
-  <script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <!-- AdminLTE App -->
-  <script src="{% static 'project/js/adminlte.min.js' %}"></script>
+<!-- Generic JS goes HERE  -->
+<!-- jQuery -->
+<script src="{% static 'project/plugins/jquery/jquery.min.js' %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'project/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'project/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'project/js/adminlte.min.js' %}"></script>
 
-  <!-- Specific Page JS goes HERE  -->
-  {% block javascripts %}{% endblock javascripts %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
 
-  <!-- Dark Theme Patch -->
-  <script>
-    $(".textinput").css({ "background-color": "white", "color": "black", "border": "1px solid black" });
-  </script>
+<!-- Dark Theme Patch -->
+<script>
+    $(".textinput").css({"background-color": "white", "color": "black", "border": "1px solid black"});
+</script>
 
-  <!-- Sweet Alerts -->
-  <!-- SweetAlert2 -->
-  <script src="{% static 'project/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
-  <script>
+<!-- Sweet Alerts -->
+<!-- SweetAlert2 -->
+<script src="{% static 'project/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+<script>
     var Toast = Swal.mixin({
-      toast: true,
-      position: 'bottom',
-      showConfirmButton: false,
-      timer: 30000
+        toast: true,
+        position: 'bottom',
+        showConfirmButton: false,
+        timer: 30000
     });
-  </script>
-  {% if messages %}
-  {% for message in messages %}
-  <script>
-    Toast.fire({
-      icon: '{{ message.tags|lower }}',
-      title: '{{ message }}'
-    })
-  </script>
-  {% endfor %}
-  {% endif %}
+</script>
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            Toast.fire({
+                icon: '{{ message.tags|lower }}',
+                title: '{{ message }}'
+            })
+        </script>
+    {% endfor %}
+{% endif %}
 
 </body>
 

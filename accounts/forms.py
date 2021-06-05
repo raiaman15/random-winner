@@ -14,7 +14,7 @@ class ProfileIdentityProofUploadViewForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ('identity_proof', 'x', 'y', 'width', 'height', )
+        fields = ('identity_proof', 'x', 'y', 'width', 'height',)
 
     def save(self):
         user_identity = super(ProfileIdentityProofUploadViewForm, self).save()

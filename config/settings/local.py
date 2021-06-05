@@ -1,7 +1,6 @@
 from config.settings.base import *
 from config.settings.base import env
 
-
 # Development specific settings
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -37,7 +36,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {

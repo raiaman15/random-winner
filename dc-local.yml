@@ -1,6 +1,6 @@
 # Verify at http://yaml-online-parser.appspot.com/
 version: "3.8"
-   
+
 services:
 
   django:
@@ -14,7 +14,7 @@ services:
       - .:/app
     ports:
       - "9001:25" # HOST:CONTAINER
-      - 8000:8000 # HOST:CONTAINER
+      - 80:8000 # HOST:CONTAINER
     env_file:
       - ./.envs/.local/.django
     depends_on:
