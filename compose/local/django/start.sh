@@ -21,7 +21,7 @@ echo "RUNNING ALL TEST CASES"
 python manage.py test
 echo "CREATING TEST SUPERUSER"
 echo "from django.contrib.auth import get_user_model; user = get_user_model().objects.create_user(username='9999999999', email='webmaster@bit-boomer.com', password='DevTeam@123'); user.is_superuser=True; user.is_staff=True; user.save()" | python manage.py shell
-echo "from django.contrib.auth import get_user_model; from django.contrib.auth.models import Group; manager_group = Group.objects.get_or_create(name='manager'); user = get_user_model().objects.create_user(username='9999999998', email='manager@bit-boomer.com', password='DevTeam@123'); manager_group.user_set.add(user); user.save()" | python manage.py shell
+echo "from django.contrib.auth import get_user_model; from django.contrib.auth.models import Group; manager_group, created = Group.objects.get_or_create(name='manager'); user = get_user_model().objects.create_user(username='9999999998', email='manager@bit-boomer.com', password='DevTeam@123'); manager_group.user_set.add(user); user.save()" | python manage.py shell
 
 echo "STARTING DJANGO BUILT-IN SERVER"
 # SSL Enabled Mode
