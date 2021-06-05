@@ -28,8 +28,8 @@ def short_url(url, apikey=key):
     request = urllib.request.Request("https://api.textlocal.in/create_shorturl/")
     f = urllib.request.urlopen(request, data)
     d = ast.literal_eval(f.read().decode('utf-8', 'strict'))
-    shorturl = d['shorturl'].replace('\\', '')
-    return shorturl
+    url = d['shorturl'].replace('\\', '')
+    return url
 
 
 def send_sms(apikey, numbers, sender, message):
@@ -65,12 +65,11 @@ def send_otp(number, otp, first_name='', last_name=''):
 
         full_name = name_long if len(name_long) <= 26 else name_short[:26]
 
-    lines = []
-    lines.append(f'Welcome {full_name},')
-    lines.append(f'OTP is {otp}')
-    lines.append(
+    lines = [
+        f'Welcome {full_name},',
+        f'OTP is {otp}',
         'Hope you enjoy our platform and praise our effort in making affordable solution for Educational Institution!'
-    )
+    ]
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -87,13 +86,13 @@ def send_sms_platform_invite(number, username, password, invitee_number):
     3. Newline character takes 1 character length
     """
 
-    url = 'https://bit-boomer.com/accounts/signup/'
-    shorturl = short_url(url)
+    url = short_url('https://bit-boomer.com/accounts/login/')
 
-    lines = []
-    lines.append('Welcome to BitBoomer!')
-    lines.append(f'Sign in at {shorturl} with contact number: {username} and password: {password}')
-    lines.append(f'Invited by {invitee_number}')
+    lines = [
+        'Welcome to BitBoomer!',
+        f'Sign in at {url} with contact number: {username} and password: {password}',
+        f'Invited by {invitee_number}'
+    ]
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -109,10 +108,9 @@ def send_sms_pool_invite(number, pool_id, invitee_number):
     3. Newline character takes 1 character length
     """
 
-    url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
-    shorturl = short_url(url)
+    url = short_url(f'https://bit-boomer.com/pools/detail/{pool_id}/')
 
-    lines = ['Hello from BitBoomer!', f'You have been invited by {invitee_number} to join their pool {shorturl}']
+    lines = ['Hello from BitBoomer!', f'You have been invited by {invitee_number} to join their pool {url}']
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -157,7 +155,10 @@ def send_sms_pool_winner(number, pool_id):
     url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
     shorturl = short_url(url)
 
-    lines = ['Hello from BitBoomer!', f'Congratulations! You won this month spin for the pool {shorturl}']
+    lines = [
+        'Hello from BitBoomer!',
+        f'Congratulations! You won this month spin for the pool {shorturl}'
+    ]
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -173,11 +174,13 @@ def send_email_pool_winner(email_id, pool_id):
     2. Personalized Touch with Happy Tone
     """
 
-    url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
-    shorturl = short_url(url)
+    url = short_url(f'https://bit-boomer.com/pools/detail/{pool_id}/')
 
-    lines = ['Hello from BitBoomer!', f'Congratulations! You won this month spin for the pool {shorturl}',
-             'Payments will be processed shortly.']
+    lines = [
+        'Hello from BitBoomer!',
+        f'Congratulations! You won this month spin for the pool {url}',
+        'Payments will be processed shortly.'
+    ]
 
     message = '\n'.join(lines)
 

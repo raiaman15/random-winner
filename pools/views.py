@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http.response import HttpResponse
 from django.utils import timezone
@@ -156,10 +157,12 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
                     remaining_amount = pool.investment - self.request.user.balance_amount
                     messages.warning(request, f'Please add ₹ {remaining_amount} to your account.')
                     return redirect('profile_balance_credit_transaction_create')
-                if not self.user.billing_address:
+                try:
+                    self.request.user.billing_address
+                except ObjectDoesNotExist:
                     messages.warning(request, response_messages['profile_billing_address_incomplete'])
                     return redirect('profile_billing_address_create')
-                if not self.user.bank_account_detail:
+                if not self.request.user.bank_account_detail:
                     messages.warning(request, response_messages['profile_bank_account_detail_incomplete'])
                     return redirect('profile_bank_account_detail_create')
                 try:
@@ -186,7 +189,7 @@ class AutomaticActivateScheduleView(View):
         end = timezone.now().replace(day=10, hour=23, minute=59)
         activated_count = 0
         failed_count = 0
-        if now > start and now < end:
+        if start < now < end:
             pools = Pool.objects.all()
             for pool in pools:
                 if not pool.activated:
@@ -206,7 +209,7 @@ class AutomaticSpinScheduleView(View):
         end = timezone.now().replace(day=2, hour=00, minute=00)
         spinned_count = 0
         failed_count = 0
-        if now > start and now < end:
+        if start < now < end:
             pools = Pool.objects.all()
             for pool in pools:
                 try:
@@ -222,11 +225,12 @@ class PoolStatisticsView(View):
     def get(self, request):
         total_pool_count = Pool.objects.count()
         active_pool_count = Pool.objects.exclude(activated__isnull=True).count()
-        pool_ready_for_activation = [1 for pool in Pool.objects.all() if pool.get_member_remaining == 0].sum()
+        pool_ready_for_activation = sum([1 for pool in Pool.objects.all() if pool.get_member_remaining == 0])
 
-        summary = []
-        summary.append(f'Total Pools: {total_pool_count}<br/>')
-        summary.append(f'Active Pools: {active_pool_count} <br/>')
-        summary.append(f'Pools Ready for Activation: {pool_ready_for_activation}<br/>')
+        summary = [
+            f'Total Pools: {total_pool_count}<br/>',
+            f'Active Pools: {active_pool_count} <br/>',
+            f'Pools Ready for Activation: {pool_ready_for_activation}<br/>'
+        ]
 
         return HttpResponse(''.join(summary))
