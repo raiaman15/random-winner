@@ -43,6 +43,44 @@
             <!-- Main row -->
             <div class="row">
                 <!-- Left col -->
+                            <section class="col-lg-6 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-black elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card"></i>
+                                Update Your Details
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <input type="submit" class="btn btn-light" value="Update">
+                            </form>
+                        </div><!-- /.card-body -->
+                        <!-- Help Text -->
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Click <a href="{% url 'dashboard' %}">here</a> to go back to your dashboard.
+                                </p>
+                            </div><!-- /.col -->
+                        </div>
+                        <!-- /.Help Text -->
+                    </div>
+                    <!-- /.card -->
+                </section>
+                <!-- /.Left col -->
+                <!-- Right col -->
                 <section class="col-lg-6 connectedSortable text-center">
                     <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
                     <div class="col-md-12">
