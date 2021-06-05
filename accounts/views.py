@@ -453,7 +453,7 @@ class ProfileInvestmentTransactionListView(LoginRequiredMixin, GroupRequiredMixi
 
 class ProfileCreditBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
-    template_name = 'account/profile_balance_transaction_create.html'
+    template_name = 'account/profile_balance_transaction_credit_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
     group_required = u"member"
@@ -569,7 +569,7 @@ class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Det
 
 class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BalanceTransaction
-    template_name = 'account/profile_balance_transaction_create.html'
+    template_name = 'account/profile_balance_transaction_debit_create.html'
     fields = ['amount', ]
     login_url = 'account_login'
     group_required = u"member"

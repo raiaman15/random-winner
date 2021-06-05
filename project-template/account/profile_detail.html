@@ -254,4 +254,17 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            let pan_number = $("#id_pan_number")
+            let aadhaar_number = $("#id_aadhaar_number",)
+            if (pan_number.val() === "") {
+                pan_number.css("border", "2px solid red").focus()
+            }
+            if (aadhaar_number.val() === "") {
+                aadhaar_number.css("border", "2px solid red").focus()
+            }
+        })
+    </script>
+{% endblock javascripts %}

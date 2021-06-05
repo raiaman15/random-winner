@@ -88,7 +88,9 @@
                                                 <td>{{ pool.investment|intcomma }}</td>
                                                 <td>{{ pool.master.first_name }} {{ pool.master.last_name }}</td>
                                                 <td>
-                                                    {% if user not in pool.members %}
+                                                    {% if user in pool.members.all %}
+                                                        Joined <i class="fas fa-check-circle text-success"></i>
+                                                    {% else %}
                                                         <form id="{{ pool.id }}" method="post"
                                                               action="{% url 'pool_join' %}">
                                                             {% csrf_token %}
@@ -99,8 +101,6 @@
                                                             <input type="submit" class="btn btn-sm btn-success"
                                                                    onclick="joining()" value="Join">
                                                         </form>
-                                                    {% else %}
-                                                        Joined <i class="fas fa-check-circle text-success"></i>
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -141,6 +141,8 @@
                                 </div>
                             </div>
                             <!-- /.card -->
+                        </div>
+                        <!-- Custom tabs (Charts with tabs)-->
                     </section>
                     <!-- /.Section -->
                 </div>

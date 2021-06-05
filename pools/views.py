@@ -180,7 +180,7 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
                     messages.error(request, f'Unable to join the pool. Error: {e}')
         else:
             messages.error(request, 'Your response is invalid. Please try again!')
-        return redirect('pool_invite_list')
+        return redirect('pool_membership_list')
 
 
 # Automatic Schedule: Activate Pools, Spin, Exit PoolMember
