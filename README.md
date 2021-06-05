@@ -1,21 +1,21 @@
 ## DJANGO-STARTER
 
 ### DEVELOPMENT SETUP
-**Deleting Development Setup**
+**Closing Development Setup**
 `docker-compose -f dc-local.yml down -v`
 
 **Creating Development Setup**
 `docker-compose -f dc-local.yml up --build`
 
 ### PRODUCTION SETUP
-**Deleting Production Setup**
+**Closing Production Setup**
 `docker-compose -f dc-production.yml down -v`
 
 **Creating Prod Setup**
 `docker-compose -f dc-production.yml up -d --build`
 
 ### PRODUCTION SSL SETUP
-**Deleting Production Setup**
+**Closing Production Setup**
 `docker-compose -f dc-ssl-production.yml down -v`
 
 **Creating Prod Setup**
@@ -25,18 +25,23 @@
 **Execute Command in Docker Container**
 `docker-compose exec <container_name> <command>`
 
-**Deletes all Docker components unused presently (DON'T TRY IF NOT SURE)**
+**Delete all Docker components unused presently (DON'T TRY IF NOT SURE)**
 `docker system prune -a`
 
-*NOTE: Volumes persist unless deleted explicitly with "docker-compose -f <yml filename> down -v" where -v flag is for deleting the volume.*
+**Delete the persistent volume, used by specific docker container**
+`docker volume ls`
+`docker volume rm <volume ID>`
+
+*NOTE: Alternatively, volumes could be deleted explicitly with below command where -v flag is for deleting the volume.*  
+`docker-compose -f <yml filename> down -v`
 
 ### Reference URLs
 - https://docs.docker.com/compose/django/
 - https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
 
 *NOTE: This is a starter template for django (version 3.1.5)*
-*NOTE: You must update the compose/ssl_production/nginx/domain_ssl_cert.pem file with the file generated for your domain. You can generate it from Cloudflare or any other provider.*
-*NOTE: You must update the compose/ssl_production/nginx/domain_ssl_private_key.key file with the file generated for your domain. You can generate it from Cloudflare or any other provider.*
+*NOTE: You must update `compose/ssl_production/nginx/domain_ssl_cert.pem` file with the file generated for your domain. You can generate it from Cloudflare or any other provider.*
+*NOTE: You must update `compose/ssl_production/nginx/domain_ssl_private_key.key` file with the file generated for your domain. You can generate it from Cloudflare or any other provider.*
 
 Default values come from env files; change accordingly.
 
