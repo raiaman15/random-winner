@@ -12,7 +12,6 @@ from django.contrib import messages
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -27,7 +26,7 @@ from pools.models import PoolInvite
 
 
 ##############################################################################
-# User Onboarding & Management Views
+# User Onboard & Management Views
 ##############################################################################
 
 class UserStatusView(LoginRequiredMixin, View):
@@ -47,8 +46,8 @@ class UserStatusView(LoginRequiredMixin, View):
             return redirect('pool_list')
 
         # If user signed up with email and confirmed their email address
-        if (EmailAddress.objects.filter(user=user).exists() and not user.contact_verified):
-            if (EmailAddress.objects.filter(user=user, verified=False).exists()):
+        if EmailAddress.objects.filter(user=user).exists() and not user.contact_verified:
+            if EmailAddress.objects.filter(user=user, verified=False).exists():
                 return redirect('profile_verification_option')
             elif user.identity_reject_reason or not user.identity_proof:
                 return redirect('profile_identity_proof_upload')
@@ -117,7 +116,7 @@ class ProfileVerificationSMSView(LoginRequiredMixin, TemplateView):
                     user_otp = int(request.POST.get("otp_confirm"))
 
             totp = pyotp.TOTP(user.contact_secret)
-            token_valid = totp.verify(user_otp, valid_window=3)
+            token_valid = totp.verify(str(user_otp), valid_window=3)
             if token_valid:
                 request.user.contact_verified = True
                 request.user.save()
@@ -136,7 +135,7 @@ class ProfileIdentityProofUploadView(LoginRequiredMixin, UpdateView):
     template_name = 'account/profile_identity_proof_upload.html'
     login_url = 'account_login'
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
@@ -180,7 +179,7 @@ class ProfileNameView(LoginRequiredMixin, UpdateView):
     login_url = 'account_login'
     success_url = reverse_lazy('status')
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
@@ -192,7 +191,7 @@ class ProfileDetailView(LoginRequiredMixin, UpdateView):
     login_url = 'account_login'
     success_url = reverse_lazy('profile_detail')
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
@@ -209,7 +208,7 @@ class ProfilePictureView(LoginRequiredMixin, UpdateView):
     login_url = 'account_login'
     success_url = reverse_lazy('profile_picture')
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
@@ -234,7 +233,7 @@ class ProfileApplyPoolmasterView(LoginRequiredMixin, GroupRequiredMixin, UpdateV
     success_url = reverse_lazy('status')
     group_required = u"member"
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
@@ -270,7 +269,8 @@ class AccountResetPasswordWithOTPView(FormView):
     template_name = 'account/password_reset_with_otp.html'
     form_class = AccountResetPasswordWithOTPViewForm
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.username = None
 
     def post(self, request, *args, **kwargs):
@@ -313,7 +313,8 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
     form_class = AccountResetPasswordWithOTPConfirmViewForm
     success_url = reverse_lazy('status')
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.username = None
 
     def get(self, request, *args, **kwargs):
@@ -354,7 +355,7 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
 # User Billing Address & Transactions Specific Views
 ##############################################################################
 
-class ProfileBillingAddresssCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class ProfileBillingAddressCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = BillingAddress
     template_name = 'account/profile_billing_address.html'
     fields = ['name', 'address1', 'address2', 'zip_code', 'city', 'state', 'country']
@@ -362,7 +363,7 @@ class ProfileBillingAddresssCreateView(LoginRequiredMixin, GroupRequiredMixin, C
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super(ProfileBillingAddresssCreateView, self).form_valid(form)
+        return super(ProfileBillingAddressCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('profile_billing_address_update',  kwargs={'pk': self.request.user.id})
@@ -546,7 +547,7 @@ class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Det
                                 request.POST.get('razorpay_signature')
                             )
                             messages.success(
-                                request, f'Payment Successfull! ₹ {balance_transaction.amount} added to your balance.')
+                                request, f'Payment Successful! ₹ {balance_transaction.amount} added to your balance.')
 
             except Exception as e:
                 messages.error(request, f'Payment Failed: {e}')
@@ -590,7 +591,7 @@ class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView
 
                 form.instance.order_id = 'DEBIT'+prefix+yy+mm+dd+hh     # +mm
                 try:
-                    return super(ProfileCreditBalanceView, self).form_valid(form)
+                    return super(ProfileDebitBalanceView, self).form_valid(form)
                 except Exception as e:
                     messages.error(self.request, f'Error Occurred: {e}')
                     return redirect('profile_balance_debit_transaction_create')
@@ -737,7 +738,7 @@ class ManagerProfileVerifyIdentityView(LoginRequiredMixin, GroupRequiredMixin, U
     def form_valid(self, form):
         form.instance.master = get_object_or_404(
             self.model, pk=self.kwargs['pk'])
-        if bool(form.cleaned_data['identity_verified']) == True:
+        if bool(form.cleaned_data['identity_verified']):
             user = get_object_or_404(self.model, pk=self.kwargs['pk'])
             # Managers are not allowed to become Members
             if not user.groups.filter(name='manager').exists():
@@ -756,6 +757,7 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
     group_required = u"manager"
 
     def __init__(self):
+        super().__init__()
         self.profile = None
 
     def get(self, request, *args, **kwargs):
@@ -780,7 +782,7 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
 class ManagerProfileSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'profile_list'
-    template_name = 'account/profile_list.html'
+    template_name = 'account/manager_profile_list.html'
     paginate_by = 100
     group_required = u"manager"
 

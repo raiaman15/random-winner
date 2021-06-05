@@ -39,7 +39,7 @@ services:
     volumes:
       - postgres_production_data:/var/lib/postgresql/data/
     ports:
-      - 5435:5432 # HOST:CONTAINER
+      - 5432:5432 # HOST:CONTAINER
     env_file:
       - ./.envs/.production/.postgres
 

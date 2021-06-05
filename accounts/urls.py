@@ -22,7 +22,7 @@ urlpatterns = [
     path('password/reset/otp/confirm/', accounts_views.AccountResetPasswordWithOTPConfirmView.as_view(),
          name='account_reset_password_with_otp_confirm'),
     # Profile Billing Address, Bank Account Detail & Transactions
-    path('profile/billing-address/create/', accounts_views.ProfileBillingAddresssCreateView.as_view(),
+    path('profile/billing-address/create/', accounts_views.ProfileBillingAddressCreateView.as_view(),
          name='profile_billing_address_create'),
     path('profile/billing-address/update/<int:pk>/',
          accounts_views.ProfileBillingAddresssUpdateView.as_view(), name='profile_billing_address_update'),
