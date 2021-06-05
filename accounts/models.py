@@ -4,8 +4,10 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator, DecimalValidator
-from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username, validate_amount,
-                               validate_balance_type_of_transaction, validate_investment_type_of_transaction, validate_support_ticket_type_of_ticket, validate_message)
+from config.validators import (validate_name, validate_aadhaar_number, validate_pan_number, validate_username,
+                               validate_amount, validate_balance_type_of_transaction,
+                               validate_investment_type_of_transaction, validate_support_ticket_type_of_ticket,
+                               validate_message)
 from config.utils import send_otp
 from decimal import Decimal
 
@@ -87,16 +89,16 @@ class CustomUser(AbstractUser):
             btc = sum([t.amount for t in bts if t.type_of_transaction == 'C'])
             btd = sum([t.amount for t in bts if t.type_of_transaction == 'D'])
             # Net Balance Amount
-            nba = btc-btd
+            nba = btc - btd
         # Investment
         if InvestmentTransaction.objects.filter(user=self, verified=True).exists():
             its = InvestmentTransaction.objects.filter(user=self, verified=True).all()
             iti = sum([t.amount for t in its if t.type_of_transaction == 'I'])
             itd = sum([t.amount for t in its if t.type_of_transaction == 'D'])
             # Net Investment Amount
-            nia = iti-itd
+            nia = iti - itd
         # Net Final Balance & Investment
-        self.balance_amount = nba-nia
+        self.balance_amount = nba - nia
         self.investment_amount = nia
         return super(CustomUser, self).save()
 
@@ -180,7 +182,7 @@ class InvestmentTransaction(models.Model):
 
     def save(self):
         self.full_clean()
-        if self.verified == True:
+        if self.verified:
             # TODO-NORMAL: Generate and send invoice
             pass
         return super(InvestmentTransaction, self).save()

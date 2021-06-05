@@ -51,7 +51,7 @@ def send_otp(number, otp, first_name='', last_name=''):
 
     Dynamically formats the SMS body to meet the template conditions.
     Constraints:
-    1. According the ISO IEC 7813 the cardholder name length must be 2 to 26 
+    1. According the ISO IEC 7813 the cardholder name length must be 2 to 26
     characters including first name, last name and spaces.
     2. OTP length is 6 characters
     3. Newline character takes 1 character length
@@ -69,7 +69,7 @@ def send_otp(number, otp, first_name='', last_name=''):
     lines.append(f'Welcome {full_name},')
     lines.append(f'OTP is {otp}')
     lines.append(
-        f'Hope you enjoy our platform and praise our effort in making affordable solution for Educational Institution!'
+        'Hope you enjoy our platform and praise our effort in making affordable solution for Educational Institution!'
     )
 
     message = '\n'.join(lines)
@@ -91,7 +91,7 @@ def send_sms_platform_invite(number, username, password, invitee_number):
     shorturl = short_url(url)
 
     lines = []
-    lines.append(f'Welcome to BitBoomer!')
+    lines.append('Welcome to BitBoomer!')
     lines.append(f'Sign in at {shorturl} with contact number: {username} and password: {password}')
     lines.append(f'Invited by {invitee_number}')
 
@@ -112,9 +112,7 @@ def send_sms_pool_invite(number, pool_id, invitee_number):
     url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
     shorturl = short_url(url)
 
-    lines = []
-    lines.append(f'Hello from BitBoomer!')
-    lines.append(f'You have been invited by {invitee_number} to join their pool {shorturl}')
+    lines = ['Hello from BitBoomer!', f'You have been invited by {invitee_number} to join their pool {shorturl}']
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -132,9 +130,7 @@ def send_email_pool_invite(email_id, pool_id, invitee_number):
 
     url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
 
-    lines = []
-    lines.append(f'Hello from BitBoomer!')
-    lines.append(f'You have been invited by {invitee_number} to join their pool {url}')
+    lines = ['Hello from BitBoomer!', f'You have been invited by {invitee_number} to join their pool {url}']
 
     message = '\n'.join(lines)
     try:
@@ -161,9 +157,7 @@ def send_sms_pool_winner(number, pool_id):
     url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
     shorturl = short_url(url)
 
-    lines = []
-    lines.append(f'Hello from BitBoomer!')
-    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}')
+    lines = ['Hello from BitBoomer!', f'Congratulations! You won this month spin for the pool {shorturl}']
 
     message = '\n'.join(lines)
     response = send_sms(key, number, sender, message)
@@ -182,10 +176,8 @@ def send_email_pool_winner(email_id, pool_id):
     url = f'https://bit-boomer.com/pools/detail/{pool_id}/'
     shorturl = short_url(url)
 
-    lines = []
-    lines.append(f'Hello from BitBoomer!')
-    lines.append(f'Congratulations! You won this month spin for the pool {shorturl}')
-    lines.append(f'Payments will be processed shortly.')
+    lines = ['Hello from BitBoomer!', f'Congratulations! You won this month spin for the pool {shorturl}',
+             'Payments will be processed shortly.']
 
     message = '\n'.join(lines)
 

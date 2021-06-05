@@ -1,12 +1,9 @@
 from PIL import Image
 from captcha.fields import CaptchaField
 from django import forms
-from django.core.files import File
-from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import ContactNumberOTP, BalanceTransaction
+from .models import BalanceTransaction
 
 
 class ProfileIdentityProofUploadViewForm(forms.ModelForm):
@@ -28,7 +25,7 @@ class ProfileIdentityProofUploadViewForm(forms.ModelForm):
         h = self.cleaned_data.get('height')
 
         image = Image.open(user_identity.identity_proof)
-        cropped_image = image.crop((x, y, w+x, h+y))
+        cropped_image = image.crop((x, y, w + x, h + y))
         resized_image = cropped_image.resize((660, 420), Image.ANTIALIAS)
         resized_image.save(user_identity.identity_proof.path)
 
@@ -54,7 +51,7 @@ class ProfilePictureViewForm(forms.ModelForm):
         h = self.cleaned_data.get('height')
 
         image = Image.open(user_profile.picture)
-        cropped_image = image.crop((x, y, w+x, h+y))
+        cropped_image = image.crop((x, y, w + x, h + y))
         resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
         resized_image.save(user_profile.picture.path)
 

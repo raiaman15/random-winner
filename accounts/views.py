@@ -1,7 +1,7 @@
 import os
 import pyotp
 import razorpay
-from decimal import *
+from decimal import getcontext, ROUND_UP, Decimal
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,7 +17,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, TemplateView, FormView
 from allauth.account.admin import EmailAddress
-from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDetail, BalanceTransaction, InvestmentTransaction, SupportTicket
+from .models import CustomUser, ContactNumberOTP, BillingAddress, BankAccountDetail, BalanceTransaction, \
+    InvestmentTransaction, SupportTicket
 from .forms import (ProfileIdentityProofUploadViewForm, ProfilePictureViewForm, AccountResetPasswordWithOTPViewForm,
                     AccountResetPasswordWithOTPConfirmViewForm, ManagerProfileApprovePoolmasterViewForm)
 from config.validators import validate_username
@@ -278,7 +279,8 @@ class AccountResetPasswordWithOTPView(FormView):
         self.username = int(request.POST.get("username"))
         if not CustomUser.objects.filter(username=self.username).exists():
             messages.error(
-                request, f'There is no user registered with the provided contact number {self.username}. You can Sign Up if you are new user.')
+                request,
+                f'There is no user registered with the provided contact number {self.username}. You can Sign Up if you are new user.')
         else:
             if ContactNumberOTP.objects.filter(username=self.username).exists():
                 td = timezone.now() - timedelta(minutes=5)
@@ -318,8 +320,8 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
         self.username = None
 
     def get(self, request, *args, **kwargs):
-        attempt = int(request.session['password_reset_attempt'])+1
-        request.session['password_reset_attempt'] = attempt+1
+        attempt = int(request.session['password_reset_attempt']) + 1
+        request.session['password_reset_attempt'] = attempt + 1
         if attempt > 2:
             messages.error(request, response_messages['profile_password_reset_attempt_exceeded'])
             return redirect('status')
@@ -342,7 +344,8 @@ class AccountResetPasswordWithOTPConfirmView(FormView):
             user.set_password(f'{self.username}{user_otp}')
             user.save()
             messages.success(
-                request, f'Password Changed! New password is {self.username}XXXXXX where XXXXXX is the OTP you just confirmed.')
+                request,
+                f'Password Changed! New password is {self.username}XXXXXX where XXXXXX is the OTP you just confirmed.')
 
         else:
             messages.error(
@@ -366,7 +369,7 @@ class ProfileBillingAddressCreateView(LoginRequiredMixin, GroupRequiredMixin, Cr
         return super(ProfileBillingAddressCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('profile_billing_address_update',  kwargs={'pk': self.request.user.id})
+        return reverse_lazy('profile_billing_address_update', kwargs={'pk': self.request.user.id})
 
 
 class ProfileBillingAddresssUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
@@ -383,7 +386,7 @@ class ProfileBillingAddresssUpdateView(LoginRequiredMixin, GroupRequiredMixin, U
         return super(ProfileBillingAddresssUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('profile_billing_address_update',  kwargs={'pk': self.request.user.id})
+        return reverse_lazy('profile_billing_address_update', kwargs={'pk': self.request.user.id})
 
 
 class ProfileBankAccountDetailCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -397,7 +400,7 @@ class ProfileBankAccountDetailCreateView(LoginRequiredMixin, GroupRequiredMixin,
         return super(ProfileBankAccountDetailCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('profile_bank_account_detail_update',  kwargs={'pk': self.request.user.id})
+        return reverse_lazy('profile_bank_account_detail_update', kwargs={'pk': self.request.user.id})
 
 
 class ProfileBankAccountDetailUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
@@ -414,7 +417,7 @@ class ProfileBankAccountDetailUpdateView(LoginRequiredMixin, GroupRequiredMixin,
         return super(ProfileBankAccountDetailUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('profile_bank_account_detail_update',  kwargs={'pk': self.request.user.id})
+        return reverse_lazy('profile_bank_account_detail_update', kwargs={'pk': self.request.user.id})
 
 
 class ProfileBalanceTransactionListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -460,13 +463,13 @@ class ProfileCreditBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateVie
         getcontext().prec = 3
         getcontext().rounding = ROUND_UP
         form.instance.amount = abs(form.instance.amount)
-        form.instance.tax = abs(Decimal(0.18)*form.instance.amount)  # Adding 18% GST
+        form.instance.tax = abs(Decimal(0.18) * form.instance.amount)  # Adding 18% GST
         # Initiate RazorPay Transaction
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
         order_status = None
         try:
             response = client.order.create(
-                dict(amount=round((form.instance.amount+form.instance.tax)*100), currency='INR')
+                dict(amount=round((form.instance.amount + form.instance.tax) * 100), currency='INR')
             )  # RazorPay Transactions are in Paise; Added GST
             order_id = response['id']
             order_status = response['status']
@@ -523,7 +526,8 @@ class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Det
         balance_transaction_id = self.kwargs['pk']
         balance_transaction = get_object_or_404(BalanceTransaction, id=balance_transaction_id)
 
-        if balance_transaction in request.user.balance_transaction.all() and balance_transaction.order_id == request.POST.get('razorpay_order_id'):
+        if balance_transaction in request.user.balance_transaction.all() and balance_transaction.order_id == request.POST.get(
+                'razorpay_order_id'):
             param_dict = {
                 'razorpay_payment_id': request.POST.get('razorpay_payment_id'),
                 'razorpay_order_id': balance_transaction.order_id,
@@ -534,7 +538,7 @@ class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Det
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
 
             try:
-                status = client.utility.verify_payment_signature(param_dict)
+                client.utility.verify_payment_signature(param_dict)
                 # Explicitly Reconfirm Payment Status at RazorPay Server
                 payments = client.order.payments(request.POST.get('razorpay_order_id'))
 
@@ -552,7 +556,7 @@ class ProfileCreditBalanceStatusView(LoginRequiredMixin, GroupRequiredMixin, Det
             except Exception as e:
                 messages.error(request, f'Payment Failed: {e}')
                 return redirect('profile_balance_transaction_list')
-            return super(ProfileCreditBalanceStatusView, self).get(request, * args, **kwargs)
+            return super(ProfileCreditBalanceStatusView, self).get(request, *args, **kwargs)
         else:
             messages.error(self.request, 'Order ID Mismatch Error. Please try again!')
             return redirect('profile_balance_transaction_status')
@@ -575,7 +579,7 @@ class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView
         getcontext().prec = 3
         getcontext().rounding = ROUND_UP
         form.instance.amount = abs(form.instance.amount)
-        form.instance.tax = abs(Decimal(0.0)*form.instance.amount)  # Adding 0% Processing Fee
+        form.instance.tax = abs(Decimal(0.0) * form.instance.amount)  # Adding 0% Processing Fee
         self.request.user.refresh_balance_investment()
         if form.instance.amount <= self.request.user.balance_amount:
             if self.request.user.billing_address and self.request.user.bank_account_detail:
@@ -589,7 +593,7 @@ class ProfileDebitBalanceView(LoginRequiredMixin, GroupRequiredMixin, CreateView
                 # A Member can create only 1 withdrawal request per hour
                 # mm = t.strftime("%M")
 
-                form.instance.order_id = 'DEBIT'+prefix+yy+mm+dd+hh     # +mm
+                form.instance.order_id = 'DEBIT' + prefix + yy + mm + dd + hh  # +mm
                 try:
                     return super(ProfileDebitBalanceView, self).form_valid(form)
                 except Exception as e:
@@ -705,7 +709,8 @@ class ManagerProfileListWillingPoolMasterView(LoginRequiredMixin, GroupRequiredM
     group_required = u"manager"
 
     def get_queryset(self):
-        return self.model.objects.filter(~Q(groups__name='master') & Q(groups__name='member') & Q(is_willing_master=True)).order_by("username")
+        return self.model.objects.filter(
+            ~Q(groups__name='master') & Q(groups__name='member') & Q(is_willing_master=True)).order_by("username")
 
 
 class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -717,7 +722,8 @@ class ManagerProfileListUnverifiedProfileView(LoginRequiredMixin, GroupRequiredM
     group_required = u"manager"
 
     def get_queryset(self):
-        return self.model.objects.filter(~Q(groups__name='manager') & Q(is_superuser=False) & Q(identity_verified=False)).order_by("username")
+        return self.model.objects.filter(
+            ~Q(groups__name='manager') & Q(is_superuser=False) & Q(identity_verified=False)).order_by("username")
 
 
 class ManagerProfileDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
@@ -765,7 +771,7 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
         return super(ManagerProfileApprovePoolmasterView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form, *args, **kwargs):
-        if bool(form.cleaned_data['confirm']) == True:
+        if bool(form.cleaned_data['confirm']):
             user = get_object_or_404(CustomUser, pk=self.kwargs['pk'])
             # Managers are not allowed to become Members
             if not user.groups.filter(name='manager').exists():
@@ -776,7 +782,7 @@ class ManagerProfileApprovePoolmasterView(LoginRequiredMixin, GroupRequiredMixin
         return super(ManagerProfileApprovePoolmasterView, self).form_valid(form, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('manager_profile_detail',  kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('manager_profile_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class ManagerProfileSearchView(LoginRequiredMixin, GroupRequiredMixin, ListView):

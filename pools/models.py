@@ -1,13 +1,13 @@
-from django.db.models.fields import NullBooleanField
 import pyotp
 import random
-from decimal import *
+from decimal import getcontext, ROUND_DOWN, Decimal
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from config.validators import validate_username, validate_investment, validate_name, validate_number, validate_amount, validate_pool_size
-from config.utils import send_sms_pool_invite, send_email_pool_invite, send_sms_platform_invite, send_email_pool_winner, send_sms_pool_winner
+from config.validators import validate_username, validate_investment, validate_name, validate_pool_size
+from config.utils import (send_sms_pool_invite, send_email_pool_invite, send_sms_platform_invite,
+                          send_email_pool_winner, send_sms_pool_winner)
 from accounts.models import InvestmentTransaction
 
 
@@ -103,7 +103,7 @@ class Pool(models.Model):
         else:
             lower_limit, upper_limit = 1, self.get_member_count()
             selected = random.randint(lower_limit, upper_limit)
-            user = self.members.all()[selected-1]
+            user = self.members.all()[selected - 1]
             winner = PoolWinner(pool=self, user=user)
             winner.save()
             self.exit(user)
@@ -123,8 +123,8 @@ class Pool(models.Model):
             month = int((yd * 12) + md)
             getcontext().prec = 3
             getcontext().rounding = ROUND_DOWN
-            incentive = (Decimal(0.05)*self.investment)*month  # 5% of investment per month
-            master_incentive = Decimal(0.05)*self.investment  # 5% of investment amount
+            incentive = (Decimal(0.05) * self.investment) * month  # 5% of investment per month
+            master_incentive = Decimal(0.05) * self.investment  # 5% of investment amount
         if self.is_member(user):
             itu = InvestmentTransaction(
                 type_of_transaction='D', amount=self.investment + incentive, user=user, pool=self)
@@ -198,7 +198,7 @@ class PoolWinner(models.Model):
         t = timezone.now()
         prefix = str(self.pool.id)
         yy, mm = t.strftime("%Y"), t.strftime("%m")
-        self.codename = prefix+yy+mm
+        self.codename = prefix + yy + mm
 
         self.full_clean()
         return super(PoolWinner, self).save()

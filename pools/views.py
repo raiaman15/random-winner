@@ -5,7 +5,6 @@ from django.views.generic import View, CreateView, ListView, DetailView
 from .models import Pool, PoolInvite
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
-from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
@@ -32,11 +31,11 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         # A Master can create only 1 pool per day
         # hh = t.strftime("%H")
         # mm = t.strftime("%M")
-        if Pool.objects.filter(codename=prefix+yy+mm+dd).exists():
+        if Pool.objects.filter(codename=prefix + yy + mm + dd).exists():
             messages.error(self.request, response_messages['pool_creation_limit_exceeded'])
             return super(PoolCreateView, self).get(self.request)
         else:
-            form.instance.codename = prefix+yy+mm+dd  # +hh+mm
+            form.instance.codename = prefix + yy + mm + dd  # +hh+mm
         return super(PoolCreateView, self).form_valid(form)
 
 
@@ -194,7 +193,7 @@ class AutomaticActivateScheduleView(View):
                     try:
                         pool.activate()
                         activated_count += 1
-                    except Exception as e:
+                    except Exception:
                         failed_count += 1
 
         return HttpResponse(f'{activated_count} Pools Activated. {failed_count} Pools Failed Activation.')
@@ -213,7 +212,7 @@ class AutomaticSpinScheduleView(View):
                 try:
                     pool.spin()
                     spinned_count += 1
-                except Exception as e:
+                except Exception:
                     failed_count += 1
 
         return HttpResponse(f'{spinned_count} Pools Spinned. {failed_count} Pools Failed Spinning.')

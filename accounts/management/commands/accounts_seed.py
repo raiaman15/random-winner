@@ -3,7 +3,6 @@ Creates necessary permission groups for users
 It uses the DATA/group_permission.csv for its input
 """
 import logging
-import numpy as np
 import pandas as pd
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission

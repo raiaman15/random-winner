@@ -1,14 +1,10 @@
-from django.contrib.auth.mixins import (
-    LoginRequiredMixin,
-    PermissionRequiredMixin
-)
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 
 
 class CompanyPageView(TemplateView):
     """ The Product Page is acting as Company Page since it is a product based company """
-    # template_name = 'pages/cpmpany.html'
+    # template_name = 'pages/company.html'
     template_name = 'pages/product.html'
 
     def dispatch(self, request, *args, **kwargs):

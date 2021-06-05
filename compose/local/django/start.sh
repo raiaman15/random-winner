@@ -15,6 +15,8 @@ echo "MIGRATING DATABASE"
 python manage.py migrate --noinput
 echo "SEEDING DATABASE | REFRESH"
 python manage.py accounts_seed
+echo "RUNNING FLAKE8"
+flake8
 echo "RUNNING ALL TEST CASES"
 python manage.py test
 echo "CREATING TEST SUPERUSER"

@@ -1,8 +1,6 @@
-from config.urls.base import *
-from config.settings import local
+from config.urls.base import urlpatterns
+from config.settings import base
 from django.conf.urls.static import static
 
-urlpatterns += static(local.STATIC_URL,
-                      document_root=local.STATIC_ROOT)
-urlpatterns += static(local.MEDIA_URL,
-                      document_root=local.MEDIA_ROOT)
+urlpatterns += static(base.STATIC_URL, document_root=base.STATIC_ROOT)
+urlpatterns += static(base.MEDIA_URL, document_root=base.MEDIA_ROOT)
