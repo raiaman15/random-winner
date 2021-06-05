@@ -2,206 +2,212 @@
 {% load account_extras %}
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-light-primary elevation-4 text-black">
-  <!-- Brand Logo -->
-  <a href="{% url 'status' %}" class="brand-link">
-    <img src="{% static 'logo.png' %}" alt="{{PRODUCT_NAME}} Logo" class="brand-image" style="opacity: .8;">
-    <span class="brand-text font-weight-bold">{{PRODUCT_NAME}}</span>
-  </a>
+    <!-- Brand Logo -->
+    <a href="{% url 'status' %}" class="brand-link">
+        <img src="{% static 'logo.png' %}" alt="{{ PRODUCT_NAME }} Logo" class="brand-image" style="opacity: .8;">
+        <span class="brand-text font-weight-bold">{{ PRODUCT_NAME }}</span>
+    </a>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        {% if user.picture %}
-        <img src="{{ user.picture.url }}" class="img-circle" style="height:2rem; width:2rem;" alt="User Image">
-        {% else %}
-        <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1" alt="User Image">
-        {% endif %}
-      </div>
-      <div class="info">
-        {% if user.first_name or user.last_name %}
-        <a href="{% url 'dashboard' %}" class="d-block">{{ user.first_name }} {{ user.last_name }}</a>
-        {% else %}
-        <a href="{% url 'dashboard' %}" class="d-block">{{ user.email }}</a>
-        {% endif %}
-      </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                {% if user.picture %}
+                    <img src="{{ user.picture.url }}" class="img-circle" style="height:2rem; width:2rem;"
+                         alt="User Image">
+                {% else %}
+                    <img src="{% static 'project/img/user.png' %}" class="img-circle elevation-1" alt="User Image">
+                {% endif %}
+            </div>
+            <div class="info">
+                {% if user.first_name or user.last_name %}
+                    <a href="{% url 'dashboard' %}" class="d-block">{{ user.first_name }} {{ user.last_name }}</a>
+                {% elif user.email %}
+                    <a href="{% url 'dashboard' %}" class="d-block">{{ user.email }}</a>
+                {% else %}
+                    <a href="{% url 'dashboard' %}" class="d-block">{{ user.username }}</a>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                       with font-awesome or any other icon font library -->
+
+                {% if user|has_group:"member" %}
+                    <li class="nav-header">MY ACCOUNT</li>
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard' %}"
+                           class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'profile_balance_transaction_list' %}"
+                           class="nav-link {% if 'balance' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-wallet"></i>
+                            <p>
+                                Balance
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'profile_investment_transaction_list' %}"
+                           class="nav-link {% if 'investment' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>
+                                Investment
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if user|has_group:"member" %}
+                    <li class="nav-header">POOLMEMBER POOLS</li>
+                    <li class="nav-item">
+                        <a href="{% url 'pool_list' %}"
+                           class="nav-link {% if 'pools/all' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-globe-asia"></i>
+                            <p>
+                                Global Pool List
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'pool_invite_list' %}"
+                           class="nav-link {% if 'pools/invite/' in request.path %}active{% endif %}">
+                            <i class="nav-icon far fa-envelope-open"></i>
+                            <p>
+                                Pool Invitations
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'pool_membership_list' %}"
+                           class="nav-link {% if 'pools/membership' in request.path %}active{% endif %}">
+                            <i class="nav-icon fab fa-galactic-republic"></i>
+                            <p>
+                                My Membership Pools
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if user|has_group:"master" %}
+                    <li class="nav-header">POOLMASTER POOLS</li>
+                    <li class="nav-item">
+                        <a href="{% url 'pool_create' %}"
+                           class="nav-link {% if 'pools/create' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-plus"></i>
+                            <p>
+                                Create New Pools
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'pool_mastership_list' %}"
+                           class="nav-link {% if 'pools/mastership' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-hat-cowboy"></i>
+                            <p>
+                                My Mastership Pools
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if user|has_group:"manager" %}
+                    <li class="nav-header">USER MANAGEMENT</li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_profile_list' %}"
+                           class="nav-link {% if 'manager/profile/all' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                All Profiles
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_profile_member_list' %}"
+                           class="nav-link {% if 'manager/profile/member' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-user-check"></i>
+                            <p>
+                                PoolMembers
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_profile_master_list' %}"
+                           class="nav-link {% if 'manager/profile/master' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-user-ninja"></i>
+                            <p>
+                                PoolMasters
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_profile_willing_master_list' %}"
+                           class="nav-link {% if 'manager/profile/willing/master' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-user-clock"></i>
+                            <p>
+                                Willing PoolMasters
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_profile_unverified_list' %}"
+                           class="nav-link {% if 'manager/profile/unverified' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-user-times"></i>
+                            <p>
+                                Unverified Profiles
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if user|has_group:"manager" %}
+                    <li class="nav-header">SUPPORT TICKETS</li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_financial_support_ticket_list' %}"
+                           class="nav-link {% if 'manager/support-ticket/financial' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-comments-dollar"></i>
+                            <p>
+                                Finance Related
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_application_support_ticket_list' %}"
+                           class="nav-link {% if 'manager/support-ticket/application' in request.path %}active{% endif %}">
+                            <i class="nav-icon fas fa-ticket-alt"></i>
+                            <p>
+                                Application Related
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if user|has_group:"manager" %}
+                    <li class="nav-header">MANUAL POOL MANAGEMENT</li>
+                    <li class="nav-item">
+                        <a href="{% url 'manager_manage_pool' %}"
+                           class="nav-link {% if 'manage/pool/manage' in request.path %}active{% endif %}">
+                            <i class="nav-icon fab fa-galactic-republic"></i>
+                            <p>
+                                Manage Pool
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+
     </div>
-
-
-    <!-- Sidebar Menu -->
-    <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
-        {% if user|has_group:"member" %}
-        <li class="nav-header">MY ACCOUNT</li>
-        <li class="nav-item">
-          <a href="{% url 'dashboard' %}" class="nav-link {% if 'dashboard' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>
-              Dashboard
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'profile_balance_transaction_list' %}"
-            class="nav-link {% if 'balance' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-wallet"></i>
-            <p>
-              Balance
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'profile_investment_transaction_list' %}"
-            class="nav-link {% if 'investment' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-chart-line"></i>
-            <p>
-              Investment
-            </p>
-          </a>
-        </li>
-        {% endif %}
-
-        {% if user|has_group:"member" %}
-        <li class="nav-header">POOLMEMBER POOLS</li>
-        <li class="nav-item">
-          <a href="{% url 'pool_list' %}" class="nav-link {% if 'pools/all' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-globe-asia"></i>
-            <p>
-              Global Pool List
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'pool_invite_list' %}"
-            class="nav-link {% if 'pools/invite/' in request.path %}active{% endif %}">
-            <i class="nav-icon far fa-envelope-open"></i>
-            <p>
-              Pool Invitations
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'pool_membership_list' %}"
-            class="nav-link {% if 'pools/membership' in request.path %}active{% endif %}">
-            <i class="nav-icon fab fa-galactic-republic"></i>
-            <p>
-              My Membership Pools
-            </p>
-          </a>
-        </li>
-        {% endif %}
-        {% if user|has_group:"master" %}
-        <li class="nav-header">POOLMASTER POOLS</li>
-        <li class="nav-item">
-          <a href="{% url 'pool_create' %}" class="nav-link {% if 'pools/create' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-plus"></i>
-            <p>
-              Create New Pools
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'pool_mastership_list' %}"
-            class="nav-link {% if 'pools/mastership' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-hat-cowboy"></i>
-            <p>
-              My Mastership Pools
-            </p>
-          </a>
-        </li>
-        {% endif %}
-
-        {% if user|has_group:"manager" %}
-        <li class="nav-header">USER MANAGEMENT</li>
-        <li class="nav-item">
-          <a href="{% url 'manager_profile_list' %}"
-            class="nav-link {% if 'manager/profile/all' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-users"></i>
-            <p>
-              All Profiles
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'manager_profile_member_list' %}"
-            class="nav-link {% if 'manager/profile/member' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-user-check"></i>
-            <p>
-              PoolMembers
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'manager_profile_master_list' %}"
-            class="nav-link {% if 'manager/profile/master' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-user-ninja"></i>
-            <p>
-              PoolMasters
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'manager_profile_willing_master_list' %}"
-            class="nav-link {% if 'manager/profile/willing/master' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-user-clock"></i>
-            <p>
-              Willing PoolMasters
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'manager_profile_unverified_list' %}"
-            class="nav-link {% if 'manager/profile/unverified' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-user-times"></i>
-            <p>
-              Unverified Profiles
-            </p>
-          </a>
-        </li>
-        {% endif %}
-
-        {% if user|has_group:"manager" %}
-        <li class="nav-header">SUPPORT TICKETS</li>
-        <li class="nav-item">
-          <a href="{% url 'manager_financial_support_ticket_list' %}"
-            class="nav-link {% if 'manager/support-ticket/financial' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-comments-dollar"></i>
-            <p>
-              Finance Related
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'manager_application_support_ticket_list' %}"
-            class="nav-link {% if 'manager/support-ticket/application' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-ticket-alt"></i>
-            <p>
-              Application Related
-            </p>
-          </a>
-        </li>
-        {% endif %}
-
-        {% if user|has_group:"manager" %}
-        <li class="nav-header">MANUAL POOL MANAGEMENT</li>
-        <li class="nav-item">
-          <a href="{% url 'manager_manage_pool' %}"
-            class="nav-link {% if 'manage/pool/manage' in request.path %}active{% endif %}">
-            <i class="nav-icon fab fa-galactic-republic"></i>
-            <p>
-              Manage Pool
-            </p>
-          </a>
-        </li>
-        {% endif %}
-      </ul>
-    </nav>
-    <!-- /.sidebar-menu -->
-
-  </div>
-  <!-- /.sidebar -->
+    <!-- /.sidebar -->
 </aside>
