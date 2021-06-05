@@ -162,7 +162,9 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
                 except ObjectDoesNotExist:
                     messages.warning(request, response_messages['profile_billing_address_incomplete'])
                     return redirect('profile_billing_address_create')
-                if not self.request.user.bank_account_detail:
+                try:
+                    self.request.user.bank_account_detail
+                except ObjectDoesNotExist:
                     messages.warning(request, response_messages['profile_bank_account_detail_incomplete'])
                     return redirect('profile_bank_account_detail_create')
                 try:
