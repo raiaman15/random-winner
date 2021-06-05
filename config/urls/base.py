@@ -16,10 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-# Enable 2FA for Admin (Device Authentication)
-# from django_otp.admin import OTPAdminSite
-# admin.site.__class__ = OTPAdminSite
-
 urlpatterns = [
     # Django admin
     path('infroid-backend/', admin.site.urls),
