@@ -43,112 +43,45 @@
             <!-- Main row -->
             <div class="row">
                 <!-- Left col -->
-                <section class="col-lg-6 connectedSortable text-center">
-                    <img src="{% static 'project/img/fill-out-form.png' %}" style="max-width:30%;">
-                    <div class="col-md-12">
-                        <div class="timeline">
-                            <!-- timeline time label -->
-                            <div class="time-label text-left">
-                                <span class="bg-success"><i class="fas fa-clipboard-list"></i> ONBOARDING STARTED</span>
+                <section class="col-lg-6 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card bg-black elevation-2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card"></i>
+                                Update Your Details
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Minimize">
+                                    <i class="fas fa-minus"></i>
+                                </button>
                             </div>
-                            <!-- /.timeline-label -->
-                            {% if user.contact_verified %}
-                            <!-- timeline item -->
-                            <div>
-                                <i class="fas fa-phone-alt bg-success"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i>
-                                        {{user.date_joined|naturaltime}}
-                                    </span>
-                                    <h3 class="timeline-header text-left">
-                                        <a href="{% url 'status' %}">Contact Verification</a>
-                                        <small><strong>DONE</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        Your Contact Number was verified using OTP. This was necessary
-                                        for all high priority communications and updates.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-                            {% else %}
-                            <!-- timeline item -->
-                            <div>
-                                <i class="fas fa-envelope bg-success"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i>
-                                        {{user.date_joined|naturaltime}}
-                                    </span>
-                                    <h3 class="timeline-header text-left">
-                                        <a href="{% url 'status' %}">Email Verified Profile Creation</a>
-                                        <small><strong>DONE</strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You verified your email address: {{user.email}} using email link.
-                                        This was necessary for all high priority communications and updates.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-                            {% endif %}
-                            <!-- timeline item -->
-                            <div>
-                                <i
-                                    class="fas fa-id-card {% if user.identity_verified %}bg-green{% else %}bg-warning{% endif %}"></i>
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header text-left">
-                                        <a href="{% url 'status' %}">Identity Verification</a>
-                                        <small>
-                                            <strong>
-                                                {% if user.identity_verified %}
-                                                DONE
-                                                {% elif user.identity_proof %}
-                                                VERIFICATION PENDING FROM {{PRODUCT_NAME|upper}}
-                                                {% else %}
-                                                PENDING
-                                                {% endif %}
-                                            </strong>
-                                        </small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You update your Identity Proof Details here, which is verified by our team.
-                                        Identity verification helps us in ensuring a legitimate user base for future
-                                        financial transactions.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-                            <!-- timeline item -->
-                            <div>
-                                <i
-                                    class="fas fa-user {% if user.first_name or user.last_name %}bg-green{% else %}bg-warning{% endif %}"></i>
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header text-left">
-                                        <a href="{% url 'status' %}">Profile Completion</a>
-                                        <small><strong>
-                                                {% if user.first_name or user.last_name %}
-                                                DONE
-                                                {% else %}
-                                                IN PROGRESS
-                                                {% endif %}
-                                            </strong></small>
-                                    </h3>
-                                    <div class="timeline-body text-justify">
-                                        You update your full name which will be used for future transactions.
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- timeline time label -->
-                            <div class="time-label text-left">
-                                {% if user.identity_verified and user.first_name or user.last_name %}
-                                <span class="bg-success"><i class="fas fa-check"></i> ONBOARDING COMPLETED</span>
-                                {% else %}
-                                <span class="bg-warning"><i class="fas fa-check"></i> ONBOARDING COMPLETES</span>
-                                {% endif %}
-                            </div>
-                            <!-- /.timeline-label -->
+
+                        </div><!-- /.card-header -->
+                        <!-- Ongoing Live Class -->
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <input type="submit" class="btn btn-light" value="Update">
+                            </form>
+                        </div><!-- /.card-body -->
+                        <!-- Help Text -->
+                        <div class="row card-footer text-center pb-0">
+                            <div class="col-sm-12 text-center">
+                                <p>
+                                    Click <a href="{% url 'dashboard' %}">here</a> to go back to your dashboard.
+                                </p>
+                            </div><!-- /.col -->
                         </div>
+                        <!-- /.Help Text -->
                     </div>
+                    <!-- /.card -->
+                </section>
+                <!-- /.Left col -->
+                <!-- Right col -->
+                <section class="col-lg-6 connectedSortable text-center">
                 </section>
                 <!-- right col -->
             </div>

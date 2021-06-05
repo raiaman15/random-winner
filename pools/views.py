@@ -5,10 +5,10 @@ from django.views.generic import View, CreateView, ListView, DetailView
 from .models import Pool, PoolInvite
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
-from config.messages import response_messages
 
 
 class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -31,11 +31,11 @@ class PoolCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         # A Master can create only 1 pool per day
         # hh = t.strftime("%H")
         # mm = t.strftime("%M")
-        if Pool.objects.filter(codename=prefix + yy + mm + dd).exists():
-            messages.error(self.request, response_messages['pool_creation_limit_exceeded'])
+        if Pool.objects.filter(codename=prefix+yy+mm+dd).exists():
+            messages.error(self.request, 'You can create a maximum of one pool per day!')
             return super(PoolCreateView, self).get(self.request)
         else:
-            form.instance.codename = prefix + yy + mm + dd  # +hh+mm
+            form.instance.codename = prefix+yy+mm+dd  # +hh+mm
         return super(PoolCreateView, self).form_valid(form)
 
 
@@ -81,7 +81,6 @@ class PoolDetailView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     login_url = 'account_login'
     group_required = [u"member", u"master"]
 
-    # Pool Details visible to owners only
     # def get(self, request, *args, **kwargs):
     #     # pool = get_object_or_404(self.model, id=self.kwargs['pk'])
     #     # if pool.is_member(request.user) or pool.is_master(request.user):
@@ -120,9 +119,9 @@ class PoolInviteCreateView(LoginRequiredMixin, GroupRequiredMixin, View):
                 try:
                     pool.invite(username)
                     invited.append(username)
-                except Exception as e:
-                    messages.error(request, f'Unable to invite {username}! Error: {e}')
-            messages.success(request, f'Invitations to {", ".join(invited)} sent successfully')
+                except:
+                    messages.error(request, f'{username} Invitation Failed!')
+            messages.success(request, f'{", ".join(invited)} Invitation Sent Successfully')
         return redirect('status')
 
 
@@ -148,20 +147,14 @@ class PoolJoinView(LoginRequiredMixin, GroupRequiredMixin, View):
         accept_reject = str(request.POST.get('accept_reject'))
         pool_id = int(request.POST.get('pool'))
         pool = get_object_or_404(Pool, id=pool_id)
+        self.request.user.refresh_balance_investment()
 
         if accept_reject in ('Accept', 'Reject'):
             if accept_reject == 'Accept':
-                self.request.user.refresh_balance_investment()
                 if pool.investment > self.request.user.balance_amount:
                     remaining_amount = pool.investment - self.request.user.balance_amount
                     messages.warning(request, f'Please add ₹ {remaining_amount} to your account.')
-                    return redirect('profile_balance_credit_transaction_create')
-                if not self.user.billing_address:
-                    messages.warning(request, response_messages['profile_billing_address_incomplete'])
-                    return redirect('profile_billing_address_create')
-                if not self.user.bank_account_detail:
-                    messages.warning(request, response_messages['profile_bank_account_detail_incomplete'])
-                    return redirect('profile_bank_account_detail_create')
+                    return redirect('profile_balance_transaction_create')
                 try:
                     pool.join(request.user)
                     messages.success(request, f'You have joined the pool - {pool.name}')
@@ -183,7 +176,7 @@ class AutomaticActivateScheduleView(View):
     def get(self, request):
         now = timezone.now()
         start = timezone.now().replace(day=2, hour=00, minute=00)
-        end = timezone.now().replace(day=10, hour=23, minute=59)
+        end = timezone.now().replace(day=28, hour=23, minute=59)
         activated_count = 0
         failed_count = 0
         if now > start and now < end:
@@ -193,7 +186,7 @@ class AutomaticActivateScheduleView(View):
                     try:
                         pool.activate()
                         activated_count += 1
-                    except Exception:
+                    except Exception as e:
                         failed_count += 1
 
         return HttpResponse(f'{activated_count} Pools Activated. {failed_count} Pools Failed Activation.')
@@ -201,9 +194,10 @@ class AutomaticActivateScheduleView(View):
 
 class AutomaticSpinScheduleView(View):
     def get(self, request):
+        # active_pool_count = Pool.objects.exclude(activated__isnull=True).count()
         now = timezone.now()
         start = timezone.now().replace(day=1, hour=00, minute=00)
-        end = timezone.now().replace(day=2, hour=00, minute=00)
+        end = timezone.now().replace(day=28, hour=00, minute=00)
         spinned_count = 0
         failed_count = 0
         if now > start and now < end:
@@ -212,21 +206,7 @@ class AutomaticSpinScheduleView(View):
                 try:
                     pool.spin()
                     spinned_count += 1
-                except Exception:
+                except Exception as e:
                     failed_count += 1
 
         return HttpResponse(f'{spinned_count} Pools Spinned. {failed_count} Pools Failed Spinning.')
-
-
-class PoolStatisticsView(View):
-    def get(self, request):
-        total_pool_count = Pool.objects.count()
-        active_pool_count = Pool.objects.exclude(activated__isnull=True).count()
-        pool_ready_for_activation = [1 for pool in Pool.objects.all() if pool.get_member_remaining == 0].sum()
-
-        summary = []
-        summary.append(f'Total Pools: {total_pool_count}<br/>')
-        summary.append(f'Active Pools: {active_pool_count} <br/>')
-        summary.append(f'Pools Ready for Activation: {pool_ready_for_activation}<br/>')
-
-        return HttpResponse(''.join(summary))
