@@ -10,15 +10,15 @@ find . -path "*/migrations/*.pyc" -delete
 # /Personal Preference to start fresh - You may comment
 
 echo "MAKING MIGRATION FILES"
-python manage.py makemigrations --noinput
+python manage.py makemigrations --settings=config.settings.local --noinput
 echo "MIGRATING DATABASE"
-python manage.py migrate --noinput
+python manage.py migrate --settings=config.settings.local --noinput
 echo "SEEDING DATABASE | REFRESH"
-python manage.py accounts_seed
+python manage.py accounts_seed --settings=config.settings.local
 echo "RUNNING FLAKE8"
 flake8
 echo "RUNNING ALL TEST CASES"
-python manage.py test
+python manage.py test --settings=config.settings.local
 echo "CREATING TEST SUPERUSER"
 echo "from django.contrib.auth import get_user_model; user = get_user_model().objects.create_user(username='9999999999', email='webmaster@bit-boomer.com', password='DevTeam@123'); user.is_superuser=True; user.is_staff=True; user.save()" | python manage.py shell --settings=config.settings.local
 echo "from django.contrib.auth import get_user_model; from django.contrib.auth.models import Group; manager_group, created = Group.objects.get_or_create(name='manager'); user = get_user_model().objects.create_user(username='9999999998', email='manager@bit-boomer.com', password='DevTeam@123'); manager_group.user_set.add(user); user.save()" | python manage.py shell --settings=config.settings.local
