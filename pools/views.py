@@ -209,18 +209,18 @@ class AutomaticSpinScheduleView(View):
         now = timezone.now()
         start = timezone.now().replace(day=1, hour=00, minute=00)
         end = timezone.now().replace(day=2, hour=00, minute=00)
-        spinned_count = 0
+        spun_count = 0
         failed_count = 0
         if start < now < end:
             pools = Pool.objects.all()
             for pool in pools:
                 try:
                     pool.spin()
-                    spinned_count += 1
+                    spun_count += 1
                 except Exception:
                     failed_count += 1
 
-        return HttpResponse(f'{spinned_count} Pools Spinned. {failed_count} Pools Failed Spinning.')
+        return HttpResponse(f'{spun_count} Pools Spun. {failed_count} Pools Failed Spinning.')
 
 
 class PoolStatisticsView(View):
